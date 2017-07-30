@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <AssemblyName>Vostok.Logging.Serilog</AssemblyName>
+    <Authors>Vostok team</Authors>
+    <Company>SKB Kontur</Company>
+    <Product>Vostok</Product>
+    <RootNamespace>Vostok.Logging.Serilog</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Logging\Logging.csproj" />
+  </ItemGroup>
+
+</Project>

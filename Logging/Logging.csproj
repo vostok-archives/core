@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <AssemblyName>Vostok.Logging</AssemblyName>
+    <Authors>Vostok team</Authors>
+    <Company>SKB Kontur</Company>
+    <Product>Vostok</Product>
+    <RootNamespace>Vostok.Logging</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Flow\Flow.csproj" />
+  </ItemGroup>
+
+</Project>
