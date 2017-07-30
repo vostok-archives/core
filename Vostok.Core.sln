@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Logging\Logging.csproj", "{22989A64-84E8-45D1-A181-A9BEB17BE2B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Logging", "Vostok.Logging\Vostok.Logging.csproj", "{22989A64-84E8-45D1-A181-A9BEB17BE2B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flow", "Flow\Flow.csproj", "{B4871488-BEAF-48BE-8399-B1521539CBA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Flow", "Vostok.Flow\Vostok.Flow.csproj", "{B4871488-BEAF-48BE-8399-B1521539CBA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging.Serilog", "Logging.Serilog\Logging.Serilog.csproj", "{9DAA8DF7-9AC1-4DD3-BD24-C92A8269AC58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Logging.Serilog", "Vostok.Logging.Serilog\Vostok.Logging.Serilog.csproj", "{9DAA8DF7-9AC1-4DD3-BD24-C92A8269AC58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging.Serilog.Example", "Logging.Serilog.Example\Logging.Serilog.Example.csproj", "{E6E2BAE6-7B4D-48F8-B04E-B0DADD7592B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vostok.Logging.Serilog.Example", "Vostok.Logging.Serilog.Example\Vostok.Logging.Serilog.Example.csproj", "{E6E2BAE6-7B4D-48F8-B04E-B0DADD7592B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

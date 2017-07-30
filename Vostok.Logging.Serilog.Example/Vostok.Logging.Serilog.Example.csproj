@@ -57,15 +57,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Flow\Flow.csproj">
+    <ProjectReference Include="..\Vostok.Flow\Vostok.Flow.csproj">
       <Project>{b4871488-beaf-48be-8399-b1521539cba9}</Project>
       <Name>Flow</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Logging.Serilog\Logging.Serilog.csproj">
+    <ProjectReference Include="..\Vostok.Logging.Serilog\Vostok.Logging.Serilog.csproj">
       <Project>{9daa8df7-9ac1-4dd3-bd24-c92a8269ac58}</Project>
       <Name>Logging.Serilog</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Logging\Logging.csproj">
+    <ProjectReference Include="..\Vostok.Logging\Vostok.Logging.csproj">
       <Project>{22989a64-84e8-45d1-a181-a9beb17be2b3}</Project>
       <Name>Logging</Name>
     </ProjectReference>

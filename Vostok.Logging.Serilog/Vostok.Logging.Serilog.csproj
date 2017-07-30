@@ -7,6 +7,7 @@
     <Company>SKB Kontur</Company>
     <Product>Vostok</Product>
     <RootNamespace>Vostok.Logging.Serilog</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Logging\Logging.csproj" />
+    <ProjectReference Include="..\Vostok.Logging\Vostok.Logging.csproj" />
   </ItemGroup>
 
 </Project>
