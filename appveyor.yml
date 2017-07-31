@@ -14,4 +14,4 @@ before_build:
       $propertyGroup.Version = $env:appveyor_build_version
       $xml.Save($xmlPath)
 after_build:
-  - ps: Get-ChildItem .\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: Get-ChildItem .\Core\bin\Debug\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
