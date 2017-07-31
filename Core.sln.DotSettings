@@ -1,0 +1,11 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=70AE435395FD254B95DD95C7277D58BB/AbsolutePath/@EntryValue">D:\Work\vostok\webapi-instrumentation\CSharpCodeStyle.DotSettings</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=70AE435395FD254B95DD95C7277D58BB/RelativePath/@EntryValue">..\CSharpCodeStyle.DotSettings</s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=70AE435395FD254B95DD95C7277D58BB/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=E6CBB5F670A12A419B986848A360513E/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=E6CBB5F670A12A419B986848A360513E/AbsolutePath/@EntryValue">D:\Work\vostok\webapi-instrumentation\CSharpCodeStyle.SpaceIndent.DotSettings</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=E6CBB5F670A12A419B986848A360513E/RelativePath/@EntryValue">..\CSharpCodeStyle.SpaceIndent.DotSettings</s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File70AE435395FD254B95DD95C7277D58BB/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File70AE435395FD254B95DD95C7277D58BB/RelativePriority/@EntryValue">1</s:Double>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileE6CBB5F670A12A419B986848A360513E/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=FileE6CBB5F670A12A419B986848A360513E/RelativePriority/@EntryValue">2</s:Double></wpf:ResourceDictionary>
