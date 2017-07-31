@@ -1,8 +1,15 @@
 skip_branch_with_pr: true
-version: '{build}-{branch}'
+version: '1.0.0-{branch}.{build}'
 image: Visual Studio 2017
 install:
   - nuget restore
 configuration: Debug
+before_build:
+  - ps: |
+      $xmlPath = "$env:appveyor_build_folder\Core\Core.csproj"
+      $xml = [xml](get-content $xmlPath)
+      $propertyGroup = $xml.Project.PropertyGroup | Where { $_.Version}
+      $propertyGroup.Version = $env:appveyor_build_version
+      $xml.Save($xmlPath)
 build:
   verbosity: normal
