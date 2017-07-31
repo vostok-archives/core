@@ -8,6 +8,7 @@
     <Product>Vostok</Product>
     <RootNamespace>Vostok</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.0.0-alpha1</Version>
   </PropertyGroup>
 
   <ItemGroup>
