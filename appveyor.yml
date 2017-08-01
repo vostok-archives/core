@@ -8,7 +8,7 @@ install:
 configuration: Debug
 before_build:
   - ps: |
-      $zeroPaddedBuildNumber = $env:appveyor_build_number.ToString("000000")
+      $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
       Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber"
       $xmlPath = "$env:appveyor_build_folder\Core\Core.csproj"
       $xml = [xml](get-content $xmlPath)
