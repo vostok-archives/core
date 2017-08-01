@@ -12,8 +12,10 @@ before_build:
       Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber"
       $xmlPath = "$env:appveyor_build_folder\Core\Core.csproj"
       $xml = [xml](get-content $xmlPath)
-      $version = $xml.Project.PropertyGroup.CreateElement("Version")
-      $version.InnerText = $env:appveyor_build_version
+      $version = $xml.CreateElement("Version")
+      $versionText = $xml.CreateTextNode($env:appveyor_build_version)
+      $version.AppendChild($versionText)
+      $xml.Project.PropertyGroup.AppendChild($version)
       $xml.Save($xmlPath)
 after_build:
   - ps: Get-ChildItem .\Core\bin\Debug\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
