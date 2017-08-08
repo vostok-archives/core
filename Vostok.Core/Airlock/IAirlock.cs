@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Vostok.Airlock
+﻿namespace Vostok.Airlock
 {
     // (iloktionov): На первый взгляд кажется, что Airlock не должен знать ничего о природе протаскиваемых через него сообщений.
     // С отправляющей стороны знание их формата должно быть у инструментации какой-то подсистемы (трассировки, логов, метрик).
@@ -14,31 +12,5 @@ namespace Vostok.Airlock
     public interface IAirlock
     {
         void Throw<T>(string category, T item);
-    }
-
-    public interface IAirlockSerializer<in T>
-    {
-        void Serialize(T item, IAirlockSink sink);
-    }
-
-    public static class AirlockSerializerRegistry
-    {
-        public static void Register<T>(IAirlockSerializer<T> serializer)
-        {
-            // ...
-        }
-    }
-
-    public interface IAirlockSink
-    {
-        Stream WriteStream { get; }
-
-        void Write(int value);
-        void Write(long value);
-        void Write(byte value);
-        void Write(byte[] value);
-        void Write(string value);
-        void Write(double value);
-        // ...
     }
 }
