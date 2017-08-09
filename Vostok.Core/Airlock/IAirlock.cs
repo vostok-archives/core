@@ -11,6 +11,6 @@
 
     public interface IAirlock
     {
-        void Throw<T>(string category, T item);
+        void Push<T>(string category, T item);
     }
 }
