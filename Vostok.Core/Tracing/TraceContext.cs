@@ -10,7 +10,8 @@ namespace Vostok.Tracing
 
         static TraceContext()
         {
-            // TODO(iloktionov): configure distributed properties in Context.
+            Context.Configuration.AddDistributedProperty(TraceIdContextName);
+            Context.Configuration.AddDistributedProperty(SpanIdContextName);
         }
 
         public static IDisposable Use(TraceContext context)
