@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Threading;
 
 namespace Vostok.Flow
 {
     internal class ContextProperties : IContextProperties
     {
-        private readonly AsyncLocal<ImmutableDictionary<string, object>> container;
+        private readonly AsyncLocal<ContextPropertiesSnapshot> container;
 
         public ContextProperties()
         {
-            container = new AsyncLocal<ImmutableDictionary<string, object>>();
+            container = new AsyncLocal<ContextPropertiesSnapshot>();
         }
 
         public IReadOnlyDictionary<string, object> Current => Properties;
 
         public void SetProperty(string key, object value)
         {
-            Properties = Properties.SetItem(key, value);
+            Properties = Properties.Set(key, value);
         }
 
         public void RemoveProperty(string key)
@@ -25,9 +24,9 @@ namespace Vostok.Flow
             Properties = Properties.Remove(key);
         }
 
-        private ImmutableDictionary<string, object> Properties
+        private ContextPropertiesSnapshot Properties
         {
-            get => container.Value ?? ImmutableDictionary<string, object>.Empty;
+            get => container.Value ?? ContextPropertiesSnapshot.Empty;
             set => container.Value = value;
         }
     }
