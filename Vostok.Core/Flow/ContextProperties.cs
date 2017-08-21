@@ -27,8 +27,8 @@ namespace Vostok.Flow
 
         private ImmutableDictionary<string, object> Properties
         {
-            get { return container.Value ?? ImmutableDictionary<string, object>.Empty; }
-            set { container.Value = value; }
+            get => container.Value ?? ImmutableDictionary<string, object>.Empty;
+            set => container.Value = value;
         }
     }
 }
