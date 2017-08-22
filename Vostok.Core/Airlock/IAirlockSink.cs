@@ -1,4 +1,5 @@
 using System.IO;
+using Vostok.Commons.Binary;
 
 namespace Vostok.Airlock
 {
@@ -6,12 +7,6 @@ namespace Vostok.Airlock
     {
         Stream WriteStream { get; }
 
-        void Write(int value);
-        void Write(long value);
-        void Write(byte value);
-        void Write(byte[] value);
-        void Write(string value);
-        void Write(double value);
-        // ...
+        IBinaryWriter Writer { get; }
     }
 }
