@@ -18,7 +18,7 @@ before_build:
       $xml.Project.PropertyGroup.AppendChild($version)
       $xml.Save($xmlPath)
 after_build:
-  - ps: Get-ChildItem $env:appveyor_build_folder\Vostok.Core\bin\Debug\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: Get-ChildItem $env:appveyor_build_folder\Vostok.Core\bin\Release\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 test_script:
   - dotnet test --logger "trx;LogFileName=core-tests.trx"
 after_test:
