@@ -10,6 +10,8 @@ namespace Vostok.Tracing
 
         Func<bool> IsEnabled { get; set; }
 
+        Func<string> AirlockRoutingKey { get; set; }
+
         IAirlock Airlock { get; set; }
     }
 }

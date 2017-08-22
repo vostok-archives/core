@@ -2,15 +2,13 @@
 
 namespace Vostok.Tracing
 {
-    public interface ISpanBuilder
+    public interface ISpanBuilder : IDisposable
     {
-        bool IsCanceled { get; }
+        bool IsCanceled { get; set; }
+        bool IsEndless { get; set; }
 
         void SetAnnotation<TValue>(string key, TValue value);
         void SetBeginTimestamp(DateTimeOffset timestamp);
         void SetEndTimestamp(DateTimeOffset timestamp);
-
-        void MakeEndless();
-        void Cancel();
     }
 }

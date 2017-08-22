@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Vostok.Airlock;
 using Vostok.Commons.Collections;
 
@@ -25,11 +26,12 @@ namespace Vostok.Tracing
         {
             var isEnabled = Configuration.IsEnabled();
             var airlock = Configuration.Airlock;
+            var airlockRoutingKey = configuration.AirlockRoutingKey();
 
-            if (!isEnabled || airlock == null)
+            if (!isEnabled || airlock == null || airlockRoutingKey == null)
                 return new FakeSpanBuilder();
 
-            return new SpanBuilder(operationName);
+            return new SpanBuilder(operationName, airlockRoutingKey, airlock, spanPool.AcquireHandle(), TraceContextScope.Begin());
         }
 
         public static ITraceConfiguration Configuration => configuration;

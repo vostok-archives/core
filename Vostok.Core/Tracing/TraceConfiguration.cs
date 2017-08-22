@@ -11,6 +11,8 @@ namespace Vostok.Tracing
 
         public Func<bool> IsEnabled { get; set; } = () => true;
 
+        public Func<string> AirlockRoutingKey { get; set; } = () => "tracing";
+
         public IAirlock Airlock { get; set; }
     }
 }

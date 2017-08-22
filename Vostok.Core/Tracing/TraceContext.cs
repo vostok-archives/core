@@ -16,7 +16,7 @@ namespace Vostok.Tracing
 
         public static IDisposable Use(TraceContext context)
         {
-            return new TraceContextScope(context);
+            return TraceContextScope.Begin(context);
         }
 
         public static IDisposable Disable()

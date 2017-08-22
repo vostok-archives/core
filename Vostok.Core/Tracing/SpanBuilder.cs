@@ -1,41 +1,92 @@
 ﻿using System;
+using System.Diagnostics;
+using Vostok.Airlock;
+using Vostok.Commons.Collections;
 
 namespace Vostok.Tracing
 {
     internal class SpanBuilder : ISpanBuilder
     {
-        private readonly string operationName;
+        private readonly string airlockRoutingKey;
+        private readonly IAirlock airlock;
+        private readonly PoolHandle<Span> spanHandle;
+        private readonly TraceContextScope contextScope;
+        private readonly Stopwatch stopwatch;
 
-        public SpanBuilder(string operationName)
+        public SpanBuilder(
+            string operationName, 
+            string airlockRoutingKey, 
+            IAirlock airlock, 
+            PoolHandle<Span> spanHandle,
+            TraceContextScope contextScope)
         {
-            this.operationName = operationName;
+            this.airlockRoutingKey = airlockRoutingKey;
+            this.airlock = airlock;
+            this.spanHandle = spanHandle;
+            this.contextScope = contextScope;
+
+            stopwatch = Stopwatch.StartNew();
+
+            InitializeSpan(operationName);
         }
 
-        public bool IsCanceled { get; private set; }
+        public bool IsCanceled { get; set; } = false;
+
+        public bool IsEndless { get; set; } = false;
 
         public void SetAnnotation<TValue>(string key, TValue value)
         {
-            throw new NotImplementedException();
+            Span.Annotations[key] = value?.ToString() ?? string.Empty;
         }
 
         public void SetBeginTimestamp(DateTimeOffset timestamp)
         {
-            throw new NotImplementedException();
+            Span.BeginTimestamp = timestamp;
         }
 
         public void SetEndTimestamp(DateTimeOffset timestamp)
         {
-            throw new NotImplementedException();
+            Span.EndTimestamp = timestamp;
         }
 
-        public void MakeEndless()
+        public void Dispose()
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (!IsCanceled)
+                {
+                    FinalizeSpan();
+                    airlock.Push(airlockRoutingKey, Span);
+                }
+            }
+            finally
+            {
+                CleanupSpan();
+                spanHandle.Dispose();
+                contextScope.Dispose();
+            }
         }
 
-        public void Cancel()
+        private void InitializeSpan(string operationName)
         {
-            throw new NotImplementedException();
+            Span.OperationName = operationName;
+            Span.TraceId = contextScope.Current.TraceId;
+            Span.SpanId = contextScope.Current.SpanId;
+            Span.ParentSpanId = contextScope.Parent?.SpanId;
+            Span.BeginTimestamp = DateTimeOffset.UtcNow; // TODO(iloktionov): придумать что-нибудь поточнее
         }
+
+        private void FinalizeSpan()
+        {
+            Span.EndTimestamp = IsEndless ? null as DateTimeOffset? : Span.BeginTimestamp + stopwatch.Elapsed;
+        }
+
+        private void CleanupSpan()
+        {
+            Span.OperationName = null;
+            Span.Annotations.Clear();
+        }
+
+        private Span Span => spanHandle;
     }
 }

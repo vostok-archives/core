@@ -4,7 +4,8 @@ namespace Vostok.Tracing
 {
     internal class FakeSpanBuilder : ISpanBuilder
     {
-        public bool IsCanceled => true;
+        public bool IsCanceled { get; set; } = true;
+        public bool IsEndless { get; set; } = false;
 
         public void SetAnnotation<TValue>(string key, TValue value)
         {
@@ -18,11 +19,7 @@ namespace Vostok.Tracing
         {
         }
 
-        public void MakeEndless()
-        {
-        }
-
-        public void Cancel()
+        public void Dispose()
         {
         }
     }
