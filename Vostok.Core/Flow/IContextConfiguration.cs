@@ -1,9 +1,9 @@
-﻿namespace Vostok.Flow
+﻿using System.Collections.Generic;
+
+namespace Vostok.Flow
 {
     public interface IContextConfiguration
     {
-        bool IsDistributedProperty(string key);
-
-        void AddDistributedProperty(string key);
+        ISet<string> DistributedProperties { get; }
     }
 }
