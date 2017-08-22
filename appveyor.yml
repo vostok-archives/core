@@ -23,5 +23,7 @@ test_script:
   - dotnet test --logger "trx;LogFileName=core-tests.trx"
 after_test:
   - ps: |
+      Write-Host "https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)"
+      Write-Host (Resolve-Path .\Vostok.Core.Tests\TestResults\core-tests.trx)
       $wc = New-Object 'System.Net.WebClient'
-      $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.Core.Tests\TestResults\core-tests.trx")
+      $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", (Resolve-Path .\Vostok.Core.Tests\TestResults\core-tests.trx))
