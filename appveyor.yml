@@ -20,10 +20,8 @@ before_build:
 after_build:
   - ps: Get-ChildItem $env:appveyor_build_folder\Vostok.Core\bin\Release\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 test_script:
-  - dotnet test --logger "trx;LogFileName=core-tests.trx"
+  - dotnet test $env:appveyor_build_folder\Vostok.Core.Tests\Vostok.Core.Tests.csproj --logger "trx;LogFileName=core-tests.trx"
 after_test:
   - ps: |
-      Write-Host "https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)"
-      Write-Host (Resolve-Path .\Vostok.Core.Tests\TestResults\core-tests.trx)
       $wc = New-Object 'System.Net.WebClient'
-      $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", (Resolve-Path .\Vostok.Core.Tests\TestResults\core-tests.trx))
+      $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.Core.Tests\TestResults\core-tests.trx")
