@@ -20,7 +20,7 @@ before_build:
 after_build:
   - ps: Get-ChildItem $env:appveyor_build_folder\Vostok.Core\bin\Release\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 test_script:
-  - dotnet test $env:appveyor_build_folder\Vostok.Core.Tests\Vostok.Core.Tests.csproj --logger "trx;LogFileName=core-tests.trx"
+  - ps: dotnet test "$env:appveyor_build_folder\Vostok.Core.Tests\Vostok.Core.Tests.csproj" --logger "trx;LogFileName=core-tests.trx"
 after_test:
   - ps: |
       $wc = New-Object 'System.Net.WebClient'
