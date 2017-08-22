@@ -9,6 +9,8 @@ namespace Vostok.Tracing
     {
         public ISet<string> ContextFieldsWhitelist { get; } = new ConcurrentSet<string>(StringComparer.Ordinal);
 
+        public Func<bool> IsEnabled { get; set; } = () => true;
+
         public IAirlock Airlock { get; set; }
     }
 }
