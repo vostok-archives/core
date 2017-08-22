@@ -49,6 +49,21 @@ namespace Vostok.Commons.Binary
             }
         }
 
+        public static void WriteDictionary<TKey, TValue>(
+            this IBinaryWriter writer,
+            IDictionary<TKey, TValue> values,
+            Action<IBinaryWriter, TKey> writeSingleKey,
+            Action<IBinaryWriter, TValue> writeSingleValue)
+        {
+            writer.Write(values.Count);
+
+            foreach (var pair in values)
+            {
+                writeSingleKey(writer, pair.Key);
+                writeSingleValue(writer, pair.Value);
+            }
+        }
+
         public static void WriteNullable<T>(this IBinaryWriter writer, T value, Action<IBinaryWriter, T> writeNonNullValue)
             where T : class
         {
