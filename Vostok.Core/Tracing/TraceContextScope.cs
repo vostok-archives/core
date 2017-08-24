@@ -23,7 +23,7 @@ namespace Vostok.Tracing
             return new TraceContextScope(newContext, oldContext);
         }
 
-        private TraceContextScope(TraceContext current, TraceContext parent)
+        internal TraceContextScope(TraceContext current, TraceContext parent)
         {
             Current = current;
             Parent = parent;
