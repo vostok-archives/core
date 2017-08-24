@@ -54,6 +54,8 @@ namespace Vostok.Tracing
             Span.EndTimestamp = timestamp;
         }
 
+        // TODO(iloktionov): Тут есть неявное предположение о том, что реализация эйрлока не использует спан после завершения Push().
+        // TODO(iloktionov): Его надо как-то получше обосновать, потому что иначе использовать пул просто небезопасно.
         public void Dispose()
         {
             try

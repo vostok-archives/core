@@ -12,6 +12,7 @@ namespace Vostok.Tracing
 
         Func<string> AirlockRoutingKey { get; set; }
 
+        // TODO(iloktionov): Invent a way to automatically fill this with an out-of-the-box implementation in apps.
         IAirlock Airlock { get; set; }
     }
 }
