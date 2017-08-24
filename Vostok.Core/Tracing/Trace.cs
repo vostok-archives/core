@@ -30,7 +30,10 @@ namespace Vostok.Tracing
             if (!isEnabled || airlock == null || airlockRoutingKey == null)
                 return new FakeSpanBuilder();
 
-            return new SpanBuilder(operationName, airlockRoutingKey, airlock, spanPool.AcquireHandle(), TraceContextScope.Begin());
+            var pooledSpan = spanPool.AcquireHandle();
+            var contextScope = TraceContextScope.Begin();
+
+            return new SpanBuilder(operationName, airlockRoutingKey, airlock, pooledSpan, contextScope, configuration);
         }
 
         public static ITraceConfiguration Configuration => configuration;
