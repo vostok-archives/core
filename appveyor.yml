@@ -1,0 +1,27 @@
+version: '1.0.0-pre{build}'
+branches:
+  only:
+    - master
+image: Visual Studio 2017
+install:
+  - dotnet restore
+configuration: Release
+before_build:
+  - ps: |
+      $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
+      Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber"
+      $xmlPath = "$env:appveyor_build_folder\Vostok.ClusterClient.Core\Vostok.ClusterClient.Core.csproj"
+      $xml = [xml](get-content $xmlPath)
+      $version = $xml.CreateElement("Version")
+      $versionText = $xml.CreateTextNode($env:appveyor_build_version)
+      $version.AppendChild($versionText)
+      $xml.Project.PropertyGroup.AppendChild($version)
+      $xml.Save($xmlPath)
+after_build:
+  - ps: Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient.Core\bin\Release\Vostok.ClusterClient.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+test_script:
+  - ps: dotnet test "$env:appveyor_build_folder\Vostok.ClusterClient.Tests\Vostok.ClusterClient.Tests.csproj" --logger "trx;LogFileName=clusterclient-tests.trx"
+after_test:
+  - ps: |
+      $wc = New-Object 'System.Net.WebClient'
+      $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.ClusterClient.Tests\TestResults\core-tests.trx")
