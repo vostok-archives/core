@@ -5,7 +5,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>Vostok.ClusterClient</RootNamespace>
+    <RootNamespace>Vostok.Clusterclient</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
