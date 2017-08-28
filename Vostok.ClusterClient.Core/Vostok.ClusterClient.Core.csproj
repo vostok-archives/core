@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Vostok.Clusterclient</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Vostok team</Authors>
+    <Company>SKB Kontur</Company>
+    <Product>Vostok</Product>
+    <Description>ClusterClient library enables developers to build resilient and efficient clients for HTTP microservices.</Description>
+    <PackageProjectUrl />
+    <RepositoryUrl>https://github.com/vostok-project/clusterclient</RepositoryUrl>
+    <PackageTags>vostok clusterclient</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000026" />
+  </ItemGroup>
+
+</Project>
