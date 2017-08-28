@@ -4,6 +4,7 @@ branches:
     - master
 image: Visual Studio 2017
 install:
+  - nuget sources add -name core -source https://ci.appveyor.com/nuget/vostok-htv1wakyrb25
   - dotnet restore
 configuration: Release
 before_build:
