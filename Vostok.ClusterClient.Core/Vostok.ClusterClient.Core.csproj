@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000026" />
+    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000027" />
   </ItemGroup>
 
 </Project>
