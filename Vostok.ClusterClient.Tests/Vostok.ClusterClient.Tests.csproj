@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vostok.ClusterClient.Core\Vostok.ClusterClient.Core.csproj" />
+    <ProjectReference Include="..\Vostok.ClusterClient\Vostok.ClusterClient.csproj" />
   </ItemGroup>
 
 </Project>

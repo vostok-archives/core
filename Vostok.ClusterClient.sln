@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.ClusterClient.Core", "Vostok.ClusterClient.Core\Vostok.ClusterClient.Core.csproj", "{5E0DBEF6-7CBC-458E-8044-E04ACDCD9C8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.ClusterClient", "Vostok.ClusterClient\Vostok.ClusterClient.csproj", "{5E0DBEF6-7CBC-458E-8044-E04ACDCD9C8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vostok.ClusterClient.Tests", "Vostok.ClusterClient.Tests\Vostok.ClusterClient.Tests.csproj", "{49CC8DA4-31DF-4EAE-8C8D-CFF7B18FF1C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.ClusterClient.Tests", "Vostok.ClusterClient.Tests\Vostok.ClusterClient.Tests.csproj", "{49CC8DA4-31DF-4EAE-8C8D-CFF7B18FF1C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
