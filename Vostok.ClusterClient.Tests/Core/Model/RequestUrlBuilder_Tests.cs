@@ -12,7 +12,9 @@ namespace Vostok.Clusterclient.Core.Model
         {
             var builder = new RequestUrlBuilder
             {
-                "foo/", "bar/", "baz"
+                "foo/",
+                "bar/",
+                "baz"
             };
 
             builder.Build().OriginalString.Should().Be("foo/bar/baz");
@@ -23,7 +25,9 @@ namespace Vostok.Clusterclient.Core.Model
         {
             var builder = new RequestUrlBuilder
             {
-                "foo/", "bar/", "baz",
+                "foo/",
+                "bar/",
+                "baz",
                 {"a", 1},
                 {"b", 2}
             };
@@ -36,7 +40,9 @@ namespace Vostok.Clusterclient.Core.Model
         {
             var builder = new RequestUrlBuilder("initial/segments/")
             {
-                "foo/", "bar/", "baz"
+                "foo/",
+                "bar/",
+                "baz"
             };
 
             builder.Build().OriginalString.Should().Be("initial/segments/foo/bar/baz");
@@ -59,7 +65,9 @@ namespace Vostok.Clusterclient.Core.Model
         {
             var builder = new RequestUrlBuilder
             {
-                "foo/", "bar/", "baz",
+                "foo/",
+                "bar/",
+                "baz",
                 {"a?a", "b?b"},
             };
 
@@ -71,7 +79,9 @@ namespace Vostok.Clusterclient.Core.Model
         {
             var builder = new RequestUrlBuilder
             {
-                "foo/", "bar/", "baz"
+                "foo/",
+                "bar/",
+                "baz"
             };
 
             builder.Build();
@@ -116,7 +126,10 @@ namespace Vostok.Clusterclient.Core.Model
         {
             var builder = new RequestUrlBuilder
             {
-                "1", "2", "3", "4"
+                "1",
+                "2",
+                "3",
+                "4"
             };
 
             builder.Build().OriginalString.Should().Be("1/2/3/4");
@@ -127,7 +140,10 @@ namespace Vostok.Clusterclient.Core.Model
         {
             var builder = new RequestUrlBuilder
             {
-                "11/", "/22/", "/33/", "/44"
+                "11/",
+                "/22/",
+                "/33/",
+                "/44"
             };
 
             builder.Build().OriginalString.Should().Be("11/22/33/44");
@@ -138,7 +154,9 @@ namespace Vostok.Clusterclient.Core.Model
         {
             var builder = new RequestUrlBuilder
             {
-                "foo", "bar", "baz"
+                "foo",
+                "bar",
+                "baz"
             };
 
             var url1 = builder.Build();
