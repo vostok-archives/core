@@ -13,10 +13,11 @@ namespace Vostok.Tracing
         {
             configuration = new TraceConfiguration();
 
-            spanPool = new UnlimitedLazyPool<Span>(() => new Span
-            {
-                Annotations = new Dictionary<string, string>()
-            });
+            spanPool = new UnlimitedLazyPool<Span>(
+                () => new Span
+                {
+                    Annotations = new Dictionary<string, string>()
+                });
 
             AirlockSerializerRegistry.Register(new SpanAirlockSerializer());
         }

@@ -14,6 +14,12 @@ namespace Vostok.Flow
 
         public IReadOnlyDictionary<string, object> Current => Properties;
 
+        private ContextPropertiesSnapshot Properties
+        {
+            get => container.Value ?? ContextPropertiesSnapshot.Empty;
+            set => container.Value = value;
+        }
+
         public void SetProperty(string key, object value)
         {
             Properties = Properties.Set(key, value);
@@ -22,12 +28,6 @@ namespace Vostok.Flow
         public void RemoveProperty(string key)
         {
             Properties = Properties.Remove(key);
-        }
-
-        private ContextPropertiesSnapshot Properties
-        {
-            get => container.Value ?? ContextPropertiesSnapshot.Empty;
-            set => container.Value = value;
         }
     }
 }

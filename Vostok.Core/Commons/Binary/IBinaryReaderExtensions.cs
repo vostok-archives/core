@@ -61,7 +61,7 @@ namespace Vostok.Commons.Binary
         }
 
         public static Dictionary<TKey, TValue> ReadDictionary<TKey, TValue>(
-            this IBinaryReader reader, 
+            this IBinaryReader reader,
             Func<IBinaryReader, TKey> readSingleKey,
             Func<IBinaryReader, TValue> readSingleValue)
         {
@@ -90,6 +90,5 @@ namespace Vostok.Commons.Binary
         {
             return reader.ReadBool() ? readNonNullValue(reader) : (T?) null;
         }
-
     }
 }

@@ -6,8 +6,7 @@ namespace Vostok.Flow
     {
         public static IDisposable Use<TValue>(this IContextProperties properties, string key, TValue value)
         {
-            object oldValue;
-            properties.Current.TryGetValue(key, out oldValue);
+            properties.Current.TryGetValue(key, out var oldValue);
             properties.SetProperty(key, value);
             return new ContextScope(key, oldValue, properties);
         }

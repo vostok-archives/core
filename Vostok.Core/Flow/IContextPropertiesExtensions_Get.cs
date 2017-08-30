@@ -4,8 +4,7 @@
     {
         public static TValue Get<TValue>(this IContextProperties properties, string key, TValue defaultValue = default(TValue))
         {
-            object value;
-            return properties.Current.TryGetValue(key, out value) ? (TValue) value : defaultValue;
+            return properties.Current.TryGetValue(key, out var value) ? (TValue) value : defaultValue;
         }
     }
 }

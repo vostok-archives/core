@@ -22,8 +22,8 @@ namespace Vostok.Commons.Binary
         }
 
         public static void WriteCollection<T>(
-            this IBinaryWriter writer, 
-            IReadOnlyCollection<T> values, 
+            this IBinaryWriter writer,
+            IReadOnlyCollection<T> values,
             Action<IBinaryWriter, T> writeSingleValue)
         {
             writer.Write(values.Count);

@@ -6,11 +6,12 @@ namespace Vostok.Logging
     {
         public static LogEvent AddProperties(this LogEvent logEvent, IReadOnlyDictionary<string, object> properties)
         {
-            return new LogEvent(logEvent.Level,
-                                logEvent.Exception,
-                                logEvent.MessageTemplate,
-                                logEvent.MessageParameters,
-                                logEvent.Properties.Union(properties));
+            return new LogEvent(
+                logEvent.Level,
+                logEvent.Exception,
+                logEvent.MessageTemplate,
+                logEvent.MessageParameters,
+                logEvent.Properties.Union(properties));
         }
 
         private static IReadOnlyDictionary<string, object> Union(this IReadOnlyDictionary<string, object> first, IReadOnlyDictionary<string, object> second)

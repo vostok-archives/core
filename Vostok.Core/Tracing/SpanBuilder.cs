@@ -16,9 +16,9 @@ namespace Vostok.Tracing
         private readonly Stopwatch stopwatch;
 
         public SpanBuilder(
-            string operationName, 
-            string airlockRoutingKey, 
-            IAirlock airlock, 
+            string operationName,
+            string airlockRoutingKey,
+            IAirlock airlock,
             PoolHandle<Span> spanHandle,
             TraceContextScope contextScope,
             TraceConfiguration configuration)
@@ -38,6 +38,8 @@ namespace Vostok.Tracing
         public bool IsCanceled { get; set; } = false;
 
         public bool IsEndless { get; set; } = false;
+
+        private Span Span => spanHandle;
 
         public void SetAnnotation<TValue>(string key, TValue value)
         {
@@ -102,7 +104,5 @@ namespace Vostok.Tracing
             Span.OperationName = null;
             Span.Annotations.Clear();
         }
-
-        private Span Span => spanHandle;
     }
 }
