@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
-using Vostok.Clusterclient;
 using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Ordering.Storage;
+using Vostok.Commons.Collections;
 
 namespace Vostok.Clusterclient.Ordering.Weighed
 {
@@ -24,7 +24,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed
     {
         private const int PooledArraySize = 50;
 
-        private static readonly Pool<TreeNode[]> TreeArrays = new Pool<TreeNode[]>(() => new TreeNode[PooledArraySize]);
+        private static readonly IPool<TreeNode[]> TreeArrays = new UnlimitedLazyPool<TreeNode[]>(() => new TreeNode[PooledArraySize]);
 
         private readonly IList<IReplicaWeightModifier> modifiers;
         private readonly IReplicaWeightCalculator weightCalculator;

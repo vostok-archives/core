@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
 using Vostok.Clusterclient.Helpers;
+using Vostok.Commons.Collections;
 
 namespace Vostok.Clusterclient.Model
 {
@@ -29,11 +30,11 @@ namespace Vostok.Clusterclient.Model
     /// </example>
     public class RequestUrlBuilder : IDisposable, IEnumerable
     {
-        private static readonly Pool<StringBuilder> builders;
+        private static readonly IPool<StringBuilder> builders;
 
         static RequestUrlBuilder()
         {
-            builders = new Pool<StringBuilder>(() => new StringBuilder(128));
+            builders = new UnlimitedLazyPool<StringBuilder>(() => new StringBuilder(128));
         }
 
         private StringBuilder builder;
