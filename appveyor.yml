@@ -25,4 +25,4 @@ test_script:
 after_test:
   - ps: |
       $wc = New-Object 'System.Net.WebClient'
-      $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.ClusterClient.Tests\TestResults\clusterclient-tests.trx")
+      $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.ClusterClient.Tests\TestResults\clusterclient-tests.trx")
