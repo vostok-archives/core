@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Core", "Vostok.Core\Vostok.Core.csproj", "{B4871488-BEAF-48BE-8399-B1521539CBA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vostok.Core.Tests", "Vostok.Core.Tests\Vostok.Core.Tests.csproj", "{946DB5C4-1E49-4D28-9545-8C9A94FB3C0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vostok.Core.Tests", "Vostok.Core.Tests\Vostok.Core.Tests.csproj", "{14367A5F-CB94-4188-9D82-BED970C51D2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{B4871488-BEAF-48BE-8399-B1521539CBA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4871488-BEAF-48BE-8399-B1521539CBA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4871488-BEAF-48BE-8399-B1521539CBA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{946DB5C4-1E49-4D28-9545-8C9A94FB3C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{946DB5C4-1E49-4D28-9545-8C9A94FB3C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{946DB5C4-1E49-4D28-9545-8C9A94FB3C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{946DB5C4-1E49-4D28-9545-8C9A94FB3C0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14367A5F-CB94-4188-9D82-BED970C51D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14367A5F-CB94-4188-9D82-BED970C51D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14367A5F-CB94-4188-9D82-BED970C51D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14367A5F-CB94-4188-9D82-BED970C51D2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
