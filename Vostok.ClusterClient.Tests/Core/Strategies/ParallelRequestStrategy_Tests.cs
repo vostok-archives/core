@@ -58,6 +58,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_immediately_fire_several_requests_to_reach_parallelism_level()
         {
+            DropSynchronizationContext();
+
             strategy.SendAsync(request, sender, Budget.Infinite, replicas, replicas.Length, token);
 
             sender.ReceivedCalls().Should().HaveCount(3);
@@ -66,6 +68,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_fire_initial_requests_with_whole_remaining_time_budget()
         {
+            DropSynchronizationContext();
+
             strategy.SendAsync(request, sender, Budget.WithRemaining(5.Seconds()), replicas, replicas.Length, token);
 
             sender.Received(1).SendToReplicaAsync(replicas[0], request, 5.Seconds(), Arg.Any<CancellationToken>());
@@ -76,6 +80,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_fail_with_bugcheck_exception_if_replicas_enumerable_is_insufficient()
         {
+            DropSynchronizationContext();
+
             var task = strategy.SendAsync(request, sender, Budget.WithRemaining(5.Seconds()), replicas.Take(2).ToArray(), replicas.Length, token);
 
             task.IsFaulted.Should().BeTrue();
@@ -88,21 +94,25 @@ namespace Vostok.Clusterclient.Core.Strategies
         [InlineData(2)]
         public void Should_stop_when_any_of_the_requests_ends_with_accepted_response(int replicaIndex)
         {
+            DropSynchronizationContext();
+
             var task = strategy.SendAsync(request, sender, Budget.Infinite, replicas, replicas.Length, token);
 
             CompleteRequest(replicas[replicaIndex], ResponseVerdict.Accept);
 
-            task.Wait(1.Seconds()).Should().BeTrue();
+            task.IsCompleted.Should().BeTrue();
         }
 
         [Fact]
         public void Should_issue_another_request_when_a_pending_one_ends_with_rejected_status()
         {
+            DropSynchronizationContext();
+
             var task = strategy.SendAsync(request, sender, Budget.Infinite, replicas, replicas.Length, token);
 
             CompleteRequest(replicas[1], ResponseVerdict.Reject);
 
-            task.Wait(15).Should().BeFalse();
+            task.IsCompleted.Should().BeFalse();
 
             sender.Received(1).SendToReplicaAsync(replicas[3], request, Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>());
         }
@@ -110,6 +120,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_stop_when_all_replicas_ended_up_returning_rejected_statuses()
         {
+            DropSynchronizationContext();
+
             var task = strategy.SendAsync(request, sender, Budget.Infinite, replicas, replicas.Length, token);
 
             foreach (var replica in replicas)
@@ -117,7 +129,7 @@ namespace Vostok.Clusterclient.Core.Strategies
                 CompleteRequest(replica, ResponseVerdict.Reject);
             }
 
-            task.Wait(1.Seconds()).Should().BeTrue();
+            task.IsCompleted.Should().BeTrue();
 
             sender.ReceivedCalls().Should().HaveCount(replicas.Length);
         }
@@ -125,6 +137,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_fire_initial_requests_to_all_replicas_if_parallelism_level_is_greater_than_replicas_count()
         {
+            DropSynchronizationContext();
+
             strategy = new ParallelRequestStrategy(int.MaxValue);
 
             strategy.SendAsync(request, sender, Budget.WithRemaining(5.Seconds()), replicas, replicas.Length, token);
@@ -140,6 +154,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_cancel_remaining_requests_when_receiving_accepted_result()
         {
+            DropSynchronizationContext();
+
             var tokens = new List<CancellationToken>();
 
             sender
@@ -165,6 +181,11 @@ namespace Vostok.Clusterclient.Core.Strategies
         private void CompleteRequest(Uri replica, ResponseVerdict verdict)
         {
             resultSources[replica].TrySetResult(new ReplicaResult(replica, new Response(ResponseCode.Ok), verdict, TimeSpan.Zero));
+        }
+
+        private static void DropSynchronizationContext()
+        {
+            SynchronizationContext.SetSynchronizationContext(null);
         }
     }
 }

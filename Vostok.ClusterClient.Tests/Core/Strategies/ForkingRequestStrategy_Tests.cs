@@ -168,6 +168,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_launch_parallel_requests_when_forking_delay_fires()
         {
+            DropSynchronizationContext();
+
             strategy.SendAsync(request, sender, Budget.Infinite, replicas, replicas.Length, token);
 
             CompleteForkingDelay();
@@ -182,6 +184,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_launch_parallel_requests_with_correct_parameters()
         {
+            DropSynchronizationContext();
+
             strategy.SendAsync(request, sender, Budget.WithRemaining(5.Seconds()), replicas, replicas.Length, token);
 
             sender.ClearReceivedCalls();
@@ -199,25 +203,29 @@ namespace Vostok.Clusterclient.Core.Strategies
         [InlineData(2)]
         public void Should_stop_when_any_of_requests_completes_with_accepted_result(int replicaIndex)
         {
+            DropSynchronizationContext();
+
             var task = strategy.SendAsync(request, sender, Budget.WithRemaining(5.Seconds()), replicas, replicas.Length, token);
 
             CompleteForkingDelay();
             CompleteForkingDelay();
             CompleteRequest(replicas[replicaIndex], ResponseVerdict.Accept);
 
-            task.Wait(1.Seconds()).Should().BeTrue();
+            task.IsCompleted.Should().BeTrue();
         }
 
         [Fact]
         public void Should_issue_another_request_when_a_pending_one_ends_with_rejected_status()
         {
+            DropSynchronizationContext();
+
             var task = strategy.SendAsync(request, sender, Budget.Infinite, replicas, replicas.Length, token);
 
             CompleteForkingDelay();
             CompleteForkingDelay();
             CompleteRequest(replicas[1], ResponseVerdict.Reject);
 
-            task.Wait(15).Should().BeFalse();
+            task.IsCompleted.Should().BeFalse();
 
             sender.Received(1).SendToReplicaAsync(replicas[3], request, Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>());
         }
@@ -225,6 +233,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_stop_when_all_replicas_ended_up_returning_rejected_statuses()
         {
+            DropSynchronizationContext();
+
             var task = strategy.SendAsync(request, sender, Budget.Infinite, replicas, replicas.Length, token);
 
             CompleteForkingDelay();
@@ -247,6 +257,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_forget_existing_forking_delays_upon_any_request_completion()
         {
+            DropSynchronizationContext();
+
             strategy.SendAsync(request, sender, Budget.Infinite, replicas, replicas.Length, token);
 
             CompleteForkingDelay();
@@ -263,6 +275,8 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Fact]
         public void Should_cancel_remaining_requests_and_delays_when_receiving_accepted_result()
         {
+            DropSynchronizationContext();
+
             var tokens = new List<CancellationToken>();
 
             sender
@@ -326,6 +340,11 @@ namespace Vostok.Clusterclient.Core.Strategies
         private void CompleteForkingDelay(int index)
         {
             delaySources[index].TrySetResult(true);
+        }
+
+        private static void DropSynchronizationContext()
+        {
+            SynchronizationContext.SetSynchronizationContext(null);
         }
     }
 }
