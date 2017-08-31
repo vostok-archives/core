@@ -3,11 +3,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using FluentAssertions;
 using NSubstitute;
+using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Ordering.Storage;
 using Vostok.Clusterclient.Ordering.Weighed.Leadership;
-using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Ordering.Weighed.Leadership
 {
@@ -26,7 +27,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Leadership
         private readonly ConcurrentDictionary<Uri, bool> storage;
         private readonly LeadershipWeightModifier modifier;
 
-        public LeadershipWeightModifier_Tests()
+        public LeadershipWeightModifier_Tests(ITestOutputHelper outputHelper)
         {
             replica = new Uri("http://replica");
             replicas = new List<Uri> {replica};
@@ -39,7 +40,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Leadership
             storageProvider = Substitute.For<IReplicaStorageProvider>();
             storageProvider.Obtain<bool>(Arg.Any<string>()).Returns(storage = new ConcurrentDictionary<Uri, bool>());
 
-            modifier = new LeadershipWeightModifier(resultDetector, new ConsoleLog());
+            modifier = new LeadershipWeightModifier(resultDetector, new TestOutputLog(outputHelper));
         }
 
         [Fact]

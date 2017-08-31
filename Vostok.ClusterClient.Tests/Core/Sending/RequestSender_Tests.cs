@@ -13,6 +13,7 @@ using Vostok.Clusterclient.Sending;
 using Vostok.Clusterclient.Transport;
 using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Sending
 {
@@ -33,7 +34,7 @@ namespace Vostok.Clusterclient.Core.Sending
         private readonly RequestSender sender;
         private Request absoluteRequest;
 
-        public RequestSender_Tests()
+        public RequestSender_Tests(ITestOutputHelper outputHelper)
         {
             replica = new Uri("http://replica/");
             relativeRequest = Request.Get("foo/bar");
@@ -44,7 +45,7 @@ namespace Vostok.Clusterclient.Core.Sending
             log = Substitute.For<ILog>();
             log
                 .When(l => l.Log(Arg.Any<LogEvent>()))
-                .Do(info => new ConsoleLog().Log(info.Arg<LogEvent>()));
+                .Do(info => new TestOutputLog(outputHelper).Log(info.Arg<LogEvent>()));
 
             configuration = Substitute.For<IClusterClientConfiguration>();
             configuration.ResponseCriteria.Returns(new List<IResponseCriterion> {Substitute.For<IResponseCriterion>()});

@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using Vostok.Clusterclient.Criteria;
+using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Modules;
 using Vostok.Clusterclient.Transforms;
-using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core
 {
@@ -12,9 +13,9 @@ namespace Vostok.Clusterclient.Core
     {
         private readonly ClusterClientConfiguration configuration;
 
-        public ClusterClientConfigurationExtensions_Tests()
+        public ClusterClientConfigurationExtensions_Tests(ITestOutputHelper outputHelper)
         {
-            configuration = new ClusterClientConfiguration(new ConsoleLog());
+            configuration = new ClusterClientConfiguration(new TestOutputLog(outputHelper));
         }
 
         [Fact]

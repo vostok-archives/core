@@ -15,6 +15,7 @@ using Vostok.Clusterclient.Strategies;
 using Vostok.Clusterclient.Topology;
 using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Modules
 {
@@ -37,7 +38,7 @@ namespace Vostok.Clusterclient.Core.Modules
         private RequestContext context;
         private readonly RequestExecutionModule module;
 
-        public RequestExecutionModule_Tests()
+        public RequestExecutionModule_Tests(ITestOutputHelper outputHelper)
         {
             replica1 = new Uri("http://replica1");
             replica2 = new Uri("http://replica2");
@@ -49,7 +50,9 @@ namespace Vostok.Clusterclient.Core.Modules
             result1 = new ReplicaResult(replica1, response1, ResponseVerdict.DontKnow, TimeSpan.Zero);
             result2 = new ReplicaResult(replica2, response2, ResponseVerdict.DontKnow, TimeSpan.Zero);
 
-            context = new RequestContext(Request.Get("foo/bar"), Substitute.For<IRequestStrategy>(), Budget.Infinite, new ConsoleLog(), CancellationToken.None, null, int.MaxValue);
+            var log = new TestOutputLog(outputHelper);
+
+            context = new RequestContext(Request.Get("foo/bar"), Substitute.For<IRequestStrategy>(), Budget.Infinite, log, CancellationToken.None, null, int.MaxValue);
             context.Strategy.SendAsync(null, null, null, null, 0, default(CancellationToken))
                 .ReturnsForAnyArgs(
                     async info =>

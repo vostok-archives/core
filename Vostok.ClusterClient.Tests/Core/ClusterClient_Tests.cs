@@ -7,6 +7,7 @@ using Vostok.Clusterclient.Transforms;
 using Vostok.Clusterclient.Transport;
 using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core
 {
@@ -14,9 +15,9 @@ namespace Vostok.Clusterclient.Core
     {
         private readonly ILog log;
 
-        public ClusterClient_Tests()
+        public ClusterClient_Tests(ITestOutputHelper outputHelper)
         {
-            log = new ConsoleLog();
+            log = new TestOutputLog(outputHelper);
         }
 
         [Fact]
@@ -28,7 +29,7 @@ namespace Vostok.Clusterclient.Core
         }
 
         [Fact]
-        public void Should_use_cluser_provider_as_is_when_there_is_no_replicas_transform()
+        public void Should_use_cluster_provider_as_is_when_there_is_no_replicas_transform()
         {
             var clusterProvider = Substitute.For<IClusterProvider>();
 

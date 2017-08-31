@@ -8,8 +8,8 @@ using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Modules;
 using Vostok.Clusterclient.Strategies;
 using Vostok.Clusterclient.Transforms;
-using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Modules
 {
@@ -26,13 +26,13 @@ namespace Vostok.Clusterclient.Core.Modules
 
         private readonly List<IRequestTransform> transforms;
 
-        public RequestTransformationModule_Tests()
+        public RequestTransformationModule_Tests(ITestOutputHelper outputHelper)
         {
             request1 = Request.Get("/1");
             request2 = Request.Get("/2");
             request3 = Request.Get("/3");
 
-            context = new RequestContext(request1, Strategy.SingleReplica, Budget.Infinite, new ConsoleLog(), CancellationToken.None, null, int.MaxValue);
+            context = new RequestContext(request1, Strategy.SingleReplica, Budget.Infinite, new TestOutputLog(outputHelper), CancellationToken.None, null, int.MaxValue);
 
             transform1 = Substitute.For<IRequestTransform>();
             transform1.Transform(Arg.Any<Request>()).Returns(request2);

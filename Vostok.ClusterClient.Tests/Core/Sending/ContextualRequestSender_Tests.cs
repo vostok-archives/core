@@ -8,8 +8,8 @@ using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Modules;
 using Vostok.Clusterclient.Sending;
 using Vostok.Clusterclient.Strategies;
-using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Sending
 {
@@ -25,7 +25,7 @@ namespace Vostok.Clusterclient.Core.Sending
         private readonly RequestContext context;
         private readonly ContextualRequestSender contextualSender;
 
-        public ContextualRequestSender_Tests()
+        public ContextualRequestSender_Tests(ITestOutputHelper outputHelper)
         {
             replica = new Uri("http://replica");
             request = Request.Get("foo/bar");
@@ -37,7 +37,9 @@ namespace Vostok.Clusterclient.Core.Sending
             baseSender = Substitute.For<IRequestSender>();
             baseSender.SendToReplicaAsync(null, null, TimeSpan.Zero, CancellationToken.None).ReturnsForAnyArgs(_ => resultSource.Task);
 
-            context = new RequestContext(request, Strategy.SingleReplica, Budget.WithRemaining(timeout), new ConsoleLog(), CancellationToken.None, null, int.MaxValue);
+            var log = new TestOutputLog(outputHelper);
+
+            context = new RequestContext(request, Strategy.SingleReplica, Budget.WithRemaining(timeout), log, CancellationToken.None, null, int.MaxValue);
             contextualSender = new ContextualRequestSender(baseSender, context);
         }
 

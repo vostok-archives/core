@@ -6,6 +6,7 @@ using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Modules;
 using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Modules
 {
@@ -15,12 +16,12 @@ namespace Vostok.Clusterclient.Core.Modules
         private readonly ILog log;
         private readonly TimeoutValidationModule module;
 
-        public TimeoutValidationModule_Tests()
+        public TimeoutValidationModule_Tests(ITestOutputHelper outputHelper)
         {
             log = Substitute.For<ILog>();
             log
                 .When(l => l.Log(Arg.Any<LogEvent>()))
-                .Do(info => new ConsoleLog().Log(info.Arg<LogEvent>()));
+                .Do(info => new TestOutputLog(outputHelper).Log(info.Arg<LogEvent>()));
 
             context = Substitute.For<IRequestContext>();
             context.Log.Returns(log);

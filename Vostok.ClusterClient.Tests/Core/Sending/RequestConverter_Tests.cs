@@ -1,9 +1,10 @@
 ﻿using System;
 using FluentAssertions;
+using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Sending;
-using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Sending
 {
@@ -11,9 +12,9 @@ namespace Vostok.Clusterclient.Core.Sending
     {
         private readonly RequestConverter converter;
 
-        public RequestConverter_Tests()
+        public RequestConverter_Tests(ITestOutputHelper outputHelper)
         {
-            converter = new RequestConverter(new ConsoleLog());
+            converter = new RequestConverter(new TestOutputLog(outputHelper));
         }
 
         [Theory]

@@ -8,8 +8,8 @@ using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Modules;
 using Vostok.Clusterclient.Retry;
-using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Modules
 {
@@ -25,15 +25,18 @@ namespace Vostok.Clusterclient.Core.Modules
         private readonly RequestRetryModule module;
         private readonly Request request;
 
-        public RequestRetryModule_Tests()
+        public RequestRetryModule_Tests(ITestOutputHelper outputHelper)
         {
             request = Request.Get("foo/bar");
             result = new ClusterResult(ClusterResultStatus.ReplicasExhausted, new List<ReplicaResult>(), null, request);
             nextModuleCalls = 0;
 
+            var log = new TestOutputLog(outputHelper);
+            var budget = Budget.Infinite;
+
             context = Substitute.For<IRequestContext>();
-            context.Budget.Returns(Budget.Infinite);
-            context.Log.Returns(new ConsoleLog());
+            context.Budget.Returns(budget);
+            context.Log.Returns(log);
             context.Request.Returns(request);
 
             retryPolicy = Substitute.For<IRetryPolicy>();
@@ -123,7 +126,7 @@ namespace Vostok.Clusterclient.Core.Modules
         [Fact]
         public void Should_reset_replica_results_in_native_context_implementation()
         {
-            var contextImpl = new RequestContext(context.Request, null, context.Budget, new ConsoleLog(), CancellationToken.None, null, int.MaxValue);
+            var contextImpl = new RequestContext(request, null, Budget.Infinite, context.Log, CancellationToken.None, null, int.MaxValue);
 
             contextImpl.SetReplicaResult(new ReplicaResult(new Uri("http://replica1"), Responses.Timeout, ResponseVerdict.Reject, TimeSpan.Zero));
             contextImpl.SetReplicaResult(new ReplicaResult(new Uri("http://replica2"), Responses.Timeout, ResponseVerdict.Reject, TimeSpan.Zero));

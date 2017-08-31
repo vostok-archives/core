@@ -5,8 +5,8 @@ using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Modules;
 using Vostok.Clusterclient.Strategies;
-using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Sending
 {
@@ -14,9 +14,11 @@ namespace Vostok.Clusterclient.Core.Sending
     {
         private readonly RequestContext context;
 
-        public RequestContext_Tests()
+        public RequestContext_Tests(ITestOutputHelper outputHelper)
         {
-            context = new RequestContext(Request.Get("foo/bar"), Strategy.Sequential2, Budget.Infinite, new ConsoleLog(), CancellationToken.None, null, int.MaxValue);
+            var log = new TestOutputLog(outputHelper);
+
+            context = new RequestContext(Request.Get("foo/bar"), Strategy.Sequential2, Budget.Infinite, log, CancellationToken.None, null, int.MaxValue);
         }
 
         [Fact]

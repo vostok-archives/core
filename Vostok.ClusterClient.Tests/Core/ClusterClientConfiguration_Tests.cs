@@ -12,6 +12,7 @@ using Vostok.Clusterclient.Transforms;
 using Vostok.Clusterclient.Transport;
 using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core
 {
@@ -20,9 +21,9 @@ namespace Vostok.Clusterclient.Core
         private readonly ILog log;
         private ClusterClientConfiguration configuration;
 
-        public ClusterClientConfiguration_Tests()
+        public ClusterClientConfiguration_Tests(ITestOutputHelper outputHelper)
         {
-            log = new ConsoleLog();
+            log = new TestOutputLog(outputHelper);
 
             configuration = new ClusterClientConfiguration(log)
             {

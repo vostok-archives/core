@@ -3,11 +3,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using FluentAssertions;
 using NSubstitute;
+using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Ordering.Storage;
 using Vostok.Clusterclient.Ordering.Weighed.Adaptive;
 using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Ordering.Weighed.Adaptive
 {
@@ -25,7 +27,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Adaptive
         private readonly AdaptiveHealthModifier<int> modifier;
         private readonly ILog log;
 
-        public AdaptiveHealthModifier_Tests()
+        public AdaptiveHealthModifier_Tests(ITestOutputHelper outputHelper)
         {
             replica1 = new Uri("http://replica1");
             replica2 = new Uri("http://replica2");
@@ -37,7 +39,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Adaptive
 
             implementation = Substitute.For<IAdaptiveHealthImplementation<int>>();
             tuningPolicy = Substitute.For<IAdaptiveHealthTuningPolicy>();
-            modifier = new AdaptiveHealthModifier<int>(implementation, tuningPolicy, log = new ConsoleLog());
+            modifier = new AdaptiveHealthModifier<int>(implementation, tuningPolicy, log = new TestOutputLog(outputHelper));
         }
 
         [Fact]

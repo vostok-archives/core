@@ -7,8 +7,8 @@ using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Ordering.Storage;
 using Vostok.Clusterclient.Ordering.Weighed.Gray;
-using Vostok.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Vostok.Clusterclient.Core.Ordering.Weighed.Gray
 {
@@ -28,7 +28,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Gray
 
         private readonly GrayListModifier modifier;
 
-        public GrayListModifier_Tests()
+        public GrayListModifier_Tests(ITestOutputHelper outputHelper)
         {
             weight = 1.0;
             request = Request.Get("foo/bar");
@@ -46,7 +46,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Gray
             timeProvider = Substitute.For<ITimeProvider>();
             timeProvider.GetCurrentTime().Returns(currentTime = DateTime.UtcNow);
 
-            modifier = new GrayListModifier(periodProvider, timeProvider, new ConsoleLog());
+            modifier = new GrayListModifier(periodProvider, timeProvider, new TestOutputLog(outputHelper));
         }
 
         [Fact]
