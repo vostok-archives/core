@@ -13,7 +13,6 @@ using Vostok.Clusterclient.Ordering.Storage;
 using Vostok.Clusterclient.Sending;
 using Vostok.Clusterclient.Strategies;
 using Vostok.Clusterclient.Topology;
-using Vostok.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
