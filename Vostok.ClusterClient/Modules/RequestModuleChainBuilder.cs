@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Vostok.Clusterclient;
 using Vostok.Clusterclient.Criteria;
 using Vostok.Clusterclient.Misc;
 using Vostok.Clusterclient.Model;

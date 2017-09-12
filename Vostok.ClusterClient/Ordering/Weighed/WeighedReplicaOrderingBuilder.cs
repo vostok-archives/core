@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vostok.Clusterclient;
 using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Ordering.Weighed

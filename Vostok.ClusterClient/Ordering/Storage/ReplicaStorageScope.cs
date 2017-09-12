@@ -1,5 +1,3 @@
-using Vostok.Clusterclient;
-
 namespace Vostok.Clusterclient.Ordering.Storage
 {
     /// <summary>

@@ -1,5 +1,4 @@
 using System;
-using Vostok.Clusterclient;
 
 namespace Vostok.Clusterclient.Modules
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using JetBrains.Annotations;
-using Vostok.Clusterclient.Helpers;
 
 namespace Vostok.Clusterclient.Model
 {
