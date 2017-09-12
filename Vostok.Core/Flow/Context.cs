@@ -5,11 +5,11 @@
         static Context()
         {
             Properties = new ContextProperties();
-            Configuration = new ContextConfiguration();
+            Configuration = new DistributedContextConfiguration();
         }
 
         public static IContextProperties Properties { get; }
 
-        public static IContextConfiguration Configuration { get; }
+        public static IDistributedContextConfiguration Configuration { get; }
     }
 }
