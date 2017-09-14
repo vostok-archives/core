@@ -58,6 +58,14 @@ namespace Vostok.Flow.DistributedContextSerializer
         public static Serializer Create()
         {
             return new Serializer(
+                new StringSerializer(),
+                new ByteArraySerializer(),
+                new ByteSerializer(),
+                new CharSerializer(),
+                new DoubleSerializer(),
+                new FloatSerializer(),
+                new IntSerializer(),
+                new LongSerializer()
                 );
         }
     }
