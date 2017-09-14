@@ -6,7 +6,5 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.ToCore.Synchronization
     public interface IAsyncLock
     {
         Awaitable<IDisposable> LockAsync();
-
-        bool TryLockImmediately(out IDisposable releaser);
     }
 }

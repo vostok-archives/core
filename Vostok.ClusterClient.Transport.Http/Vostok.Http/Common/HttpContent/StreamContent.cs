@@ -38,7 +38,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent
                 {
                     if (totalBytesWritten >= length)
                         return;
-                    int bytesRead = sourceStream.Read(buffer, 0, (int)Math.Min(buffer.Length, length - totalBytesWritten));
+                    var bytesRead = sourceStream.Read(buffer, 0, (int)Math.Min(buffer.Length, length - totalBytesWritten));
                     if (bytesRead <= 0)
                         return;
                     outputStream.Write(buffer, 0, bytesRead);
@@ -68,20 +68,14 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent
 
 		public override string ToString()
 		{
-			return String.Format("StreamContent: Length = {0}.", length);
+			return string.Format("StreamContent: Length = {0}.", length);
 		}
 
-		public Stream SourceStream
-		{
-			get { return sourceStream; }
-		}
+		public Stream SourceStream => sourceStream;
 
-		public override long Length
-		{
-			get { return length; }
-		}
+	    public override long Length => length;
 
-		private void SeekToStart()
+	    private void SeekToStart()
 		{
 			sourceStream.Seek(startPosition, SeekOrigin.Begin);
 		}
@@ -90,7 +84,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent
 		private readonly long startPosition;
 		private readonly long length;
 		private readonly byte[] buffer;
-	    private readonly AsyncLock locker;
+	    private readonly IAsyncLock locker;
 	    private const int DefaultBufferSize = 16 * 1024;
 	}
 }

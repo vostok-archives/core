@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -17,12 +16,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
             return UrlEncode(str, EncodingFactory.GetDefault());
 		}
 
-		public static string UrlPathEncode(string str)
-		{
-			return HttpEncoderClone.Default.UrlPathEncode(str);
-		}
-
-		public static string UrlEncode(string str, Encoding e)
+	    public static string UrlEncode(string str, Encoding e)
 		{
             if (str == null || HttpEncoderUtility.IsUrlSafeString(str))
                 return str;
@@ -30,72 +24,25 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
             return Encoding.ASCII.GetString(UrlEncodeToBytes(str, e));
 		}
 
-		public static string UrlEncode(byte[] bytes)
-		{
-			return bytes == null ? null : Encoding.ASCII.GetString(UrlEncodeToBytes(bytes));
-		}
-
-		public static string UrlEncode(byte[] bytes, int offset, int count)
-		{
-			return bytes == null ? null : Encoding.ASCII.GetString(UrlEncodeToBytes(bytes, offset, count));
-		}
-
-		public static byte[] UrlEncodeToBytes(string str)
-		{
-			return str == null ? null : UrlEncodeToBytes(str, EncodingFactory.GetDefault());
-		}
-
-		public static byte[] UrlEncodeToBytes(string str, Encoding e)
+	    public static byte[] UrlEncodeToBytes(string str, Encoding e)
 		{
 			if (str == null)
 				return null;
-			byte[] bytes = e.GetBytes(str);
+			var bytes = e.GetBytes(str);
 			return HttpEncoderClone.Default.UrlEncode(bytes, 0, bytes.Length, false);
 		}
 
-		public static byte[] UrlEncodeToBytes(byte[] bytes)
-		{
-			return bytes == null ? null : UrlEncodeToBytes(bytes, 0, bytes.Length);
-		}
-
-		public static byte[] UrlEncodeToBytes(byte[] bytes, int offset, int count)
-		{
-			return HttpEncoderClone.Default.UrlEncode(bytes, offset, count, true);
-		}
-
-		public static string UrlEncodeUnicode(string str)
-		{
-			return HttpEncoderClone.Default.UrlEncodeUnicode(str, false);
-		}
-
-		public static byte[] UrlEncodeUnicodeToBytes(string str)
-		{
-			return str == null ? null : Encoding.ASCII.GetBytes(UrlEncodeUnicode(str));
-		}
-		#endregion
+	    #endregion
 
 		#region HttpEncoderClone (partially stripped from .NET 4.0)
 		// ReSharper disable MemberHidesStaticFromOuterClass
 		private sealed class HttpEncoderClone
 		{
-			private static readonly HttpEncoderClone _defaultEncoder = new HttpEncoderClone();
+		    public static HttpEncoderClone Default { get; } = new HttpEncoderClone();
 
-			public static HttpEncoderClone Default
+		    internal byte[] UrlEncode(byte[] bytes, int offset, int count, bool alwaysCreateNewReturnValue)
 			{
-				get
-				{
-					return _defaultEncoder;
-				}
-			}
-
-			private static bool IsNonAsciiByte(byte b)
-			{
-				return (b >= 0x7F || b < 0x20);
-			}
-
-			internal byte[] UrlEncode(byte[] bytes, int offset, int count, bool alwaysCreateNewReturnValue)
-			{
-				byte[] encoded = UrlEncode(bytes, offset, count);
+				var encoded = UrlEncode(bytes, offset, count);
 
 				return (alwaysCreateNewReturnValue && (encoded != null) && (encoded == bytes))
 					? (byte[])encoded.Clone()
@@ -109,11 +56,11 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
 					return null;
 				}
 
-				int cSpaces = 0;
-				int cUnsafe = 0;
+				var cSpaces = 0;
+				var cUnsafe = 0;
 
 				// count them first 
-				for (int i = 0; i < count; i++)
+				for (var i = 0; i < count; i++)
 				{
 					var ch = (char)bytes[offset + i];
 
@@ -129,11 +76,11 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
 
 				// expand not 'safe' characters into %XX, spaces to +s
 				var expandedBytes = new byte[count + cUnsafe * 2];
-				int pos = 0;
+				var pos = 0;
 
-				for (int i = 0; i < count; i++)
+				for (var i = 0; i < count; i++)
 				{
-					byte b = bytes[offset + i];
+					var b = bytes[offset + i];
 					var ch = (char)b;
 
 					if (HttpEncoderUtility.IsUrlSafeChar(ch))
@@ -156,123 +103,8 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
 			}
 
 			//  Helper to encode the non-ASCII url characters only
-			private String UrlEncodeNonAscii(string str, Encoding e)
-			{
-				if (String.IsNullOrEmpty(str))
-					return str;
-				if (e == null)
-					e = EncodingFactory.GetDefault();
-				byte[] bytes = e.GetBytes(str);
-				byte[] encodedBytes = UrlEncodeNonAscii(bytes, 0, bytes.Length, false /* alwaysCreateNewReturnValue */);
-				return Encoding.ASCII.GetString(encodedBytes);
-			}
 
-			private byte[] UrlEncodeNonAscii(byte[] bytes, int offset, int count, bool alwaysCreateNewReturnValue)
-			{
-				if (!ValidateUrlEncodingParameters(bytes, offset, count))
-				{
-					return null;
-				}
-
-				int cNonAscii = 0;
-
-				// count them first
-				for (int i = 0; i < count; i++)
-				{
-					if (IsNonAsciiByte(bytes[offset + i]))
-						cNonAscii++;
-				}
-
-				// nothing to expand?
-				if (!alwaysCreateNewReturnValue && cNonAscii == 0)
-					return bytes;
-
-				// expand not 'safe' characters into %XX, spaces to +s 
-				var expandedBytes = new byte[count + cNonAscii * 2];
-				int pos = 0;
-
-				for (int i = 0; i < count; i++)
-				{
-					byte b = bytes[offset + i];
-
-					if (IsNonAsciiByte(b))
-					{
-						expandedBytes[pos++] = (byte)'%';
-						expandedBytes[pos++] = (byte)HttpEncoderUtility.IntToHex((b >> 4) & 0xf);
-						expandedBytes[pos++] = (byte)HttpEncoderUtility.IntToHex(b & 0x0f);
-					}
-					else
-					{
-						expandedBytes[pos++] = b;
-					}
-				}
-
-				return expandedBytes;
-			}
-
-			internal string UrlEncodeUnicode(string value, bool ignoreAscii)
-			{
-				if (value == null)
-				{
-					return null;
-				}
-
-				int l = value.Length;
-				var sb = new StringBuilder(l);
-
-				for (int i = 0; i < l; i++)
-				{
-					char ch = value[i];
-
-					if ((ch & 0xff80) == 0)
-					{  // 7 bit? 
-						if (ignoreAscii || HttpEncoderUtility.IsUrlSafeChar(ch))
-						{
-							sb.Append(ch);
-						}
-						else if (ch == ' ')
-						{
-							sb.Append('+');
-						}
-						else
-						{
-							sb.Append('%');
-							sb.Append(HttpEncoderUtility.IntToHex((ch >> 4) & 0xf));
-							sb.Append(HttpEncoderUtility.IntToHex((ch) & 0xf));
-						}
-					}
-					else
-					{ // arbitrary Unicode?
-						sb.Append("%u");
-						sb.Append(HttpEncoderUtility.IntToHex((ch >> 12) & 0xf));
-						sb.Append(HttpEncoderUtility.IntToHex((ch >> 8) & 0xf));
-						sb.Append(HttpEncoderUtility.IntToHex((ch >> 4) & 0xf));
-						sb.Append(HttpEncoderUtility.IntToHex((ch) & 0xf));
-					}
-				}
-
-				return sb.ToString();
-			}
-
-			[SuppressMessage("Microsoft.Design", "CA1055:UriReturnValuesShouldNotBeStrings",
-				Justification = "Does not represent an entire URL, just a portion.")]
-			internal string UrlPathEncode(string value)
-			{
-				if (String.IsNullOrEmpty(value))
-				{
-					return value;
-				}
-
-				// recurse in case there is a query string 
-				int i = value.IndexOf('?');
-				if (i >= 0)
-					return UrlPathEncode(value.Substring(0, i)) + value.Substring(i);
-
-				// encode DBCS characters and spaces only
-				return HttpEncoderUtility.UrlEncodeSpaces(UrlEncodeNonAscii(value, EncodingFactory.GetDefault()));
-			}
-
-			private static bool ValidateUrlEncodingParameters(byte[] bytes, int offset, int count)
+		    private static bool ValidateUrlEncodingParameters(byte[] bytes, int offset, int count)
 			{
 				if (bytes == null && count == 0)
 					return false;
@@ -338,15 +170,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
 				}
 
 				return false;
-			}
-
-            //  Helper to encode spaces only
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal static String UrlEncodeSpaces(string str)
-			{
-				if (str != null && str.IndexOf(' ') >= 0)
-					str = str.Replace(" ", "%20");
-				return str;
 			}
 		}
 		#endregion

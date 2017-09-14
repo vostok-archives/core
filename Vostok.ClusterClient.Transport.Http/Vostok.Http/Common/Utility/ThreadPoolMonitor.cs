@@ -17,20 +17,14 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
 
         public void ReportAndFixIfNeeded(ILog log)
         {
-            int minWorkerThreads;
-            int minIocpThreads;
-            ThreadPool.GetMinThreads(out minWorkerThreads, out minIocpThreads);
+            ThreadPool.GetMinThreads(out var minWorkerThreads, out var minIocpThreads);
 
-            int maxWorkerThreads;
-            int maxIocpThreads;
-            ThreadPool.GetMaxThreads(out maxWorkerThreads, out maxIocpThreads);
+            ThreadPool.GetMaxThreads(out var maxWorkerThreads, out var maxIocpThreads);
 
-            int availableWorkerThreads;
-            int availableIocpThreads;
-            ThreadPool.GetAvailableThreads(out availableWorkerThreads, out availableIocpThreads);
+            ThreadPool.GetAvailableThreads(out var availableWorkerThreads, out var availableIocpThreads);
 
-            int busyWorkerThreads = maxWorkerThreads - availableWorkerThreads;
-            int busyIocpThreads = maxIocpThreads - availableIocpThreads;
+            var busyWorkerThreads = maxWorkerThreads - availableWorkerThreads;
+            var busyIocpThreads = maxIocpThreads - availableIocpThreads;
 
             if (busyWorkerThreads < minWorkerThreads && busyIocpThreads < minIocpThreads)
                 return;

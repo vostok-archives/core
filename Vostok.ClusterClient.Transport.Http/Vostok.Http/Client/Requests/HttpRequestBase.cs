@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Headers;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent;
@@ -21,29 +20,20 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Requests
 			this.body = body;
 		}
 
-		public HttpMethod Method
-		{
-			get { return method; }
-		}
+		public HttpMethod Method => method;
 
-		public HttpRequestHeaders Headers
-		{
-			get { return headers ?? (headers = new HttpRequestHeaders()); }
-		}
+	    public HttpRequestHeaders Headers => headers ?? (headers = new HttpRequestHeaders());
 
-		public IHttpContent Body
-		{
-			get { return body; }
-		}
+	    public IHttpContent Body => body;
 
-		internal bool HasHeaders()
+	    internal bool HasHeaders()
 		{
 			return headers != null;
 		}
 
 		protected string ToStringInternal(string uri)
 		{
-			return String.Format("{0} {1} HTTP/{2}", method, uri, HttpVersion.Version11);
+			return string.Format("{0} {1} HTTP/{2}", method, uri, HttpVersion.Version11);
 		}
 
 		protected readonly HttpMethod method;

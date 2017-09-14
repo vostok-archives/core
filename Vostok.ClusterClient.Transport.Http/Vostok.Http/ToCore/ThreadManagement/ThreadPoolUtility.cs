@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using Vostok.Logging;
 
@@ -21,68 +20,11 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.ToCore.ThreadManagemen
 
             ThreadPool.SetMinThreads(minimumThreads, minimumThreads);
 
-            int minimumWorkers;
-            int minimumIocp;
-            int maximumWorkers;
-            int maximumIocp;
-
-            ThreadPool.GetMinThreads(out minimumWorkers, out minimumIocp);
-            ThreadPool.GetMaxThreads(out maximumWorkers, out maximumIocp);
+            ThreadPool.GetMinThreads(out var minimumWorkers, out var minimumIocp);
+            ThreadPool.GetMaxThreads(out var maximumWorkers, out var maximumIocp);
 
             log.Info("Configured ThreadPool: {0}/{1} workers, {2}/{3} IOCP (min/max).",
                 minimumWorkers, maximumWorkers, minimumIocp, maximumIocp);
-        }
-
-        public static void LogPoolState(ILog log, bool logOnlyWhenExhausted = false)
-        {
-            int minWorkerThreads;
-            int minIocpThreads;
-            ThreadPool.GetMinThreads(out minWorkerThreads, out minIocpThreads);
-
-            int maxWorkerThreads;
-            int maxIocpThreads;
-            ThreadPool.GetMaxThreads(out maxWorkerThreads, out maxIocpThreads);
-
-            int availableWorkerThreads;
-            int availableIocpThread;
-            ThreadPool.GetAvailableThreads(out availableWorkerThreads, out availableIocpThread);
-
-            var usedThreads = maxWorkerThreads - availableWorkerThreads;
-            var usedIocpThreads = maxIocpThreads - availableIocpThread;
-
-            var message = string.Format("[ThreadPoolStat] min: {0}, used: {1}, minIocp: {2}, usedIocp: {3}, process: {4}",
-                minWorkerThreads,
-                usedThreads,
-                minIocpThreads,
-                usedIocpThreads,
-                Process.GetCurrentProcess().Threads.Count);
-
-            if (usedThreads > minWorkerThreads)
-            {
-                log.Warn(message);
-            }
-            else if (!logOnlyWhenExhausted)
-            {
-                log.Info(message);
-            }
-        }
-
-        public static ThreadPoolState GetPoolState()
-        {
-            int minWorkerThreads;
-            int minIocpThreads;
-            ThreadPool.GetMinThreads(out minWorkerThreads, out minIocpThreads);
-
-            int maxWorkerThreads;
-            int maxIocpThreads;
-            ThreadPool.GetMaxThreads(out maxWorkerThreads, out maxIocpThreads);
-
-            int availableWorkerThreads;
-            int availableIocpThread;
-            ThreadPool.GetAvailableThreads(out availableWorkerThreads, out availableIocpThread);
-
-            return new ThreadPoolState(minWorkerThreads, maxWorkerThreads - availableWorkerThreads, minIocpThreads,
-                maxIocpThreads - availableIocpThread);
         }
 
         public const int MaximumThreads = 32767;

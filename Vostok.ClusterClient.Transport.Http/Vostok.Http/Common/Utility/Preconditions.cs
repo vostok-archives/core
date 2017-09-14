@@ -9,21 +9,14 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
         public static void EnsureCondition(bool argumentCondition, string argumentName, string errorMessageFormat, params object[] errorMessageArgs)
         {
             if (!argumentCondition)
-                throw new ArgumentException(String.Format(errorMessageFormat, errorMessageArgs), argumentName);
+                throw new ArgumentException(string.Format(errorMessageFormat, errorMessageArgs), argumentName);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void EnsureArgumentRange(bool argumentRangeCondition, string argumentName, string errorMessageFormat, params object[] errorMessageArgs)
         {
             if (!argumentRangeCondition)
-                throw new ArgumentOutOfRangeException(argumentName, String.Format(errorMessageFormat, errorMessageArgs));
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void EnsureNotNull<T>(T argument, string argumentName, string errorMessageFormat, params object[] errorMessageArgs) where T : class
-        {
-            if (argument == null)
-                throw new ArgumentNullException(argumentName, String.Format(errorMessageFormat, errorMessageArgs));
+                throw new ArgumentOutOfRangeException(argumentName, string.Format(errorMessageFormat, errorMessageArgs));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -21,37 +21,13 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Requests
 			this.absoluteUri = absoluteUri;
 		}
 
-		public HttpRequest(HttpMethod method, string absoluteUri, HttpRequestHeaders headers, IHttpContent body)
-			: this (method, new Uri(absoluteUri, UriKind.Absolute), headers, body) { }
-
-		public HttpRequest(HttpMethod method, Uri absoluteUri, HttpRequestHeaders headers)
-			: this (method, absoluteUri, headers, null) { }
-
-		public HttpRequest(HttpMethod method, string absoluteUri, HttpRequestHeaders headers)
-			: this(method, new Uri(absoluteUri, UriKind.Absolute), headers) { }
-
-		public HttpRequest(HttpMethod method, Uri absoluteUri, IHttpContent body)
-			: this(method, absoluteUri, null, body) { }
-
-		public HttpRequest(HttpMethod method, string absoluteUri, IHttpContent body)
-			: this(method, new Uri(absoluteUri, UriKind.Absolute), body) { }
-
-		public HttpRequest(HttpMethod method, Uri absoluteUri)
-			: this(method, absoluteUri, null, null) { }
-
-		public HttpRequest(HttpMethod method, string absoluteUri)
-			: this(method, new Uri(absoluteUri, UriKind.Absolute)) { }
-
 		public override string ToString()
 		{
 			return ToStringInternal(absoluteUri.GetLeftPart(UriPartial.Path));
 		}
 
-		public Uri AbsoluteUri
-		{
-			get { return absoluteUri; }
-		}
+		public Uri AbsoluteUri => absoluteUri;
 
-		private readonly Uri absoluteUri;
+	    private readonly Uri absoluteUri;
 	}
 }

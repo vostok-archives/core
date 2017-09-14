@@ -16,23 +16,6 @@
 			}
 		}
 	
-		public static HttpMethod ParseMethod(string input)
-		{
-			switch (input)
-			{
-				case "HEAD": return HttpMethod.HEAD;
-				case "GET": return HttpMethod.GET;
-				case "POST": return HttpMethod.POST;
-				case "PUT": return HttpMethod.PUT;
-				case "PATCH": return HttpMethod.PATCH;
-				case "DELETE": return HttpMethod.DELETE;
-				case "TRACE": return HttpMethod.TRACE;
-				case "OPTIONS": return HttpMethod.OPTIONS;
-				case "STOP": return HttpMethod.STOP;
-				default: return HttpMethod.Unknown;
-			}
-		}
-
 	    public static string GetString(HttpMethod method)
 	    {
 	        switch (method)

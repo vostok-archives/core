@@ -34,25 +34,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Headers
             return !RestrictedHeaderNames.Contains(headerName);
         }
 
-        public bool IsEmpty
-	    {
-	        get
-	        {
-	            if (CustomHeaders != null && CustomHeaders.Count > 0)
-	                return false;
-
-	            return string.IsNullOrEmpty(Accept) &&
-                       string.IsNullOrEmpty(Host) &&
-                       AcceptCharset == null &&
-	                   Authorization == null &&
-	                   IfMatch == null &&
-	                   IfModifiedSince == null &&
-	                   Range == null && 
-                       string.IsNullOrEmpty(Referer) &&
-	                   string.IsNullOrEmpty(UserAgent);
-	        }
-	    }
-
 	    public string Accept { get; set; }
 
 		public Encoding AcceptCharset { get; set; }
@@ -69,69 +50,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Headers
 
 		public string Referer { get; set; }
 
-		public string UserAgent { get; set; }
-
-        public new string this[string headerName]
-        {
-            get
-            {
-                if (headerName.IgnoreCaseEquals(HttpHeaderNames.Accept))
-                {
-                    if (!string.IsNullOrWhiteSpace(Accept))
-                        return Accept;
-                }
-                else if (headerName.IgnoreCaseEquals(HttpHeaderNames.AcceptCharset))
-                {
-                    if (AcceptCharset != null)
-                        return AcceptCharset.WebName;
-                }
-                else if (headerName.IgnoreCaseEquals(HttpHeaderNames.Authorization))
-                {
-                    if (Authorization != null)
-                        return Authorization.ToString();
-                }
-                else if (headerName.IgnoreCaseEquals(HttpHeaderNames.Host))
-                {
-                    if (!string.IsNullOrWhiteSpace(Host))
-                        return Host;
-                }
-                else if (headerName.IgnoreCaseEquals(HttpHeaderNames.IfMatch))
-                {
-                    if (IfMatch != null)
-                        return IfMatch.ToString();
-                }
-                else if (headerName.IgnoreCaseEquals(HttpHeaderNames.IfModifiedSince))
-                {
-                    if (IfModifiedSince.HasValue)
-                        return IfModifiedSince.Value.ToHeaderStringValue();
-                }
-                else if (headerName.IgnoreCaseEquals(HttpHeaderNames.Range))
-                {
-                    if (Range != null)
-                        return Range.ToHeaderStringValue();
-                }
-                else if (headerName.IgnoreCaseEquals(HttpHeaderNames.Referer))
-                {
-                    if (!string.IsNullOrWhiteSpace(Referer))
-                        return Referer;
-                }
-                else if (headerName.IgnoreCaseEquals(HttpHeaderNames.UserAgent))
-                {
-                    if (!string.IsNullOrWhiteSpace(UserAgent))
-                        return UserAgent;
-                }
-                else
-                {
-                    return GetCustomHeader(headerName);
-                }
-                return null;
-            }
-        }
-
-        public string GetCustomHeader(string headerName)
-        {
-            return base[headerName];
-        }
+		public string UserAgent { get; set; }       
 
         protected override HashSet<string> GetRestrictedHeaderNames()
 		{
@@ -221,32 +140,5 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Headers
 	    {
 	        return !Equals(left, right);
 	    }
-
-        public HttpRequestHeaders Clone()
-        {
-            var clone = new HttpRequestHeaders
-            {
-                Accept          = Accept,
-                AcceptCharset   = AcceptCharset,
-                Authorization   = Authorization,
-                Host            = Host,
-                UserAgent       = UserAgent,
-                IfMatch         = IfMatch,
-                IfModifiedSince = IfModifiedSince,
-                Range           = Range,
-                Referer         = Referer
-            };
-
-            if (CustomHeaders != null)
-            {
-                foreach (var pair in CustomHeaders)
-                {
-                    clone.ObtainCustomHeaders();
-                    clone.CustomHeaders.Add(pair);
-                }
-            }
-
-            return clone;
-        }
     }
 }

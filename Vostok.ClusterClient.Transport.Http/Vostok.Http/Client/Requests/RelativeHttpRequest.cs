@@ -24,50 +24,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Requests
 			this.relativeUri = relativeUri;
 		}
 
-		public RelativeHttpRequest(HttpMethod method, string relativeUri, HttpRequestHeaders headers, IHttpContent body)
-			: this (method, new Uri(relativeUri, UriKind.Relative), headers, body) { }
-
-		public RelativeHttpRequest(HttpMethod method, Uri relativeUri, HttpRequestHeaders headers)
-			: this (method, relativeUri, headers, null) { }
-
-		public RelativeHttpRequest(HttpMethod method, string relativeUri, HttpRequestHeaders headers)
-			: this(method, new Uri(relativeUri, UriKind.Relative), headers) { }
-
-		public RelativeHttpRequest(HttpMethod method, Uri relativeUri, IHttpContent body)
-			: this(method, relativeUri, null, body) { }
-
-		public RelativeHttpRequest(HttpMethod method, string relativeUri, IHttpContent body)
-			: this (method, new Uri(relativeUri, UriKind.Relative), body) { }
-
-		public RelativeHttpRequest(HttpMethod method, Uri relativeUri)
-			: this (method, relativeUri, null, null) { }
-
-		public RelativeHttpRequest(HttpMethod method, string relativeUri)
-			: this (method, new Uri(relativeUri, UriKind.Relative)) { }
-
-		/// <summary>
-		/// Дополняет запрос, добавляя authority и, возможно, абсолютную часть пути.
-		/// </summary>
-		/// <param name="baseAbsoluteUri">
-		/// <para>Абсолютный URI, с которым нужно 'склеить' запрос.</para>
-		/// <para>Обязан содержать authority.</para>
-		/// <para>Может содержать path.</para>
-		/// <para>Не может содержать query.</para>
-		/// </param>
-		/// <returns></returns>
-		public HttpRequest ToHttpRequest(Uri baseAbsoluteUri)
-		{
-			Preconditions.EnsureCondition(baseAbsoluteUri.IsAbsoluteUri, "baseAbsoluteUri", "Base URI '{0}' is not absolute.", baseAbsoluteUri);
-			Preconditions.EnsureCondition(String.IsNullOrEmpty(baseAbsoluteUri.Query), "baseAbsoluteUri", "Base URI '{0}' has query.", baseAbsoluteUri);
-			if (!baseAbsoluteUri.AbsolutePath.EndsWith("/"))
-			{
-				var builder = new UriBuilder(baseAbsoluteUri);
-				builder.Path += '/';
-				baseAbsoluteUri = builder.Uri;
-			}
-			return new HttpRequest(method, new Uri(baseAbsoluteUri, relativeUri), headers, body);
-		}
-
 		public HttpRequest ToHttpRequest(HttpScheme scheme, string host, int port)
 		{
 			var baseAbsoluteUri = new Uri(String.Format("{0}://{1}:{2}", SchemeUtilities.ToLowercaseString(scheme), host, port));
@@ -88,11 +44,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Requests
 			return ToStringInternal(queryBeginning < 0 ? uriString : uriString.Substring(0, queryBeginning));
 		}
 
-		public Uri RelativeUri
-		{
-			get { return relativeUri; }
-		}
-
-		private readonly Uri relativeUri;
+	    private readonly Uri relativeUri;
 	}
 }

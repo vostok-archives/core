@@ -17,24 +17,12 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Headers
 			return headers.ToString();
 		}
 
-		public int Count
-		{
-			get { return headers.Count; }
-		}
+		public int Count => headers.Count;
 
-		public string[] Keys
-		{
-			get { return headers.AllKeys; }
-		}
+	    public string[] Keys => headers.AllKeys;
 
-		public string this[string headerName]
-		{
-			get
-			{
-				return headers[headerName];
-			}
-		}
+	    public string this[string headerName] => headers[headerName];
 
-		protected readonly NameValueCollection headers;
+	    protected readonly NameValueCollection headers;
 	}
 }

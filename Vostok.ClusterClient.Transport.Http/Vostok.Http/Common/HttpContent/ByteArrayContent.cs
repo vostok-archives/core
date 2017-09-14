@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility;
 
@@ -25,11 +24,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent
 			length = buffer.Length;
 		}
 
-	    public ByteArrayContent(ArraySegment<byte> segment)
-            : this (segment.Array, segment.Offset, segment.Count)
-	    {
-	    }
-
 		public override void CopyTo(Stream outputStream)
 		{
 			outputStream.Write(buffer, offset, length);
@@ -40,46 +34,18 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent
 			return outputStream.WriteAsync(buffer, offset, length);
 		}
 
-		public byte[] ToArray()
-		{
-			if (offset == 0 && length == buffer.Length)
-				return buffer;
-			var array = new byte[length];
-			System.Buffer.BlockCopy(buffer, offset, array, 0, length);
-			return array;
-		}
-
-	    public ArraySegment<byte> ToArraySegment()
-	    {
-	        return new ArraySegment<byte>(buffer, offset, length);
-	    }
-
-	    public MemoryStream ToMemoryStream()
-		{
-			return new MemoryStream(buffer, offset, length, false, true);
-		}
-
 	    public override string ToString()
 		{
 			return (Charset ?? EncodingFactory.GetDefault()).GetString(buffer, offset, length);
 		}
 
-		public byte[] Buffer
-		{
-			get { return buffer; }
-		}
+		public byte[] Buffer => buffer;
 
-		public int Offset
-		{
-			get { return offset; }
-		}
+	    public int Offset => offset;
 
-		public override long Length
-		{
-			get { return length; }
-		}
+	    public override long Length => length;
 
-		public static readonly ByteArrayContent Empty = new ByteArrayContent(new byte[0]);
+	    public static readonly ByteArrayContent Empty = new ByteArrayContent(new byte[0]);
 
 		protected readonly byte[] buffer;
 		protected readonly int offset;

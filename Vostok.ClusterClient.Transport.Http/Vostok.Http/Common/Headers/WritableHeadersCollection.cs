@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility;
 
 namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Headers
 {
-	/// <summary>
-	/// Коллекция заголовков, которую заполняет пользователь и использует библиотека.
-	/// </summary>
-	public abstract class WritableHeadersCollection
+    /// <summary>
+    /// Коллекция заголовков, которую заполняет пользователь и использует библиотека.
+    /// </summary>
+    public abstract class WritableHeadersCollection
 	{
         /// <summary>
         /// <para>Устанавливает значение заголовка, перезаписывая текущее в случае его наличия.</para>
@@ -39,21 +38,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Headers
 	    {
 	        if (CustomHeaders == null)
 	            CustomHeaders = new List<KeyValuePair<string, string>>(2);
-	    }
-
-	    public string this[string key]
-	    {
-	        get
-	        {
-	            if (CustomHeaders == null)
-	                return null;
-
-	            var index = FindCustomHeaderIndex(key);
-	            if (index < 0)
-	                return null;
-
-	            return CustomHeaders[index].Value;
-	        }
 	    }
 
 	    protected abstract HashSet<string> GetRestrictedHeaderNames(); 

@@ -24,8 +24,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 		    ConnectTimeout = 1.Seconds();
 		}
 
-		public static readonly HttpClientSettings Defaults = new HttpClientSettings();
-
 		/// <summary>
 		/// Количество попыток соединения с сервером, которые предпримет клиент в случае неудачи.
 		/// </summary>

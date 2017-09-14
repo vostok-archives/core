@@ -18,11 +18,11 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 
 	    static HttpWebRequestFactory()
 	    {
-			if (!isMono)
-			{
-				HttpWebRequest.DefaultMaximumErrorResponseLength = -1;
-				HttpWebRequest.DefaultMaximumResponseHeadersLength = -1;
-			}
+	        if (isMono)
+	            return;
+
+            HttpWebRequest.DefaultMaximumErrorResponseLength = -1;
+	        HttpWebRequest.DefaultMaximumResponseHeadersLength = -1;
 	    }
 
 		public static HttpWebRequest Create(HttpRequest request, HttpClientSettings settings, TimeSpan timeout)
@@ -54,9 +54,9 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 			if (!isMono)
 				webRequest.ServicePoint.ReceiveBufferSize = 16 * 1024;
 			if (settings.ClientCertificates != null)
-				foreach (X509Certificate2 certificate in settings.ClientCertificates)
+				foreach (var certificate in settings.ClientCertificates)
 					webRequest.ClientCertificates.Add(certificate);
-			int timeoutInMilliseconds = Math.Max(1, (int) timeout.TotalMilliseconds);
+			var timeoutInMilliseconds = Math.Max(1, (int) timeout.TotalMilliseconds);
 			webRequest.Timeout = timeoutInMilliseconds;
 			webRequest.ReadWriteTimeout = timeoutInMilliseconds;
 		}
@@ -89,7 +89,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 
 			if (!request.HasHeaders())
 				return;
-			HttpRequestHeaders headers = request.Headers;
+			var headers = request.Headers;
 
 			// (iloktionov): Проставляем особые заголовки (часть из них ставятся через свойства HttpWebRequest).
 			if (headers.Accept != null)
@@ -105,7 +105,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 			if (headers.IfModifiedSince.HasValue)
 				webRequest.IfModifiedSince = headers.IfModifiedSince.Value;
 			if (headers.Range != null)
-				foreach (RangeItemHeaderValue rangeValue in headers.Range.Ranges)
+				foreach (var rangeValue in headers.Range.Ranges)
 				{
 					if (rangeValue.From.HasValue && rangeValue.To.HasValue)
 						webRequest.AddRange(rangeValue.From.Value, rangeValue.To.Value);
@@ -131,9 +131,9 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 				webRequest.ContentLength = 0;
 			else
 			{
-				IHttpContent body = request.Body;
+				var body = request.Body;
 				webRequest.ContentLength = body.Length;
-				string contentType = (body.ContentType ?? ContentType.OctetStream).ToString();
+				var contentType = (body.ContentType ?? ContentType.OctetStream).ToString();
 				if (body.Charset != null)
 					contentType += "; charset=" + body.Charset.WebName;
 				webRequest.ContentType = contentType;

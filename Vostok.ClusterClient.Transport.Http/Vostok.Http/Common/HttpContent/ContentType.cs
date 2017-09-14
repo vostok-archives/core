@@ -20,7 +20,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent
 
 		public static ContentType Parse(string contentTypeHeader)
 		{
-			int separatorIndex = contentTypeHeader.IndexOf(';');
+			var separatorIndex = contentTypeHeader.IndexOf(';');
 			if (separatorIndex < 0)
 				return new ContentType(contentTypeHeader);
 			return new ContentType(contentTypeHeader.Substring(0, separatorIndex));
@@ -28,7 +28,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent
 
 		public static ContentType Parse(string contentTypeHeader, out Encoding charset)
 		{
-			string charsetName = HeadersParseUtility.GetAttributeFromHeader(contentTypeHeader, "charset");
+			var charsetName = HeadersParseUtility.GetAttributeFromHeader(contentTypeHeader, "charset");
 			if (charsetName == null)
 				charset = EncodingFactory.GetDefault();
 			else
@@ -43,7 +43,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent
 			return Parse(contentTypeHeader);
 		}
 
-		public string Type { get; private set; }
+		public string Type { get; }
 
 		#region Equality members
 		protected bool Equals(ContentType other)
@@ -68,21 +68,5 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent
 		public static readonly ContentType OctetStream = new ContentType("application/octet-stream");
 
 		public static readonly ContentType PlainText = new ContentType("text/plain");
-
-		public static readonly ContentType Xml = new ContentType("text/xml");
-
-        public static readonly ContentType ApplicationXml = new ContentType("application/xml");
-		
-		public static readonly ContentType Html = new ContentType("text/html");
-
-		public static readonly ContentType Json = new ContentType("application/json");
-
-		public static readonly ContentType Csv = new ContentType("text/csv");
-
-		public static readonly ContentType Pdf = new ContentType("application/pdf");
-
-		public static readonly ContentType Zip = new ContentType("application/zip");
-
-		public static readonly ContentType Gzip = new ContentType("application/gzip");
 	}
 }
