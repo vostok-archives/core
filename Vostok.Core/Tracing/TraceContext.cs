@@ -10,8 +10,8 @@ namespace Vostok.Tracing
 
         static TraceContext()
         {
-            Context.Configuration.Properties.Add(TraceIdContextName, typeof(Guid));
-            Context.Configuration.Properties.Add(SpanIdContextName, typeof(Guid));
+            Context.Configuration.DistributedProperties.Add(TraceIdContextName);
+            Context.Configuration.DistributedProperties.Add(SpanIdContextName);
         }
 
         public static IDisposable Use(TraceContext context)
