@@ -4,7 +4,7 @@ using Vostok.Clusterclient.Helpers;
 
 namespace Vostok.Clusterclient.Model
 {
-    internal class RequestTimeBudget : IRequestTimeBudget
+    public class RequestTimeBudget : IRequestTimeBudget
     {
         private readonly Stopwatch watch;
 
