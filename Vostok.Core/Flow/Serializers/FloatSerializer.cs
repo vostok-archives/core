@@ -1,5 +1,6 @@
-﻿namespace Vostok.Flow.DistributedContextSerializer
+﻿namespace Vostok.Flow.Serializers
 {
+    // CR(iloktionov): Сериализаторам не надо быть публичными.
     public class FloatSerializer : BaseTypedSerializer<float>
     {
         public override string Id => "float";

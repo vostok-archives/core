@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vostok.Flow.DistributedContextSerializer
+namespace Vostok.Flow.Serializers
 {
     public abstract class BaseTypedSerializer<T> : ITypedSerializer
     {
