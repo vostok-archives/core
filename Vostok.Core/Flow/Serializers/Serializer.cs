@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
-namespace Vostok.Flow.DistributedContextSerializer
+namespace Vostok.Flow.Serializers
 {
     internal class Serializer
     {
-        private readonly Dictionary<Type, ITypedSerializer> typedSerializeInfosByType;
-        private readonly Dictionary<string, ITypedSerializer> typedSerializeInfosById;
-        private static ITypedSerializer[] typedSerializers;
+        // CR(iloktionov): Почему часть static, а часть - нет?
+        private readonly Dictionary<Type, ITypedSerializer> serializersByType;
+        // CR(iloktionov): case-insensitive?
+        private readonly Dictionary<string, ITypedSerializer> serializersById;
+        private static readonly ITypedSerializer[] serializers;
 
         private Serializer(ITypedSerializer[] typedSerializers)
         {
-            typedSerializeInfosByType = typedSerializers.ToDictionary(x => x.Type);
-            typedSerializeInfosById = typedSerializers.ToDictionary(x => x.Id);
+            serializersByType = typedSerializers.ToDictionary(x => x.Type);
+            serializersById = typedSerializers.ToDictionary(x => x.Id);
         }
 
         static Serializer()
         {
-            typedSerializers = Assembly.GetExecutingAssembly()
+            serializers = typeof(ITypedSerializer).Assembly
                 .GetTypes()
                 .Where(type => !type.IsAbstract && type.IsClass)
                 .Where(type => typeof(ITypedSerializer).IsAssignableFrom(type))
@@ -30,7 +31,8 @@ namespace Vostok.Flow.DistributedContextSerializer
 
         public bool TrySerialize(object value, out string stringValue)
         {
-            if (!typedSerializeInfosByType.TryGetValue(value.GetType(), out var typedSerializer))
+            // CR(iloktionov): А что, если value == null?
+            if (!serializersByType.TryGetValue(value.GetType(), out var typedSerializer))
             {
                 stringValue = null;
                 return false;
@@ -42,7 +44,7 @@ namespace Vostok.Flow.DistributedContextSerializer
                 return false;
             }
 
-            stringValue = $"{typedSerializer.Id}|{serializedValue}";
+            stringValue = typedSerializer.Id + "|" + serializedValue;
             return true;
         }
 
@@ -54,6 +56,8 @@ namespace Vostok.Flow.DistributedContextSerializer
                 return false;
             }
 
+            // CR(iloktionov): 1. Не обязательно каждый раз создавать массив разделителей.
+            // CR(iloktionov): 2. Давай протестим случай с пустой value для строк.
             var split = stringValue.Split(new []{'|'}, 2, StringSplitOptions.None);
             if (split.Length < 2)
             {
@@ -62,7 +66,7 @@ namespace Vostok.Flow.DistributedContextSerializer
             }
 
             var typeId = split[0];
-            if (!typedSerializeInfosById.TryGetValue(typeId, out var typedSerializer))
+            if (!serializersById.TryGetValue(typeId, out var typedSerializer))
             {
                 value = null;
                 return false;
@@ -73,7 +77,7 @@ namespace Vostok.Flow.DistributedContextSerializer
 
         public static Serializer Create()
         {
-            return new Serializer(typedSerializers);
+            return new Serializer(serializers);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Vostok.Flow.DistributedContextSerializer
+﻿namespace Vostok.Flow.Serializers
 {
     public class StringSerializer : BaseTypedSerializer<string>
     {

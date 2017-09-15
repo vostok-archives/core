@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
-using Vostok.Flow.DistributedContextSerializer;
+using Vostok.Flow.Serializers;
 using Xunit;
 
 namespace Vostok.Flow
 {
+    // CR(iloktionov): ?? именование тестов
     public class DistributedContext_Test
     {
         public static IEnumerable<object[]> GenerateData()
@@ -31,7 +32,7 @@ namespace Vostok.Flow
             Context.Properties.SetProperty(key, obj);
             Context.Configuration.DistributedProperties.Add(key);
 
-            var distributedContext = Context.BuildDistributedContext().ToArray();
+            var distributedContext = Context.SerializeDistributedProperties().ToArray();
 
             distributedContext.Length.Should().Be(1);
             distributedContext[0].Key.Should().Be(key);
@@ -49,7 +50,7 @@ namespace Vostok.Flow
             };
             Context.Configuration.DistributedProperties.Add(key);
 
-            Context.SetDistributedContext(distributedContext);
+            Context.PopulateDistributedProperties(distributedContext);
 
             var actual = Context.Properties.Current[key];
             actual.ShouldBeEquivalentTo(obj);
@@ -58,7 +59,7 @@ namespace Vostok.Flow
         [Fact]
         public void CheckCompletenessTestingTypes()
         {
-            var defaultTypeвSerializers = GetAllDefaultTypedSerializers()
+            var defaultTypedSerializers = GetAllDefaultTypedSerializers()
                 .Select(x => x.Type)
                 .ToArray();
 
@@ -68,7 +69,7 @@ namespace Vostok.Flow
                 .Distinct()
                 .ToArray();
 
-            testingTypes.Should().Contain(defaultTypeвSerializers);
+            testingTypes.Should().Contain(defaultTypedSerializers);
         }
 
         [Fact]

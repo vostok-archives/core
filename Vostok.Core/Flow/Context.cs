@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Vostok.Flow.DistributedContextSerializer;
+using Vostok.Flow.Serializers;
 
 namespace Vostok.Flow
 {
@@ -18,7 +18,8 @@ namespace Vostok.Flow
 
         public static IContextConfiguration Configuration { get; }
 
-        public static IEnumerable<KeyValuePair<string, string>> BuildDistributedContext()
+        // CR(iloktionov): Можно перебрать лениво и не создавать Dictionary.
+        public static IEnumerable<KeyValuePair<string, string>> SerializeDistributedProperties()
         {
             var result = new Dictionary<string, string>();
             foreach (var distributedProperty in Configuration.DistributedProperties)
@@ -39,7 +40,7 @@ namespace Vostok.Flow
             return result;
         }
 
-        public static void SetDistributedContext(IEnumerable<KeyValuePair<string, string>> candidates)
+        public static void PopulateDistributedProperties(IEnumerable<KeyValuePair<string, string>> candidates)
         {
             foreach (var candidate in candidates)
             {
