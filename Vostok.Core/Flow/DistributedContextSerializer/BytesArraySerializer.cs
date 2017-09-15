@@ -2,8 +2,10 @@
 
 namespace Vostok.Flow.DistributedContextSerializer
 {
-    public class ByteArraySerializer : BaseTypedSerializer<byte[]>
+    public class BytesArraySerializer : BaseTypedSerializer<byte[]>
     {
+        public override string Id => "BytesArray";
+
         protected override bool TrySerialize(byte[] value, out string serializedValue)
         {
             serializedValue = Convert.ToBase64String(value);

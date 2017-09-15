@@ -1,20 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Vostok.Flow.DistributedContextSerializer
 {
     internal class Serializer
     {
-        private readonly Dictionary<string, ITypedSerializer> typedSerializeInfosByTypeName;
+        private readonly Dictionary<Type, ITypedSerializer> typedSerializeInfosByType;
+        private readonly Dictionary<string, ITypedSerializer> typedSerializeInfosById;
+        private static ITypedSerializer[] typedSerializers;
 
-        private Serializer(params ITypedSerializer[] typedSerializers)
+        private Serializer(ITypedSerializer[] typedSerializers)
         {
-            typedSerializeInfosByTypeName = typedSerializers.ToDictionary(x => x.Type.Name);
+            typedSerializeInfosByType = typedSerializers.ToDictionary(x => x.Type);
+            typedSerializeInfosById = typedSerializers.ToDictionary(x => x.Id);
+        }
+
+        static Serializer()
+        {
+            typedSerializers = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(type => !type.IsAbstract && type.IsClass)
+                .Where(type => typeof(ITypedSerializer).IsAssignableFrom(type))
+                .Select(Activator.CreateInstance)
+                .OfType<ITypedSerializer>()
+                .ToArray();
         }
 
         public bool TrySerialize(object value, out string stringValue)
         {
-            if (!typedSerializeInfosByTypeName.TryGetValue(value.GetType().Name, out var typedSerializer))
+            if (!typedSerializeInfosByType.TryGetValue(value.GetType(), out var typedSerializer))
             {
                 stringValue = null;
                 return false;
@@ -26,7 +42,7 @@ namespace Vostok.Flow.DistributedContextSerializer
                 return false;
             }
 
-            stringValue = $"{typedSerializer.Type.Name}|{serializedValue}";
+            stringValue = $"{typedSerializer.Id}|{serializedValue}";
             return true;
         }
 
@@ -38,35 +54,26 @@ namespace Vostok.Flow.DistributedContextSerializer
                 return false;
             }
 
-            var split = stringValue.Split(new []{'|'}, 2);
+            var split = stringValue.Split(new []{'|'}, 2, StringSplitOptions.None);
             if (split.Length < 2)
             {
                 value = null;
                 return false;
             }
 
-            var typeName = split[0];
-            if (!typedSerializeInfosByTypeName.TryGetValue(typeName, out var typedSerializer))
+            var typeId = split[0];
+            if (!typedSerializeInfosById.TryGetValue(typeId, out var typedSerializer))
             {
                 value = null;
                 return false;
             }
 
-            return typedSerializer.TryDeserialize(stringValue.Substring(2), out value);
+            return typedSerializer.TryDeserialize(split[1], out value);
         }
 
         public static Serializer Create()
         {
-            return new Serializer(
-                new StringSerializer(),
-                new ByteArraySerializer(),
-                new ByteSerializer(),
-                new CharSerializer(),
-                new DoubleSerializer(),
-                new FloatSerializer(),
-                new IntSerializer(),
-                new LongSerializer()
-                );
+            return new Serializer(typedSerializers);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Vostok.Flow.DistributedContextSerializer
 {
     public abstract class BaseTypedSerializer<T> : ITypedSerializer
     {
+        public abstract string Id { get; }
         public Type Type => typeof(T);
 
         public bool TrySerialize(object value, out string serializedValue)
