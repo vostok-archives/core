@@ -11,17 +11,15 @@ namespace Vostok.Flow
         {
             Properties = new ContextProperties();
             Configuration = new ContextConfiguration();
-            serializer = Serializer.Create();
+            serializer = new Serializer();
         }
 
         public static IContextProperties Properties { get; }
 
         public static IContextConfiguration Configuration { get; }
 
-        // CR(iloktionov): Можно перебрать лениво и не создавать Dictionary.
         public static IEnumerable<KeyValuePair<string, string>> SerializeDistributedProperties()
         {
-            var result = new Dictionary<string, string>();
             foreach (var distributedProperty in Configuration.DistributedProperties)
             {
                 if (!Properties.Current.TryGetValue(distributedProperty, out var value))
@@ -34,10 +32,8 @@ namespace Vostok.Flow
                     continue;
                 }
 
-                result[distributedProperty] = stringValue;
+                yield return new KeyValuePair<string, string>(distributedProperty, stringValue);
             }
-
-            return result;
         }
 
         public static void PopulateDistributedProperties(IEnumerable<KeyValuePair<string, string>> candidates)

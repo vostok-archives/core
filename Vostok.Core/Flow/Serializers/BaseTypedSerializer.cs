@@ -2,7 +2,7 @@
 
 namespace Vostok.Flow.Serializers
 {
-    public abstract class BaseTypedSerializer<T> : ITypedSerializer
+    internal abstract class BaseTypedSerializer<T> : ITypedSerializer
     {
         public abstract string Id { get; }
         public Type Type => typeof(T);
@@ -17,11 +17,7 @@ namespace Vostok.Flow.Serializers
             return result;
         }
 
-        protected virtual bool TrySerialize(T value, out string serializedValue)
-        {
-            serializedValue = value.ToString();
-            return true;
-        }
+        protected abstract bool TrySerialize(T value, out string serializedValue);
 
         protected abstract bool TryDeserialize(string serializedValue, out T value);
     }

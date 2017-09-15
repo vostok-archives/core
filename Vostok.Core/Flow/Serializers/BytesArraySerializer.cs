@@ -2,7 +2,7 @@
 
 namespace Vostok.Flow.Serializers
 {
-    public class BytesArraySerializer : BaseTypedSerializer<byte[]>
+    internal class BytesArraySerializer : BaseTypedSerializer<byte[]>
     {
         public override string Id => "BytesArray";
 
