@@ -1,12 +1,22 @@
-﻿namespace Vostok.Flow.Serializers
+﻿using System.Globalization;
+
+namespace Vostok.Flow.Serializers
 {
-    // CR(iloktionov): 1. Идентификаторы типов надо бы сделать такими, чтобы не пострадал interop с джавой (например, там byte - число со знаком, то есть вот это - "ubyte").
-    // CR(iloktionov): 2. Забыли bool.
-    public class ByteSerializer : BaseTypedSerializer<byte>
+    internal class ByteSerializer : BaseTypedSerializer<byte>
     {
-        public override string Id => "byte";
+        public override string Id => "ubyte";
+        protected override bool TrySerialize(byte value, out string serializedValue)
+        {
+            serializedValue = value.ToString(CultureInfoExtensions.EnUs);
+            return true;
+        }
 
         protected override bool TryDeserialize(string serializedValue, out byte value)
-            => byte.TryParse(serializedValue, out value);
+            => byte.TryParse(serializedValue, NumberStyles.Any, CultureInfoExtensions.EnUs, out value);
+    }
+
+    internal static class CultureInfoExtensions
+    {
+        public static CultureInfo EnUs = CultureInfo.GetCultureInfo("en-US");
     }
 }
