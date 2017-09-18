@@ -5,6 +5,7 @@ namespace Vostok.Flow.Serializers
     internal class IntSerializer : BaseTypedSerializer<int>
     {
         public override string Id => "int32";
+
         protected override bool TrySerialize(int value, out string serializedValue)
         {
             serializedValue = value.ToString(CultureInfoExtensions.EnUs);

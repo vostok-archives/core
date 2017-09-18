@@ -21,8 +21,8 @@ namespace Vostok.Flow
             yield return new object[] {'a', "char|a"};
             yield return new object[] {1.1, "double|1.1"};
             yield return new object[] {1.2f, "float|1.2"};
-            yield return new object[] {new byte[]{ 13, 15, 17, 44, 35}, "BytesArray|DQ8RLCM=" };
-            yield return new object[] {true, "bool|true" };
+            yield return new object[] {new byte[]{ 13, 15, 17, 44, 35}, "byteArray|DQ8RLCM=" };
+            yield return new object[] {true, "bool|True" };
         }
 
         [Theory]
@@ -86,6 +86,8 @@ namespace Vostok.Flow
             testingTypes.Should().Contain(serializedTypes);
         }
 
+        // CR(iloktionov): Что вообще проверяют этот и следующий тесты? Что метод, написанный в тестах же, возвращает что-то корректное?
+        // CR(iloktionov): Почему от такого теста у нас должно прибавиться уверенности в рабочем коде?
         [Fact]
         public void AllTypedSerializers_should_not_contain_duplicates_by_Type()
         {

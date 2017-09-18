@@ -6,8 +6,8 @@ namespace Vostok.Flow.Serializers
 {
     internal class Serializer
     {
-        private const char separtor = '|';
-        private static readonly char[] separators = new []{separtor};
+        private const char separator = '|';
+        private static readonly char[] separators = {separator};
         private static readonly Dictionary<string, ITypedSerializer> serializersById;
         private static readonly Dictionary<Type, ITypedSerializer> serializersByType;
 
@@ -45,7 +45,7 @@ namespace Vostok.Flow.Serializers
                 return false;
             }
 
-            stringValue = typedSerializer.Id + separtor + serializedValue;
+            stringValue = typedSerializer.Id + separator + serializedValue;
             return true;
         }
 
@@ -57,21 +57,22 @@ namespace Vostok.Flow.Serializers
                 return false;
             }
 
-            var split = stringValue.Split(separators, 2, StringSplitOptions.None);
-            if (split.Length < 2)
+            var parts = stringValue.Split(separators, 2, StringSplitOptions.None);
+            if (parts.Length < 2)
             {
                 value = null;
                 return false;
             }
 
-            var typeId = split[0].ToLower();
+            // CR(iloktionov): Не надо мусорить зря. Передай лучше в Dictionary StringComparer.OrdinalIgnoreCase в конструкторе.
+            var typeId = parts[0].ToLower();
             if (!serializersById.TryGetValue(typeId, out var typedSerializer))
             {
                 value = null;
                 return false;
             }
 
-            return typedSerializer.TryDeserialize(split[1], out value);
+            return typedSerializer.TryDeserialize(parts[1], out value);
         }
     }
 }
