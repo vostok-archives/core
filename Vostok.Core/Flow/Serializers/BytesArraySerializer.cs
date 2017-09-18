@@ -4,7 +4,7 @@ namespace Vostok.Flow.Serializers
 {
     internal class BytesArraySerializer : BaseTypedSerializer<byte[]>
     {
-        public override string Id => "BytesArray";
+        public override string Id => "byteArray";
 
         protected override bool TrySerialize(byte[] value, out string serializedValue)
         {
@@ -19,7 +19,7 @@ namespace Vostok.Flow.Serializers
                 value = Convert.FromBase64String(serializedValue);
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 value = null;
                 return false;

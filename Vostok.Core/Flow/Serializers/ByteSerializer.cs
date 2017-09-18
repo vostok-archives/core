@@ -5,6 +5,7 @@ namespace Vostok.Flow.Serializers
     internal class ByteSerializer : BaseTypedSerializer<byte>
     {
         public override string Id => "ubyte";
+
         protected override bool TrySerialize(byte value, out string serializedValue)
         {
             serializedValue = value.ToString(CultureInfoExtensions.EnUs);
@@ -15,6 +16,7 @@ namespace Vostok.Flow.Serializers
             => byte.TryParse(serializedValue, NumberStyles.Any, CultureInfoExtensions.EnUs, out value);
     }
 
+    // CR(iloktionov): Почему живет в одном файле с сериализатором? Причем тут extensions, если это не экстеншны?
     internal static class CultureInfoExtensions
     {
         public static CultureInfo EnUs = CultureInfo.GetCultureInfo("en-US");

@@ -5,6 +5,7 @@ namespace Vostok.Flow.Serializers
     internal class FloatSerializer : BaseTypedSerializer<float>
     {
         public override string Id => "float";
+
         protected override bool TrySerialize(float value, out string serializedValue)
         {
             serializedValue = value.ToString(CultureInfoExtensions.EnUs);

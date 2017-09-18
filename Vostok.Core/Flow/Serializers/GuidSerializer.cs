@@ -5,6 +5,7 @@ namespace Vostok.Flow.Serializers
     internal class GuidSerializer : BaseTypedSerializer<Guid>
     {
         public override string Id => "guid";
+
         protected override bool TrySerialize(Guid value, out string serializedValue)
         {
             serializedValue = value.ToString("D");

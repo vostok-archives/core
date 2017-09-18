@@ -3,6 +3,7 @@
     internal class StringSerializer : BaseTypedSerializer<string>
     {
         public override string Id => "string";
+
         protected override bool TrySerialize(string value, out string serializedValue)
         {
             serializedValue = value;
