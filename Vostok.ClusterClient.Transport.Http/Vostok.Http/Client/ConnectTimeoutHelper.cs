@@ -24,7 +24,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 			{
 				canCheckSocket = false;
 
-				WrapLog(log).Error("Failed to check socket connection", error);
+				log.Error("Failed to check socket connection", error);
 			}
 
 			return true;
@@ -54,12 +54,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 			}
 			
 			if (savedError != null)
-				WrapLog(log).Error("Failed to build connection checker lambda", savedError);
-		}
-
-		private static PrefixedILogWrapper WrapLog(ILog log)
-		{
-			return log.WithPrefix(typeof(ConnectTimeoutHelper).Name);
+				log.Error("Failed to build connection checker lambda", savedError);
 		}
 
 		/// <summary>

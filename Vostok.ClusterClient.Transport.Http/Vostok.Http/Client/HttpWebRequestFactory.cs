@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Requests;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Headers;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility;
-using Vostok.Tracing;
-using HttpRequestHeaders = Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Headers.HttpRequestHeaders;
 
 namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 {
@@ -32,7 +28,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 		    SetCredentials(webRequest, settings);
 		    SetHttpMethod(webRequest, request);
 		    SetRequestHeaders(webRequest, request, timeout);
-		    SetTracingHeaders(webRequest);
 		    SetContentHeaders(webRequest, request);
 			return webRequest;
 		}
@@ -141,24 +136,5 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 					webRequest.Headers.Set(HttpHeaderNames.ContentRange, body.ContentRange.ToString());
 			}
 		}
-
-	    private static void SetTracingHeaders(HttpWebRequest webRequest)
-	    {
-	        var traceContext = TraceContext.Current;
-	        if (traceContext == null)
-	            return;
-
-            webRequest.Headers.Set(TraceHttpHeaders.XKonturTraceId, traceContext.TraceId);
-            webRequest.Headers.Set(TraceHttpHeaders.XKonturTraceSpanId, traceContext.SpanId);
-
-            if (!String.IsNullOrEmpty(traceContext.ParentSpanId))
-                webRequest.Headers.Set(TraceHttpHeaders.XKonturTraceParentSpanId, traceContext.ParentSpanId);
-
-            if (!String.IsNullOrEmpty(traceContext.ProfileId))
-                webRequest.Headers.Set(TraceHttpHeaders.XKonturTraceProfileId, traceContext.ProfileId);
-
-            if (traceContext.IsSampled)
-                webRequest.Headers.Set(TraceHttpHeaders.XKonturTraceIsSampled, "true");
-	    }
 	}
 }

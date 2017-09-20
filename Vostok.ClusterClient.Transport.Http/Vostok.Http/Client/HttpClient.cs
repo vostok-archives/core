@@ -14,7 +14,6 @@ using Vostok.ClusterClient.Transport.Http.Vostok.Http.ToCore.Collections;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.ToCore.Utilities.Convertions.Time;
 using Vostok.Commons.Collections;
 using Vostok.Logging;
-using Vostok.Tracing;
 using HttpMethod = Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpMethod;
 using HttpResponseHeaders = Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Headers.HttpResponseHeaders;
 
@@ -34,9 +33,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 		    threadPoolMonitor = ThreadPoolMonitor.Instance;
 		}
 
-		public HttpClient(ILog log)
-			: this (HttpClientSettings.Defaults, log) { }
-
 	    public Task<HttpResponse> SendAsync(HttpRequest request, TimeSpan timeout)
 	    {
             return SendAsync(request, timeout, CancellationToken.None);
@@ -44,14 +40,10 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 
 	    public async Task<HttpResponse> SendAsync(HttpRequest request, TimeSpan timeout, CancellationToken cancellationToken)
 		{
-		    using (var spanBuilder = Trace.BeginSpan(TODO))
-		    {
-		        request.TraceWith(spanBuilder, log);
-
                 if (timeout.TotalMilliseconds < 1)
                 {
                     LogRequestTimeout(request, timeout);
-                    return new HttpResponse(HttpResponseCode.RequestTimeout).TraceWith(spanBuilder, log);
+                    return new HttpResponse(HttpResponseCode.RequestTimeout);
                 }
 
                 var state = new HttpWebRequestState(timeout);
@@ -60,12 +52,12 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 		        {
 		            var timeoutTask = Task.Delay(state.TimeRemaining, timeoutCancellation.Token);
 		            var senderTask = SendInternalAsync(request, state, cancellationToken);
-		            var completedTask = await Task.WhenAny(timeoutTask, senderTask).ConfigureAwait(false);
+		            var completedTask = await Task.WhenAny(timeoutTask, senderTask).ConfigureAwait(false);//?
 
 		            if (completedTask is Task<HttpResponse> taskWithResponse)
 		            {
 		                timeoutCancellation.Cancel();
-		                return taskWithResponse.GetAwaiter().GetResult().TraceWith(spanBuilder, log);
+		                return taskWithResponse.GetAwaiter().GetResult();
 		            }
 
 		            // (iloktionov): Если выполнившееся задание не кастуется к Task<HttpResponse>, сработал таймаут.
@@ -79,9 +71,8 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 		            if (!senderTask.IsCompleted)
 		                LogFailedToWaitForRequestAbort();
 
-		            return BuildFailureResponse(HttpResponseCode.RequestTimeout, state).TraceWith(spanBuilder, log);
+		            return BuildFailureResponse(HttpResponseCode.RequestTimeout, state);
 		        }
-		    }
 		}
 
 		private async Task<HttpResponse> SendInternalAsync(HttpRequest request, HttpWebRequestState state, CancellationToken cancellationToken)
