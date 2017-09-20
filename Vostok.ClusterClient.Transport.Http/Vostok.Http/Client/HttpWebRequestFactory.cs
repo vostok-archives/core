@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Security;
-using Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Requests;
+using Vostok.Clusterclient.Model;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Headers;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility;
@@ -21,9 +21,9 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 	        HttpWebRequest.DefaultMaximumResponseHeadersLength = -1;
 	    }
 
-		public static HttpWebRequest Create(HttpRequest request, HttpClientSettings settings, TimeSpan timeout)
+		public static HttpWebRequest Create(Request request, HttpClientSettings settings, TimeSpan timeout)
 		{
-			var webRequest = WebRequest.CreateHttp(request.AbsoluteUri);
+			var webRequest = WebRequest.CreateHttp(request.Url.AbsoluteUri);
 			TuneRequestParameters(webRequest, settings, timeout);
 		    SetCredentials(webRequest, settings);
 		    SetHttpMethod(webRequest, request);
@@ -71,18 +71,18 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 	        }
 	    }
 
-	    private static void SetHttpMethod(HttpWebRequest webRequest, HttpRequest request)
+	    private static void SetHttpMethod(HttpWebRequest webRequest, Request request)
 		{
-			webRequest.Method = MethodUtilities.GetString(request.Method);
+			webRequest.Method = request.Method;
 		}
 
-		private static void SetRequestHeaders(HttpWebRequest webRequest, HttpRequest request, TimeSpan timeout)
+		private static void SetRequestHeaders(HttpWebRequest webRequest, Request request, TimeSpan timeout)
 		{
 			// (iloktionov): Укажем таймаут, с которым выполняем запрос, и свою identity.
 			webRequest.Headers.Set(HttpHeaderNames.XKonturRequestTimeout, timeout.Ticks.ToString());
 			webRequest.Headers.Set(HttpHeaderNames.XKonturClientIdentity, UrlEncodingUtility.UrlEncode(HttpClientIdentity.Get(), EncodingFactory.GetDefault()));
 
-			if (!request.HasHeaders())
+			if (request.Headers != null)
 				return;
 			var headers = request.Headers;
 
@@ -120,13 +120,13 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 					webRequest.Headers.Set(pair.Key, pair.Value);
 		}
 
-		private static void SetContentHeaders(HttpWebRequest webRequest, HttpRequest request)
+		private static void SetContentHeaders(HttpWebRequest webRequest, Request request)
 		{
-			if (request.Body == null)
+			if (request.Content == null)
 				webRequest.ContentLength = 0;
 			else
 			{
-				var body = request.Body;
+				var body = request.Content;
 				webRequest.ContentLength = body.Length;
 				var contentType = (body.ContentType ?? ContentType.OctetStream).ToString();
 				if (body.Charset != null)

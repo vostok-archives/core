@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Vostok.Clusterclient.Model;
 using Vostok.Logging;
 
 namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
@@ -9,19 +10,19 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
 	{
 	    static ResponseCodeUtilities()
 	    {
-            allowedValues = new HashSet<int>(Enum.GetValues(typeof(HttpResponseCode)).Cast<int>());
+            allowedValues = new HashSet<int>(Enum.GetValues(typeof(ResponseCode)).Cast<int>());
 	    }
 
-		public static HttpResponseCode Convert(int code, ILog log)
+		public static ResponseCode Convert(int code, ILog log)
 		{
 			if (allowedValues.Contains(code))
-				return (HttpResponseCode) code;
+				return (ResponseCode) code;
 
 			// (iloktionov): Напрямую скастовать не удалось. Попытаемся привести к x00-коду семейства в соответствии с RFC.
 			if (code < 100 || code >= 600)
 			{
 				LogUnknownResponseCode(log, code);
-				return HttpResponseCode.Unknown;
+				return ResponseCode.Unknown;
 			}
 			LogConvertResponseCode(log, code);
 			return Convert(code - code % 100, log);

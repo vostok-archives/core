@@ -32,7 +32,7 @@ namespace Vostok.Clusterclient.Model
         {
         }
 
-        internal Headers(Header[] headers, int count)
+        public Headers(Header[] headers, int count)
         {
             this.headers = headers;
             this.count = count;
@@ -100,8 +100,7 @@ namespace Vostok.Clusterclient.Model
         [NotNull]
         public Headers Set([NotNull] string name, [NotNull] string value)
         {
-            int oldHeaderIndex;
-            var oldHeader = Find(name, out oldHeaderIndex);
+            var oldHeader = Find(name, out var oldHeaderIndex);
             var newHeader = new Header(name, value);
 
             Header[] newHeaders;
@@ -144,8 +143,7 @@ namespace Vostok.Clusterclient.Model
         [NotNull]
         public Headers Remove([NotNull] string name)
         {
-            int oldHeaderIndex;
-            var oldHeader = Find(name, out oldHeaderIndex);
+            var oldHeader = Find(name, out var oldHeaderIndex);
             if (oldHeader == null)
                 return this;
 
