@@ -26,6 +26,11 @@ namespace Vostok.Commons.Binary
             IReadOnlyCollection<T> values,
             Action<IBinaryWriter, T> writeSingleValue)
         {
+            if (values == null)
+            {
+                writer.Write(0);
+                return;
+            }
             writer.Write(values.Count);
 
             foreach (var value in values)
@@ -40,6 +45,11 @@ namespace Vostok.Commons.Binary
             Action<IBinaryWriter, TKey> writeSingleKey,
             Action<IBinaryWriter, TValue> writeSingleValue)
         {
+            if (values == null)
+            {
+                writer.Write(0);
+                return;
+            }
             writer.Write(values.Count);
 
             foreach (var pair in values)
@@ -55,6 +65,11 @@ namespace Vostok.Commons.Binary
             Action<IBinaryWriter, TKey> writeSingleKey,
             Action<IBinaryWriter, TValue> writeSingleValue)
         {
+            if (values == null)
+            {
+                writer.Write(0);
+                return;
+            }
             writer.Write(values.Count);
 
             foreach (var pair in values)
