@@ -86,32 +86,6 @@ namespace Vostok.Flow
             testingTypes.Should().Contain(serializedTypes);
         }
 
-        // CR(iloktionov): Что вообще проверяют этот и следующий тесты? Что метод, написанный в тестах же, возвращает что-то корректное?
-        // CR(iloktionov): Почему от такого теста у нас должно прибавиться уверенности в рабочем коде?
-        [Fact]
-        public void AllTypedSerializers_should_not_contain_duplicates_by_Type()
-        {
-            var duplicateSerializers = GetAllTypedSerializers()
-                .GroupBy(x => x.Type)
-                .Where(x => x.Count() > 1)
-                .SelectMany(x => x)
-                .ToArray();
-
-            duplicateSerializers.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void AllTypedSerializers_should_not_contain_duplicates_by_Id()
-        {
-            var duplicateSerializers = GetAllTypedSerializers()
-                .GroupBy(x => x.Id.ToLower())
-                .Where(x => x.Count() > 1)
-                .SelectMany(x => x)
-                .ToArray();
-
-            duplicateSerializers.Should().BeEmpty();
-        }
-
         private static ITypedSerializer[] GetAllTypedSerializers()
         {
             return typeof(ITypedSerializer).Assembly

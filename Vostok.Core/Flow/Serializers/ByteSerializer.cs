@@ -8,17 +8,11 @@ namespace Vostok.Flow.Serializers
 
         protected override bool TrySerialize(byte value, out string serializedValue)
         {
-            serializedValue = value.ToString(CultureInfoExtensions.EnUs);
+            serializedValue = value.ToString(CultureInfos.EnUs);
             return true;
         }
 
         protected override bool TryDeserialize(string serializedValue, out byte value)
-            => byte.TryParse(serializedValue, NumberStyles.Any, CultureInfoExtensions.EnUs, out value);
-    }
-
-    // CR(iloktionov): Почему живет в одном файле с сериализатором? Причем тут extensions, если это не экстеншны?
-    internal static class CultureInfoExtensions
-    {
-        public static CultureInfo EnUs = CultureInfo.GetCultureInfo("en-US");
+            => byte.TryParse(serializedValue, NumberStyles.Any, CultureInfos.EnUs, out value);
     }
 }
