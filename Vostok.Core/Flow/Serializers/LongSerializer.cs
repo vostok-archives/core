@@ -8,11 +8,11 @@ namespace Vostok.Flow.Serializers
 
         protected override bool TrySerialize(long value, out string serializedValue)
         {
-            serializedValue = value.ToString(CultureInfoExtensions.EnUs);
+            serializedValue = value.ToString(CultureInfos.EnUs);
             return true;
         }
 
         protected override bool TryDeserialize(string serializedValue, out long value)
-            => long.TryParse(serializedValue, NumberStyles.Any, CultureInfoExtensions.EnUs, out value);
+            => long.TryParse(serializedValue, NumberStyles.Any, CultureInfos.EnUs, out value);
     }
 }

@@ -21,7 +21,7 @@ namespace Vostok.Flow.Serializers
                 .OfType<ITypedSerializer>()
                 .ToArray();
 
-            serializersById = serializers.ToDictionary(x => x.Id.ToLower());
+            serializersById = serializers.ToDictionary(x => x.Id.ToLower(), StringComparer.OrdinalIgnoreCase);
             serializersByType = serializers.ToDictionary(x => x.Type);
         }
 
@@ -64,8 +64,7 @@ namespace Vostok.Flow.Serializers
                 return false;
             }
 
-            // CR(iloktionov): Не надо мусорить зря. Передай лучше в Dictionary StringComparer.OrdinalIgnoreCase в конструкторе.
-            var typeId = parts[0].ToLower();
+            var typeId = parts[0];
             if (!serializersById.TryGetValue(typeId, out var typedSerializer))
             {
                 value = null;
