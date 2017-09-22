@@ -6,6 +6,11 @@ namespace Vostok.Logging
 {
     public static class ILogExtensions_KeyValue
     {
+        public static ILog With<T>(this ILog log, T t)
+        {
+            return log.With(typeof(T));
+        }
+
         public static ILog With<T>(this ILog log)
         {
             return log.With(typeof(T));
