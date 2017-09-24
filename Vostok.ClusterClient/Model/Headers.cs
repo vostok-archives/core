@@ -32,7 +32,7 @@ namespace Vostok.Clusterclient.Model
         {
         }
 
-        public Headers(Header[] headers, int count)
+        internal Headers(Header[] headers, int count)
         {
             this.headers = headers;
             this.count = count;

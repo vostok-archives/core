@@ -365,7 +365,12 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 			if (response == null)
 				return new Response(code);
 
-            var headers = new Clusterclient.Model.Headers(TODO, response.Headers.Count);//?
+            var headers = new Clusterclient.Model.Headers(response.Headers.Count);
+
+		    foreach (var key in response.Headers.AllKeys)
+		    {
+		        headers = headers.Set(key, response.Headers.Get(key));
+		    }
 
             var body = CreateResponseContent(state);
 
