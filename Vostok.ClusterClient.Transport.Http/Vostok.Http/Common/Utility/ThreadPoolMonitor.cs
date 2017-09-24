@@ -7,7 +7,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility
 {
     internal class ThreadPoolMonitor
     {
-        public ThreadPoolMonitor()
+        private ThreadPoolMonitor()
         {
             syncObject = new object();
             lastReportTimestamp = DateTime.MinValue;
