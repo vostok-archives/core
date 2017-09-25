@@ -23,20 +23,33 @@ namespace Vostok.AirlockClient
             });
         }
 
-        public async Task<bool> PingAsync(TimeSpan timeout = default(TimeSpan),
+        public async Task<PingResponse> PingAsync(TimeSpan timeout = default(TimeSpan),
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            // TODO: catch exceptions
             var request = Request.Head("ping");
-            var result = await _cluster.SendAsync(request, timeout: timeout, cancellationToken: cancellationToken);
-            return result.Status == ClusterResultStatus.Success;
+            // TODO: Choose request strategy
+            var response = await _cluster.SendAsync(request, timeout: timeout, cancellationToken: cancellationToken);
+            return new PingResponse
+            {
+                Details = response,
+                Success = response.Status == ClusterResultStatus.Success
+            };
         }
 
-        public async Task<bool> SendAsync(AirlockMessage message, TimeSpan timeout = default(TimeSpan),
+        public async Task<SendResponse> SendAsync(AirlockMessage message, TimeSpan timeout = default(TimeSpan),
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            // TODO: catch exceptions
             var request = Request.Post("send");
+            // TODO: Set content
+            // TODO: Choose request strategy
             var result = await _cluster.SendAsync(request, timeout: timeout, cancellationToken: cancellationToken);
-            return result.Status == ClusterResultStatus.Success;
+            return new SendResponse
+            {
+                Details = result,
+                Success = result.Status == ClusterResultStatus.Success
+            };
         }
     }
 }
