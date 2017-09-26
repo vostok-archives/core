@@ -24,8 +24,8 @@ namespace Vostok.Clusterclient.Core.Transport
         }
 
         [Theory]
-        [InlineData("key", "value", "distributed_context/key", "string%7Cvalue")]
-        [InlineData("ключ", "значение", "distributed_context/%D0%BA%D0%BB%D1%8E%D1%87", "string%7C%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B5")]
+        [InlineData("key", "value", HeaderNames.XDistributedContextPrefix + "key", "string|value")]
+        [InlineData("ключ", "значение", HeaderNames.XDistributedContextPrefix + "%d0%ba%d0%bb%d1%8e%d1%87", "string|%d0%b7%d0%bd%d0%b0%d1%87%d0%b5%d0%bd%d0%b8%d0%b5")]
         public void SendAsync_should_create_headers_from_DistributedContext_when_headers_is_null(string key, string value, string expectedKey, string expectedValue)
         {
             Context.Configuration.DistributedProperties.Add(key);
@@ -68,11 +68,31 @@ namespace Vostok.Clusterclient.Core.Transport
             var request = new Request("GET", new Uri("http://localhost")).WithHeader(existedkey, "existedValue");
             Headers actual = null;
             transport.SendAsync(Arg.Do<Request>(x => { actual = x.Headers; }), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new Task<Response>(() => null));
-            var expectedKeys = new[] {existedkey, "distributed_context/" + key1, "distributed_context/" + key2 };
+            var expectedKeys = new[] {existedkey, HeaderNames.XDistributedContextPrefix + key1, HeaderNames.XDistributedContextPrefix + key2 };
 
             transportWithDistributedContext.SendAsync(request, TimeSpan.Zero, CancellationToken.None);
 
             actual.Names.Should().BeEquivalentTo(expectedKeys);
+        }
+
+        [Fact]
+        public void SendAsync_should_not_add_headers_from_DistributedContext_when_key_exists()
+        {
+            const string key = "key";
+            const string headerKey = HeaderNames.XDistributedContextPrefix + key;
+
+            const string oldvalue = "oldValue";
+
+            Context.Configuration.DistributedProperties.Add(key);
+            Context.Properties.SetProperty(key, "newValue");
+
+            var request = new Request("GET", new Uri("http://localhost")).WithHeader(headerKey, oldvalue);
+            Headers actual = null;
+            transport.SendAsync(Arg.Do<Request>(x => { actual = x.Headers; }), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new Task<Response>(() => null));
+
+            transportWithDistributedContext.SendAsync(request, TimeSpan.Zero, CancellationToken.None);
+
+            actual[headerKey].Should().Be(oldvalue);
         }
     }
 }

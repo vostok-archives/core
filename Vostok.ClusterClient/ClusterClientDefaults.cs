@@ -34,6 +34,7 @@ namespace Vostok.Clusterclient
         public const bool LogResultDetails = true;
         public const bool LogReplicaRequests = true;
         public const bool LogReplicaResults = true;
+        public const bool TransferDistributedContext = true;
 
         public const int MaxReplicasUsedPerRequest = 3;
 
