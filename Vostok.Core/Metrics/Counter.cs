@@ -2,7 +2,7 @@
 
 namespace Vostok.Metrics
 {
-    public class SumMeter : IMeter<long>
+    public class Counter : IMeter<long>
     {
         private long count;
 
