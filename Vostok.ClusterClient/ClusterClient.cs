@@ -56,6 +56,9 @@ namespace Vostok.Clusterclient
             if (configuration.ReplicaTransform != null)
                 configuration.ClusterProvider = new TransformingClusterProvider(configuration.ClusterProvider, configuration.ReplicaTransform);
 
+            if (configuration.TransferDistributedContext)
+                configuration.Transport = new TransportWithDistributedContext(configuration.Transport);
+
             ReplicaStorageProvider = ReplicaStorageProviderFactory.Create(configuration.ReplicaStorageScope);
 
             var modules = RequestModuleChainBuilder.BuildChain(configuration, ReplicaStorageProvider);

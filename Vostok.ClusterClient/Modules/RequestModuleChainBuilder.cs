@@ -6,7 +6,6 @@ using Vostok.Clusterclient.Misc;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Ordering.Storage;
 using Vostok.Clusterclient.Sending;
-using Vostok.Clusterclient.Transport;
 
 namespace Vostok.Clusterclient.Modules
 {
@@ -16,12 +15,7 @@ namespace Vostok.Clusterclient.Modules
         {
             var responseClassifier = new ResponseClassifier();
             var requestConverter = new RequestConverter(config.Log);
-            var transport = config.Transport;
-
-            if (config.TransferDistributedContext)
-                transport = new TransportWithDistributedContext(transport);
-
-            var requestSender = new RequestSender(config, storageProvider, responseClassifier, requestConverter, transport);
+            var requestSender = new RequestSender(config, storageProvider, responseClassifier, requestConverter, config.Transport);
             var resultStatusSelector = new ClusterResultStatusSelector();
 
             var modules = new List<IRequestModule>(11 + config.Modules?.Count ?? 0)
@@ -47,7 +41,7 @@ namespace Vostok.Clusterclient.Modules
             if (config.ReplicaBudgeting != null)
                 modules.Add(new ReplicaBudgetingModule(config.ReplicaBudgeting));
 
-            modules.Add(new AbsoluteUrlSenderModule(transport, responseClassifier, config.ResponseCriteria, resultStatusSelector));
+            modules.Add(new AbsoluteUrlSenderModule(config.Transport, responseClassifier, config.ResponseCriteria, resultStatusSelector));
             modules.Add(new RequestExecutionModule(config.ClusterProvider, config.ReplicaOrdering, config.ResponseSelector, 
                 storageProvider, requestSender, resultStatusSelector));
 
