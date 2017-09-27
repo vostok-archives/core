@@ -24,8 +24,8 @@ namespace Vostok.Clusterclient.Core.Transport
         }
 
         [Theory]
-        [InlineData("key", "value", HeaderNames.XDistributedContextPrefix + "key", "string|value")]
-        [InlineData("ключ", "значение", HeaderNames.XDistributedContextPrefix + "%d0%ba%d0%bb%d1%8e%d1%87", "string|%d0%b7%d0%bd%d0%b0%d1%87%d0%b5%d0%bd%d0%b8%d0%b5")]
+        [InlineData("key", "value", HeaderNames.XDistributedContextPrefix + "/" + "key", "string|value")]
+        [InlineData("ключ", "значение", HeaderNames.XDistributedContextPrefix + "/" + "%d0%ba%d0%bb%d1%8e%d1%87", "string|%d0%b7%d0%bd%d0%b0%d1%87%d0%b5%d0%bd%d0%b8%d0%b5")]
         public void SendAsync_should_create_headers_from_DistributedContext_when_headers_is_null(string key, string value, string expectedKey, string expectedValue)
         {
             Context.Configuration.DistributedProperties.Add(key);
@@ -68,7 +68,7 @@ namespace Vostok.Clusterclient.Core.Transport
             var request = new Request("GET", new Uri("http://localhost")).WithHeader(existedkey, "existedValue");
             Headers actual = null;
             transport.SendAsync(Arg.Do<Request>(x => { actual = x.Headers; }), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new Task<Response>(() => null));
-            var expectedKeys = new[] {existedkey, HeaderNames.XDistributedContextPrefix + key1, HeaderNames.XDistributedContextPrefix + key2 };
+            var expectedKeys = new[] {existedkey, HeaderNames.XDistributedContextPrefix + "/" + key1, HeaderNames.XDistributedContextPrefix + "/" + key2 };
 
             transportWithDistributedContext.SendAsync(request, TimeSpan.Zero, CancellationToken.None);
 
@@ -79,7 +79,7 @@ namespace Vostok.Clusterclient.Core.Transport
         public void SendAsync_should_not_add_headers_from_DistributedContext_when_key_exists()
         {
             const string key = "key";
-            const string headerKey = HeaderNames.XDistributedContextPrefix + key;
+            const string headerKey = HeaderNames.XDistributedContextPrefix + "/" + key;
 
             const string oldvalue = "oldValue";
 

@@ -18,17 +18,16 @@ namespace Vostok.Clusterclient.Transport
 
         public Task<Response> SendAsync(Request request, TimeSpan timeout, CancellationToken cancellationToken)
         {
-            var newRequest = BuildRequestWithDistributedContext(request);
-            return transport.SendAsync(newRequest, timeout, cancellationToken);
+            EnrichRequestWithContext(ref request);
+
+            return transport.SendAsync(request, timeout, cancellationToken);
         }
 
-        private static Request BuildRequestWithDistributedContext(Request request)
+        private static void  EnrichRequestWithContext(ref Request request)
         {
             var distributedContext = Context.SerializeDistributedProperties();
             if (distributedContext == null)
-            {
-                return request;
-            }
+                return;
 
             foreach (var pair in distributedContext)
             {
@@ -36,17 +35,14 @@ namespace Vostok.Clusterclient.Transport
 
                 if (request.Headers?[key] == null)
                 {
-                    var value = Encode(pair.Value);
-                    request = request.WithHeader(key, value);
+                    request = request.WithHeader(key, Encode(pair.Value));
                 }
             }
-
-            return request;
         }
 
         private static string MakeHeaderKey(string key)
         {
-            return HeaderNames.XDistributedContextPrefix + key;
+            return HeaderNames.XDistributedContextPrefix + "/" + key;
         }
 
         private static string Encode(string str)
