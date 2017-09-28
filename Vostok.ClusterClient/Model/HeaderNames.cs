@@ -65,5 +65,6 @@
         public const string XKonturRequestPriority = "X-Kontur-Request-Priority";
         public const string XKonturClientIdentity = "X-Kontur-Client-Identity";
         public const string XKonturDontRetry = "X-Kontur-Dont-Retry";
+        public const string XDistributedContextPrefix = "X-Distributed-Context";
     }
 }
