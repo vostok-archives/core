@@ -7,6 +7,6 @@ namespace Vostok.Logging
     {
         public long Timestamp { get; set; }
 
-        public IReadOnlyDictionary<string, string> Properties { get; set; }
+        public IDictionary<string, string> Properties { get; set; }
     }
 }
