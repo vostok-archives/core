@@ -27,6 +27,10 @@ namespace Vostok.AirlockClient
         public static AirlockResponse Exception(Exception e) =>
             new AirlockResponse {Success = false, OriginalException = e};
 
-        //TODO: EnsureSuccess
+        public void EnsureSuccess()
+        {
+            if (!Success)
+                throw new AirlockRequestFailException(this);
+        }
     }
 }

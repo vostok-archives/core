@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
     <PackageReference Include="Vostok.ClusterClient" Version="1.0.0-pre000017" />
     <PackageReference Include="Vostok.Core" Version="1.0.0-pre000038" />
   </ItemGroup>
