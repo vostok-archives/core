@@ -11,10 +11,12 @@ namespace Vostok.AirlockClient
 {
     public class AirlockClient : IAirlockClient
     {
+        private readonly ILog _log;
         private readonly ClusterClient _cluster;
 
         public AirlockClient(ILog log)
         {
+            _log = log;
             _cluster = new ClusterClient(log, config =>
             {
                 // TODO: Accept endpoints in parameter
@@ -23,33 +25,39 @@ namespace Vostok.AirlockClient
             });
         }
 
-        public async Task<PingResponse> PingAsync(TimeSpan timeout = default(TimeSpan),
+        public async Task<AirlockResponse> PingAsync(TimeSpan timeout = default(TimeSpan),
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            // TODO: catch exceptions
-            var request = Request.Head("ping");
-            // TODO: Choose request strategy
-            var response = await _cluster.SendAsync(request, timeout: timeout, cancellationToken: cancellationToken);
-            return new PingResponse
+            try
             {
-                Details = response,
-                Success = response.Status == ClusterResultStatus.Success
-            };
+                var request = Request.Head("ping");
+                // TODO: Choose request strategy
+                var response = await _cluster.SendAsync(request, timeout: timeout, cancellationToken: cancellationToken);
+                return AirlockResponse.FromClusterResult(response);
+            }
+            catch (Exception e)
+            {
+                _log.Error(e, "Ping failed with exception");
+                return AirlockResponse.Exception(e);
+            }
         }
 
-        public async Task<SendResponse> SendAsync(AirlockMessage message, TimeSpan timeout = default(TimeSpan),
+        public async Task<AirlockResponse> SendAsync(AirlockMessage message, TimeSpan timeout = default(TimeSpan),
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            // TODO: catch exceptions
-            var request = Request.Post("send");
-            // TODO: Set content
-            // TODO: Choose request strategy
-            var result = await _cluster.SendAsync(request, timeout: timeout, cancellationToken: cancellationToken);
-            return new SendResponse
+            try
             {
-                Details = result,
-                Success = result.Status == ClusterResultStatus.Success
-            };
+                var request = Request.Post("send");
+                // TODO: Set content
+                // TODO: Choose request strategy
+                var response = await _cluster.SendAsync(request, timeout: timeout, cancellationToken: cancellationToken);
+                return AirlockResponse.FromClusterResult(response);
+            }
+            catch (Exception e)
+            {
+                _log.Error(e, "Send failed with exception");
+                return AirlockResponse.Exception(e);
+            }
         }
     }
 }
