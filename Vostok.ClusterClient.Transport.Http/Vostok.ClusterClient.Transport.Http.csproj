@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000029" />
+    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000039" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vostok.ClusterClient\Vostok.ClusterClient.csproj" />

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using Vostok.ClusterClient.Transport.Http.Vostok.Http.ToCore.Utilities.Convertions.Time;
 
 namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 {
@@ -21,7 +20,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 			ClientCertificates = new List<X509Certificate2>();
 			KeepAlive = true;
 			UseConnectTimeout = false;
-		    ConnectTimeout = 1.Seconds();
+		    ConnectTimeout = TimeSpan.FromSeconds(1);
 		}
 
 		/// <summary>

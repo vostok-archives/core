@@ -5,7 +5,7 @@ using Vostok.Clusterclient.Model;
 
 namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 {
-	public interface IHttpClient
+	internal interface IHttpClient
 	{
 		Task<Response> SendAsync(Request request, TimeSpan timeout, CancellationToken cancellationToken);
 	}

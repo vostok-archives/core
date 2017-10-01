@@ -5,8 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility;
-using Vostok.ClusterClient.Transport.Http.Vostok.Http.ToCore.Collections;
-using Vostok.ClusterClient.Transport.Http.Vostok.Http.ToCore.Utilities.Convertions.Time;
 using Vostok.Commons.Collections;
 using Vostok.Logging;
 
@@ -14,7 +12,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 {
     // ReSharper disable MethodSupportsCancellation
 
-    public class HttpClient : IHttpClient
+    internal class HttpClient : IHttpClient
 	{
 		public HttpClient(HttpClientSettings settings, ILog log)
 		{
@@ -452,8 +450,8 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 		private const int PreferredReadSize = 16 * 1024;
 		private const int LOHObjectSizeThreshold = 85 * 1000;
 
-        private static readonly TimeSpan RequestAbortTimeout = 250.Milliseconds();
-        private static readonly Pool<byte[]> ReadBuffersPool = new Pool<byte[]>(() => new byte[PreferredReadSize]);
+        private static readonly TimeSpan RequestAbortTimeout = TimeSpan.FromMilliseconds(250);
+        private static readonly IPool<byte[]> ReadBuffersPool = new UnlimitedLazyPool<byte[]>(() => new byte[PreferredReadSize]);
 	}
 
     // ReSharper restore MethodSupportsCancellation

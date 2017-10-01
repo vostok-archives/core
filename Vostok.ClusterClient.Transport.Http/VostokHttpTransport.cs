@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Transport;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Client;
-using Vostok.ClusterClient.Transport.Http.Vostok.Http.ToCore.Utilities.Convertions.Time;
 using Vostok.Logging;
 
 namespace Vostok.ClusterClient.Transport.Http
@@ -42,7 +41,7 @@ namespace Vostok.ClusterClient.Transport.Http
         {
             return HttpClientSettingsBuilder
                 .StartNew()
-                .EnableConnectTimeout(750.Milliseconds())
+                .EnableConnectTimeout(TimeSpan.FromMilliseconds(750))
                 .SetConnectionAttempts(2)
                 .Build();
         }
