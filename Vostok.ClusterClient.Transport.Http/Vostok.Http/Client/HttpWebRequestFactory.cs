@@ -4,7 +4,6 @@ using System.Net.Security;
 using Vostok.Clusterclient.Model;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Headers;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.HttpContent;
-using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Utility;
 
 namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 {
@@ -78,10 +77,6 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client
 
 		private static void SetRequestHeaders(HttpWebRequest webRequest, Request request, TimeSpan timeout)
 		{
-			// (iloktionov): Укажем таймаут, с которым выполняем запрос, и свою identity.
-			webRequest.Headers.Set(HttpHeaderNames.XKonturRequestTimeout, timeout.Ticks.ToString());
-			webRequest.Headers.Set(HttpHeaderNames.XKonturClientIdentity, UrlEncodingUtility.UrlEncode(HttpClientIdentity.Get(), EncodingFactory.GetDefault()));
-
 			if (request.Headers != null)
 				return;
 			var headers = request.Headers;

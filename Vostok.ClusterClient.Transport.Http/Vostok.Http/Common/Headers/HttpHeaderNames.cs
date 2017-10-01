@@ -24,9 +24,5 @@
         public const string Server = "Server";
         public const string UserAgent = "User-Agent";
         public const string WWWAuthenticate = "WWW-Authenticate";
-
-        // (iloktionov): Контуровские заголовки.
-        public const string XKonturRequestTimeout = "X-Kontur-Request-Timeout";
-        public const string XKonturClientIdentity = "X-Kontur-Client-Identity";
     }
 }

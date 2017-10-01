@@ -23,8 +23,7 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Headers
             HttpHeaderNames.IfModifiedSince,
             HttpHeaderNames.Range,
             HttpHeaderNames.Referer,
-            HttpHeaderNames.UserAgent,
-            HttpHeaderNames.XKonturRequestTimeout,
+            HttpHeaderNames.UserAgent
         };
 
         public static bool IsCorrectCustomHeaderName(string headerName)
