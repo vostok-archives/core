@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Text;
+using Vostok.Clusterclient.Model;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.Common.Headers;
 using Vostok.ClusterClient.Transport.Http.Vostok.Http.ToCore.Utilities;
 
@@ -12,18 +13,18 @@ namespace Vostok.ClusterClient.Transport.Http.Vostok.Http.Client.Headers
     {
         internal static readonly HashSet<string> RestrictedHeaderNames = new HashSet<string>
         {
-            HttpHeaderNames.Accept,
-            HttpHeaderNames.AcceptCharset,
-            HttpHeaderNames.Authorization,
-            HttpHeaderNames.ContentLength,
-            HttpHeaderNames.ContentType,
-            HttpHeaderNames.ContentRange,
-            HttpHeaderNames.Host,
-            HttpHeaderNames.IfMatch,
-            HttpHeaderNames.IfModifiedSince,
-            HttpHeaderNames.Range,
-            HttpHeaderNames.Referer,
-            HttpHeaderNames.UserAgent
+            HeaderNames.Accept,
+            HeaderNames.AcceptCharset,
+            HeaderNames.Authorization,
+            HeaderNames.ContentLength,
+            HeaderNames.ContentType,
+            HeaderNames.ContentRange,
+            HeaderNames.Host,
+            HeaderNames.IfMatch,
+            HeaderNames.IfModifiedSince,
+            HeaderNames.Range,
+            HeaderNames.Referer,
+            HeaderNames.UserAgent
         };
 
         public static bool IsCorrectCustomHeaderName(string headerName)
