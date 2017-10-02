@@ -4,6 +4,11 @@ namespace Vostok.Clusterclient.Transport.Http
 {
     internal static class ResponseFactory
     {
+        public static Response BuildSuccessResponse(HttpWebRequestState state)
+        {
+            return BuildResponse((ResponseCode) (int) state.Response.StatusCode, state);
+        }
+
         public static Response BuildFailureResponse(HttpActionStatus status, HttpWebRequestState state)
         {
             switch (status)

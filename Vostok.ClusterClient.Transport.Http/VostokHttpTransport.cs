@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -107,8 +108,8 @@ namespace Vostok.Clusterclient.Transport.Http
                         if (state.RequestCancelled)
                             return new Response(ResponseCode.Canceled);
 
-                        status = request.Content != null 
-                            ? await GetResponseAsync(request, state).ConfigureAwait(false) 
+                        status = request.Content != null
+                            ? await GetResponseAsync(request, state).ConfigureAwait(false)
                             : await connectTimeLimiter.LimitConnectTime(GetResponseAsync(request, state), request, state).ConfigureAwait(false);
 
                         if (status == HttpActionStatus.ConnectionFailure)
@@ -117,12 +118,22 @@ namespace Vostok.Clusterclient.Transport.Http
                         if (status != HttpActionStatus.Success)
                             return ResponseFactory.BuildFailureResponse(status, state);
 
-                        // TODO(iloktionov): ...
+                        // (iloktionov): Шаг 3 - скачать тело ответа, если оно имеется.
+                        if (!NeedToReadResponseBody(request, state))
+                            return ResponseFactory.BuildSuccessResponse(state);
+
+                        if (state.RequestCancelled)
+                            return new Response(ResponseCode.Canceled);
+
+                        status = await ReadResponseBodyAsync(request, state).ConfigureAwait(false);
+                        return status == HttpActionStatus.Success
+                            ? ResponseFactory.BuildSuccessResponse(state)
+                            : ResponseFactory.BuildFailureResponse(status, state);
                     }
                 }
-            }
 
-            throw new NotImplementedException();
+                return new Response(ResponseCode.ConnectFailure);
+            }
         }
 
         private async Task<HttpActionStatus> SendRequestBodyAsync(Request request, HttpWebRequestState state)
@@ -172,7 +183,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 // (iloktionov): HttpWebRequest реагирует на коды ответа вроде 404 или 500 исключением со статусом ProtocolError.
                 if (status == HttpActionStatus.ProtocolError)
                 {
-                    state.Response = (HttpWebResponse)error.Response;
+                    state.Response = (HttpWebResponse) error.Response;
                     state.ResponseStream = state.Response.GetResponseStream();
                     return HttpActionStatus.Success;
                 }
@@ -182,6 +193,94 @@ namespace Vostok.Clusterclient.Transport.Http
             {
                 LogUnknownException(error);
                 return HttpActionStatus.UnknownFailure;
+            }
+        }
+
+        private static bool NeedToReadResponseBody(Request request, HttpWebRequestState state)
+        {
+            if (request.Method == RequestMethods.Head)
+                return false;
+
+            // (iloktionov): ContentLength может быть равен -1, если сервер не укажет заголовок, но вернет контент. Это умолчание на уровне HttpWebRequest.
+            return state.Response.ContentLength != 0;
+        }
+
+        private async Task<HttpActionStatus> ReadResponseBodyAsync(Request request, HttpWebRequestState state)
+        {
+            try
+            {
+                var contentLength = (int) state.Response.ContentLength;
+                if (contentLength > 0)
+                {
+                    state.BodyBuffer = new byte[contentLength];
+
+                    var totalBytesRead = 0;
+
+                    // (iloktionov): Если буфер размером contentLength не попадет в LOH, можно передать его напрямую для работы с сокетом.
+                    // В противном случае лучше использовать небольшой промежуточный буфер из пула, т.к. ссылка на переданный сохранится надолго из-за Keep-Alive.
+                    if (contentLength < LOHObjectSizeThreshold)
+                    {
+                        while (totalBytesRead < contentLength)
+                        {
+                            var bytesToRead = Math.Min(contentLength - totalBytesRead, PreferredReadSize);
+                            var bytesRead = await state.ResponseStream.ReadAsync(state.BodyBuffer, totalBytesRead, bytesToRead).ConfigureAwait(false);
+                            if (bytesRead == 0)
+                                break;
+
+                            totalBytesRead += bytesRead;
+                        }
+                    }
+                    else
+                    {
+                        using (var bufferHandle = ReadBuffersPool.AcquireHandle())
+                        {
+                            var buffer = bufferHandle.Resource;
+
+                            while (totalBytesRead < contentLength)
+                            {
+                                var bytesToRead = Math.Min(contentLength - totalBytesRead, buffer.Length);
+                                var bytesRead = await state.ResponseStream.ReadAsync(buffer, 0, bytesToRead).ConfigureAwait(false);
+                                if (bytesRead == 0)
+                                    break;
+
+                                Buffer.BlockCopy(buffer, 0, state.BodyBuffer, totalBytesRead, bytesRead);
+
+                                totalBytesRead += bytesRead;
+                            }
+                        }
+                    }
+
+                    if (totalBytesRead < contentLength)
+                        throw new EndOfStreamException(string.Format("Response stream ended prematurely. Read only {0} byte(s), but Content-Length specified {1}.", totalBytesRead, contentLength));
+                }
+                else
+                {
+                    state.BodyStream = new MemoryStream();
+
+                    using (var bufferHandle = ReadBuffersPool.AcquireHandle())
+                    {
+                        var buffer = bufferHandle.Resource;
+
+                        while (true)
+                        {
+                            var bytesRead = await state.ResponseStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                            if (bytesRead == 0)
+                                break;
+
+                            state.BodyStream.Write(buffer, 0, bytesRead);
+                        }
+                    }
+                }
+
+                return HttpActionStatus.Success;
+            }
+            catch (Exception error)
+            {
+                if (IsCancellationException(error))
+                    return HttpActionStatus.RequestCanceled;
+
+                LogReceiveBodyFailure(request, error);
+                return HttpActionStatus.ReceiveFailure;
             }
         }
 
@@ -253,7 +352,7 @@ namespace Vostok.Clusterclient.Transport.Http
         private void LogFailedToWaitForRequestAbort()
         {
             log.Warn($"Timed out request was aborted but did not complete in {RequestAbortTimeout}.");
-        } 
+        }
 
         #endregion
     }
