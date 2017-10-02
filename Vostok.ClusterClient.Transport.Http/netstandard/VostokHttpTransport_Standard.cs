@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,9 @@ using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Transport.Http
 {
+    // TODO(iloktionov): log timeouts
+    // TODO(iloktionov): log cancellations
+
     public partial class VostokHttpTransport : IDisposable
     {
         private readonly ILog log;
@@ -16,7 +20,7 @@ namespace Vostok.Clusterclient.Transport.Http
         {
             this.log = log ?? throw new ArgumentNullException(nameof(log));
 
-            httpClient = new HttpClient
+            httpClient = new HttpClient(CreateClientHandler())
             {
                 Timeout = Timeout.InfiniteTimeSpan
             };
@@ -56,6 +60,23 @@ namespace Vostok.Clusterclient.Transport.Http
         public void Dispose()
         {
             httpClient.Dispose();
+        }
+
+        private static HttpClientHandler CreateClientHandler()
+        {
+            return new HttpClientHandler
+            {
+                AllowAutoRedirect = false,
+                AutomaticDecompression = DecompressionMethods.None,
+                CheckCertificateRevocationList = false,
+                MaxConnectionsPerServer = 10000,
+                Proxy = null,
+                PreAuthenticate = false,
+                UseDefaultCredentials = false,
+                UseCookies = false,
+                UseProxy = false,
+                ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true
+            };
         }
     }
 }

@@ -320,37 +320,37 @@ namespace Vostok.Clusterclient.Transport.Http
 
         private void LogRequestTimeout(Request request, TimeSpan timeout)
         {
-            ILogExtensions_Logging.Error(log, $"Request timed out. Target = {request.Url.Authority}. Timeout = {timeout.TotalSeconds:0.000} sec.");
+            log.Error($"Request timed out. Target = {request.Url.Authority}. Timeout = {timeout.TotalSeconds:0.000} sec.");
         }
 
         private void LogConnectionFailure(Request request, WebException error, int attempt)
         {
-            ILogExtensions_Logging.Error(log, $"Connection failure. Target = {request.Url.Authority}. Attempt = {attempt}/{ConnectionAttempts}. Status = {error.Status}.", error.InnerException ?? error);
+            log.Error($"Connection failure. Target = {request.Url.Authority}. Attempt = {attempt}/{ConnectionAttempts}. Status = {error.Status}.", error.InnerException ?? error);
         }
 
         private void LogWebException(WebException error)
         {
-            ILogExtensions_Logging.Error(log, $"Error in sending request. Status = {error.Status}.", error.InnerException ?? error);
+            log.Error($"Error in sending request. Status = {error.Status}.", error.InnerException ?? error);
         }
 
         private void LogUnknownException(Exception error)
         {
-            ILogExtensions_Logging.Error(log, "Unknown error in sending request.", error);
+            log.Error("Unknown error in sending request.", error);
         }
 
         private void LogSendBodyFailure(Request request, Exception error)
         {
-            ILogExtensions_Logging.Error(log, "Error in sending request body to " + request.Url.Authority, error);
+            log.Error("Error in sending request body to " + request.Url.Authority, error);
         }
 
         private void LogReceiveBodyFailure(Request request, Exception error)
         {
-            ILogExtensions_Logging.Error(log, "Error in receiving request body from " + request.Url.Authority, error);
+            log.Error("Error in receiving request body from " + request.Url.Authority, error);
         }
 
         private void LogFailedToWaitForRequestAbort()
         {
-            ILogExtensions_Logging.Warn(log, $"Timed out request was aborted but did not complete in {RequestAbortTimeout}.");
+            log.Warn($"Timed out request was aborted but did not complete in {RequestAbortTimeout}.");
         }
 
         #endregion
