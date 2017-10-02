@@ -21,7 +21,7 @@ namespace Vostok.Logging.Logs
             LogEventFormatter.FormatProperties(properties).Should().Be(expected);
         }
 
-        private static IEnumerable<object[]> FormatMessage_Cases()
+        public static IEnumerable<object[]> FormatMessage_Cases()
         {
             yield return new object[] {string.Empty, Array.Empty<object>(), string.Empty};
             yield return new object[] {"Hello", Array.Empty<object>(), "Hello"};
@@ -33,7 +33,7 @@ namespace Vostok.Logging.Logs
             yield return new object[] {"{0}. James {0}", new object[] {"Bond"}, "Bond. James Bond"};
         }
 
-        private static IEnumerable<object[]> FormatProperties_Cases()
+        public static IEnumerable<object[]> FormatProperties_Cases()
         {
             yield return new object[] {new Dictionary<string, object>(), "{}"};
             yield return new object[] {new Dictionary<string, object> {{"Key", "Value"}}, "{Key: Value}"};
