@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Strategies;
 using Vostok.Tracing;
+using Vostok.Commons;
 
 namespace Vostok.Clusterclient.Modules
 {
@@ -18,7 +19,7 @@ namespace Vostok.Clusterclient.Modules
         public async Task<ClusterResult> ExecuteAsync(IRequestContext context, Func<IRequestContext, Task<ClusterResult>> next)
         {
             ClusterResult clusterResult;
-            using (var span = Trace.BeginSpan(null))
+            using (var span = Trace.BeginSpan(context.Request.Url.Normalize()))
             {
                 span.SetAnnotation("kind", "cluster-client");
                 span.SetAnnotation("component", "cluster-client");

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
 using Vostok.Tracing;
+using Vostok.Commons;
 
 namespace Vostok.Clusterclient.Transport
 {
@@ -18,7 +19,7 @@ namespace Vostok.Clusterclient.Transport
         public async Task<Response> SendAsync(Request request, TimeSpan timeout, CancellationToken cancellationToken)
         {
             Response response;
-            using (var span = Trace.BeginSpan(null))
+            using (var span = Trace.BeginSpan(request.Url.Normalize()))
             {
                 span.SetAnnotation("kind", "http-client");
                 span.SetAnnotation("component", "cluster-client");
