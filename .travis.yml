@@ -1,7 +1,6 @@
 language: csharp
 sudo: required
 dist: trusty
-dotnet: 2.0
 mono: latest
 addons:
   apt:
@@ -12,14 +11,17 @@ addons:
     - libssl-dev
     - libunwind8
     - zlib1g
+
 branches:
   only:
     - master
 
 solution: Vostok.Core.sln
+
 install:
   - nuget restore Vostok.Core.sln
   - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
+
 script:
   - xbuild /p:Configuration=Release /v:m /p:restorepackages=false /p:DynamicConstants=LINUX src/Cassandra.sln
   - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./Vostok.Core.Tests/bin/Release/Vostok.Core.Tests.dll
