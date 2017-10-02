@@ -209,5 +209,11 @@ namespace Vostok.Clusterclient
         /// <para>This parameter is optional and has a default value (see <see cref="ClusterClientDefaults.TransferDistributedContext"/>).</para>
         /// </summary>
         bool EnableTracing { get; set; }
+
+        /// <summary>
+        /// <para>Gets or sets service name.</para>
+        /// <para>This parameter is optional and has a default value (see <see cref="ClusterClientDefaults.TransferDistributedContext"/>).</para>
+        /// </summary>
+        string ServiceName { get; set; }
     }
 }

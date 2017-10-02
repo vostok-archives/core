@@ -94,6 +94,8 @@ namespace Vostok.Clusterclient
 
         public bool EnableTracing { get; set; }
 
+        public string ServiceName { get; set; }
+
         public bool IsValid => !Validate().Any();
 
         public IEnumerable<string> Validate()
