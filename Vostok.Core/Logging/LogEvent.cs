@@ -5,13 +5,14 @@ namespace Vostok.Logging
 {
     public sealed class LogEvent
     {
-        public LogEvent(LogLevel level, Exception exception, string messageTemplate, object[] messageParameters, IReadOnlyDictionary<string, object> properties)
+        private readonly Dictionary<string, object> properties = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+
+        public LogEvent(LogLevel level, Exception exception, string messageTemplate, object[] messageParameters)
         {
             Level = level;
             MessageTemplate = messageTemplate;
             MessageParameters = messageParameters;
             Exception = exception;
-            Properties = properties;
         }
 
         public LogLevel Level { get; }
@@ -22,6 +23,14 @@ namespace Vostok.Logging
 
         public Exception Exception { get; }
 
-        public IReadOnlyDictionary<string, object> Properties { get; }
+        public IReadOnlyDictionary<string, object> Properties => properties;
+
+        public void AddPropertyIfAbsent(string name, object value)
+        {
+            if (properties.ContainsKey(name))
+                return;
+
+            properties.Add(name, value);
+        }
     }
 }

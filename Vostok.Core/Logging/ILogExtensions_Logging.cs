@@ -5,8 +5,6 @@ namespace Vostok.Logging
 {
     public static class ILogExtensions_Logging
     {
-        private static readonly IReadOnlyDictionary<string, object> empty = new Dictionary<string, object>();
-
         public static void Info(this ILog log, string message)
         {
             log.Log(LogLevel.Info, null, message, Array.Empty<object>());
@@ -159,7 +157,7 @@ namespace Vostok.Logging
 
         private static void Log(this ILog log, LogLevel level, Exception exception, string message, params object[] parameters)
         {
-            log.Log(new LogEvent(level, exception, message, parameters, empty));
+            log.Log(new LogEvent(level, exception, message, parameters));
         }
     }
 }
