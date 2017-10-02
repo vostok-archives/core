@@ -8,9 +8,6 @@ using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Transport.Http
 {
-    // TODO(iloktionov): log timeouts
-    // TODO(iloktionov): log cancellations
-
     public partial class VostokHttpTransport : IDisposable
     {
         private readonly ILog log;
@@ -45,15 +42,11 @@ namespace Vostok.Clusterclient.Transport.Http
             }
             catch (OperationCanceledException)
             {
-                return cancellationToken.IsCancellationRequested
-                    ? new Response(ResponseCode.Canceled) 
-                    : new Response(ResponseCode.RequestTimeout);
+                return HandleCancellationError(request, timeout, cancellationToken);
             }
             catch (Exception error)
             {
-                log.Error(error);
-
-                return new Response(ResponseCode.UnknownFailure);
+                return HandleGenericError(request, timeout, error);
             }
         }
 
@@ -78,5 +71,36 @@ namespace Vostok.Clusterclient.Transport.Http
                 ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true
             };
         }
+
+        private Response HandleCancellationError(Request request, TimeSpan timeout, CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return new Response(ResponseCode.Canceled);
+
+            LogRequestTimeout(request, timeout);
+
+            return new Response(ResponseCode.RequestTimeout);
+        }
+
+        private Response HandleGenericError(Request request, TimeSpan timeout, Exception error)
+        {
+            LogUnknownException(request, error);
+
+            return new Response(ResponseCode.UnknownFailure);
+        }
+
+        #region Logging
+
+        private void LogRequestTimeout(Request request, TimeSpan timeout)
+        {
+            log.Error($"Request timed out. Target = {request.Url.Authority}. Timeout = {timeout.TotalSeconds:0.000} sec.");
+        }
+
+        private void LogUnknownException(Request request, Exception error)
+        {
+            log.Error($"Unknown error in sending request to {request.Url.Authority}. ", error);
+        }
+
+        #endregion
     }
 }
