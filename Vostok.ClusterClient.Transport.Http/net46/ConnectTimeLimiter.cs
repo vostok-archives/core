@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
@@ -10,24 +11,24 @@ namespace Vostok.Clusterclient.Transport.Http
 
     internal class ConnectTimeLimiter
     {
-        private readonly VostokHttpTransportSettings settings;
+        private readonly TimeSpan? connectTimeout;
         private readonly ILog log;
 
-        public ConnectTimeLimiter(VostokHttpTransportSettings settings, ILog log)
+        public ConnectTimeLimiter(TimeSpan? connectTimeout, ILog log)
         {
-            this.settings = settings;
+            this.connectTimeout = connectTimeout;
             this.log = log;
         }
 
         public Task<HttpActionStatus> LimitConnectTime(Task<HttpActionStatus> mainTask, Request request, HttpWebRequestState state)
         {
-            if (settings.ConnectionTimeout == null)
+            if (connectTimeout == null)
                 return mainTask;
 
             if (!ConnectTimeoutHelper.CanCheckSocket)
                 return mainTask;
 
-            if (state.TimeRemaining < settings.ConnectionTimeout.Value)
+            if (state.TimeRemaining < connectTimeout.Value)
                 return mainTask;
 
             if (request.Url.IsLoopback)
@@ -43,7 +44,7 @@ namespace Vostok.Clusterclient.Transport.Http
         {
             using (var timeoutCancellation = new CancellationTokenSource())
             {
-                var completedTask = await Task.WhenAny(mainTask, Task.Delay(settings.ConnectionTimeout.Value, timeoutCancellation.Token)).ConfigureAwait(false);
+                var completedTask = await Task.WhenAny(mainTask, Task.Delay(connectTimeout.Value, timeoutCancellation.Token)).ConfigureAwait(false);
                 if (completedTask is Task<HttpActionStatus> taskWithResult)
                 {
                     timeoutCancellation.Cancel();
@@ -53,7 +54,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 if (!ConnectTimeoutHelper.IsSocketConnected(state.Request, log))
                 {
                     state.CancelRequestAttempt();
-                    LogConnectionFailure(request, new WebException($"Connection attempt timed out. Timeout = {settings.ConnectionTimeout.Value}.", WebExceptionStatus.ConnectFailure), state.ConnectionAttempt);
+                    LogConnectionFailure(request, new WebException($"Connection attempt timed out. Timeout = {connectTimeout.Value}.", WebExceptionStatus.ConnectFailure), state.ConnectionAttempt);
                     return HttpActionStatus.ConnectionFailure;
                 }
 
@@ -63,7 +64,7 @@ namespace Vostok.Clusterclient.Transport.Http
 
         private void LogConnectionFailure(Request request, WebException error, int attempt)
         {
-            log.Error($"Connection failure. Target = {request.Url.Authority}. Attempt = {attempt}/{settings.ConnectionAttempts}. Status = {error.Status}.", error.InnerException ?? error);
+            log.Error($"Connection failure. Target = {request.Url.Authority}. Attempt = {attempt}. Status = {error.Status}.", error.InnerException ?? error);
         }
     }
 }
