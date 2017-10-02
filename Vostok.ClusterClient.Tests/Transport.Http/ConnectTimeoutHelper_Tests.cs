@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Vostok.Clusterclient.Helpers;
-using Vostok.Clusterclient.Transport.Http.Helpers;
+using Vostok.Clusterclient.Transport.Http;
 using Vostok.Logging;
 using Xunit;
 using Xunit.Abstractions;

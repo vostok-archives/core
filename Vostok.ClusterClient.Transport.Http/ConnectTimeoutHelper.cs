@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Net;
 using Vostok.Logging;
 
-namespace Vostok.Clusterclient.Transport.Http.Helpers
+namespace Vostok.Clusterclient.Transport.Http
 {
     internal static class ConnectTimeoutHelper
     {
