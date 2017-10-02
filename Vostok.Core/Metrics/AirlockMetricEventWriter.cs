@@ -41,7 +41,7 @@ namespace Vostok.Metrics
 
         public void Commit()
         {
-            airlock.Push(routingKey, this);
+            airlock.Push(routingKey, metricEvent);
         }
     }
 }
