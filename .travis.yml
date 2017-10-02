@@ -24,8 +24,8 @@ branches:
 
 solution: Vostok.Core.sln
 
-install:
-  - nuget restore Vostok.Core.sln
+#install:
+#  - nuget restore Vostok.Core.sln
 
 script:
   - cd Vostok.Core.Tests
