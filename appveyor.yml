@@ -1,7 +1,4 @@
 version: '1.0.0-pre{build}'
-branches:
-  only:
-    - master
 image: Visual Studio 2017
 install:
   - dotnet restore
@@ -18,7 +15,7 @@ before_build:
       $xml.Project.PropertyGroup.AppendChild($version)
       $xml.Save($xmlPath)
 after_build:
-  - ps: Get-ChildItem $env:appveyor_build_folder\Vostok.Core\bin\Release\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.Core\bin\Release\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
 test_script:
   - ps: dotnet test "$env:appveyor_build_folder\Vostok.Core.Tests\Vostok.Core.Tests.csproj" --logger "trx;LogFileName=core-tests.trx"
 after_test:
