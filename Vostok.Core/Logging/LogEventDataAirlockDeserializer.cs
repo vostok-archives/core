@@ -6,9 +6,9 @@ namespace Vostok.Logging
 {
     public class LogEventDataAirlockDeserializer : IAirlockDeserializer<LogEventData>
     {
-        public LogEventData Deserialize(IAirlockDeserializationSink sink)
+        public LogEventData Deserialize(IAirlockSource source)
         {
-            var reader = sink.Reader;
+            var reader = source.Reader;
             var logEventData = new LogEventData
             {
                 Timestamp = reader.ReadInt64(),

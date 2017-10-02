@@ -3,7 +3,7 @@ using Vostok.Commons.Binary;
 
 namespace Vostok.Airlock
 {
-    public interface IAirlockDeserializationSink
+    public interface IAirlockSource
     {
         Stream ReadStream { get; }
 
