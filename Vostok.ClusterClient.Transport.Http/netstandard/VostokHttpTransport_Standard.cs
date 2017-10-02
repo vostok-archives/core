@@ -8,6 +8,10 @@ using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Transport.Http
 {
+    // TODO(iloktionov): 1. Tune WinHttpHandler in case it backs our handler (see WinHttpSetTimeouts function)
+    // TODO(iloktionov): 2. Tune CurlHandler in case it backs our handler (see SetCurlOption function with CURLOPT_CONNECTTIMEOUT_MS)
+    // TODO(iloktionov): 3. Classify errors from WinHttpHandler (they are Win32Exceptions, see Interop.WinHttp in corefx)
+    // TODO(iloktionov): 4. Classify errors from CurlHandler (they are CurlExceptions, see Interop.CURLcode in corefx)
     public partial class VostokHttpTransport : IDisposable
     {
         private readonly ILog log;
