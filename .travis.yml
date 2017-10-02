@@ -2,9 +2,12 @@ language: csharp
 sudo: required
 dist: trusty
 mono: latest
-dotnet: 2.0
+dotnet: 2.0.0
 addons:
   apt:
+    sources:
+    - sourceline: 'deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-trusty-prod trusty main'
+      key_url: 'https://packages.microsoft.com/keys/microsoft.asc'
     packages:
     - gettext
     - libcurl4-openssl-dev
@@ -12,6 +15,8 @@ addons:
     - libssl-dev
     - libunwind8
     - zlib1g
+    - dotnet-hostfxr-1.0.1
+    - dotnet-sharedframework-microsoft.netcore.app-1.0.5
 
 branches:
   only:
