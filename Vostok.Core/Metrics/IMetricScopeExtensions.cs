@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Remoting.Messaging;
 
 namespace Vostok.Metrics
 {
@@ -11,20 +14,22 @@ namespace Vostok.Metrics
             string key,
             string value)
         {
-            throw new NotImplementedException();
+            return new MetricScopeTagEnricher(
+                scope,
+                new Dictionary<string, string> {{key, value}});
         }
 
         public static IMetricScope WithTags(
             this IMetricScope scope,
-            params KeyValuePair<string, string>[] tags)
+            IReadOnlyDictionary<string, string> tags)
         {
-            throw new NotImplementedException();
+            return new MetricScopeTagEnricher(scope, tags);
         }
 
         public static ITimer StartTimer(
             this IMetricScope scope)
         {
-            throw new NotImplementedException();
+            return new Timer(scope);
         }
     }
 }
