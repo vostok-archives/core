@@ -8,25 +8,31 @@ using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Transport.Http
 {
-    // TODO(iloktionov): 1. Tune WinHttpHandler in case it backs our handler (see WinHttpSetTimeouts function)
-    // TODO(iloktionov): 2. Tune CurlHandler in case it backs our handler (see SetCurlOption function with CURLOPT_CONNECTTIMEOUT_MS)
-    // TODO(iloktionov): 3. Classify errors from WinHttpHandler (they are Win32Exceptions, see Interop.WinHttp in corefx)
-    // TODO(iloktionov): 4. Classify errors from CurlHandler (they are CurlExceptions, see Interop.CURLcode in corefx)
-    // TODO(iloktionov): 5. Functional tests.
+    // TODO(iloktionov): 1. Tune CurlHandler in case it backs our handler (see SetCurlOption function with CURLOPT_CONNECTTIMEOUT_MS)
+    // TODO(iloktionov): 2. Classify errors from WinHttpHandler (they are Win32Exceptions, see Interop.WinHttp in corefx)
+    // TODO(iloktionov): 3. Classify errors from CurlHandler (they are CurlExceptions, see Interop.CURLcode in corefx)
+    // TODO(iloktionov): 4. Functional tests.
     public partial class VostokHttpTransport : IDisposable
     {
         private readonly ILog log;
+        private readonly HttpClientHandler handler;
         private readonly HttpClient httpClient;
 
         public VostokHttpTransport(ILog log)
         {
             this.log = log ?? throw new ArgumentNullException(nameof(log));
 
-            httpClient = new HttpClient(CreateClientHandler())
+            handler = CreateClientHandler();
+
+            TuneClientHandler();
+
+            httpClient = new HttpClient(handler)
             {
                 Timeout = Timeout.InfiniteTimeSpan
             };
         }
+
+        public TimeSpan? ConnectionTimeout { get; set; } = TimeSpan.FromMilliseconds(500);
 
         public async Task<Response> SendAsync(Request request, TimeSpan timeout, CancellationToken cancellationToken)
         {
@@ -62,7 +68,7 @@ namespace Vostok.Clusterclient.Transport.Http
 
         private static HttpClientHandler CreateClientHandler()
         {
-            return new HttpClientHandler
+            var handler = new HttpClientHandler
             {
                 AllowAutoRedirect = false,
                 AutomaticDecompression = DecompressionMethods.None,
@@ -75,6 +81,14 @@ namespace Vostok.Clusterclient.Transport.Http
                 UseProxy = false,
                 ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true
             };
+
+            return handler;
+        }
+
+        private void TuneClientHandler()
+        {
+            if (ConnectionTimeout.HasValue)
+                WinHttpHandlerTuner.Tune(handler, ConnectionTimeout.Value, log);
         }
 
         private Response HandleCancellationError(Request request, TimeSpan timeout, CancellationToken cancellationToken)
