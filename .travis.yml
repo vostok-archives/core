@@ -23,5 +23,6 @@ install:
   - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
 
 script:
-  - xbuild /p:Configuration=Release /v:m /p:restorepackages=false /p:DynamicConstants=LINUX Vostok.Core.sln
-  - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./Vostok.Core.Tests/bin/Release/Vostok.Core.Tests.dll
+  - dotnet restore
+  - dotnet build -c Release
+  - dotnet ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./Vostok.Core.Tests/bin/Release/netcoreapp2.0/Vostok.Core.Tests.dll
