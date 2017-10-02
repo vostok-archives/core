@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Vostok.Airlock;
+﻿using Vostok.Airlock;
 using Vostok.Commons.Binary;
 
 namespace Vostok.Logging
