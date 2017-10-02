@@ -12,6 +12,7 @@ namespace Vostok.Clusterclient.Transport.Http
     // TODO(iloktionov): 2. Tune CurlHandler in case it backs our handler (see SetCurlOption function with CURLOPT_CONNECTTIMEOUT_MS)
     // TODO(iloktionov): 3. Classify errors from WinHttpHandler (they are Win32Exceptions, see Interop.WinHttp in corefx)
     // TODO(iloktionov): 4. Classify errors from CurlHandler (they are CurlExceptions, see Interop.CURLcode in corefx)
+    // TODO(iloktionov): 5. Functional tests.
     public partial class VostokHttpTransport : IDisposable
     {
         private readonly ILog log;
