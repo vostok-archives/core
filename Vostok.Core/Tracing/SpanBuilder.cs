@@ -8,12 +8,14 @@ namespace Vostok.Tracing
 {
     internal class SpanBuilder : ISpanBuilder
     {
+        private const string SpanContextName = "Vostok.Tracing.Span";
         private readonly string airlockRoutingKey;
         private readonly IAirlock airlock;
         private readonly PoolHandle<Span> spanHandle;
         private readonly TraceContextScope contextScope;
         private readonly TraceConfiguration configuration;
         private readonly Stopwatch stopwatch;
+        private readonly Span parentSpan;
 
         public SpanBuilder(
             string operationName,
@@ -31,8 +33,25 @@ namespace Vostok.Tracing
 
             stopwatch = Stopwatch.StartNew();
 
-            InitializeSpan(operationName);
+            parentSpan = Context.Properties.Get<Span>(SpanContextName);
+
+            InitializeSpan(operationName ?? parentSpan?.OperationName);
             EnrichSpanWithContext();
+            EnrichSpanFromParentSpan();
+        }
+
+        private void EnrichSpanFromParentSpan()
+        {
+            if (parentSpan == null)
+            {
+                return;
+            }
+
+            foreach (var inheritableProperty in configuration.InheritableProperties)
+            {
+                var annotation = parentSpan.Annotations[inheritableProperty];
+                SetAnnotation(inheritableProperty, annotation);
+            }
         }
 
         public bool IsCanceled { get; set; } = false;
@@ -73,6 +92,7 @@ namespace Vostok.Tracing
                 CleanupSpan();
                 spanHandle.Dispose();
                 contextScope.Dispose();
+                Context.Properties.Set(SpanContextName, parentSpan);
             }
         }
 
