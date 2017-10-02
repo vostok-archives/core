@@ -6,7 +6,7 @@ using Vostok.Clusterclient.Model;
 
 namespace Vostok.Clusterclient.Transport.Http
 {
-    internal class HttpWebRequestState
+    internal class HttpWebRequestState : IDisposable
     {
         public HttpWebRequestState(TimeSpan timeout)
         {
