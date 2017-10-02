@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vostok.ClusterClient.Transport.Http\Vostok.ClusterClient.Transport.Http.csproj" />
     <ProjectReference Include="..\Vostok.ClusterClient\Vostok.ClusterClient.csproj" />
   </ItemGroup>
 
