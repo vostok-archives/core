@@ -9,8 +9,8 @@ namespace Vostok.Clusterclient.Transport.Http
     {
         static HttpWebRequestFactory()
         {
-            HttpWebRequest.DefaultMaximumErrorResponseLength = -1;
-            HttpWebRequest.DefaultMaximumResponseHeadersLength = -1;
+            HttpWebRequest.DefaultMaximumErrorResponseLength = int.MaxValue;
+            HttpWebRequest.DefaultMaximumResponseHeadersLength = int.MaxValue;
 
             ServicePointManager.ServerCertificateValidationCallback = (_, __, ___, ____) => true;
             ServicePointManager.CheckCertificateRevocationList = false;
