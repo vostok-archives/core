@@ -24,9 +24,6 @@ branches:
 
 solution: Vostok.Core.sln
 
-install:
-  - nuget restore Vostok.ClusterClient.sln
-
 script:
   - cd Vostok.ClusterClient.Tests
   - dotnet build -c Release -f netcoreapp2.0
