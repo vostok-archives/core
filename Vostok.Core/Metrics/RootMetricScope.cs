@@ -1,4 +1,5 @@
 ﻿using System;
+using Vostok.Commons;
 using Vostok.Flow;
 
 namespace Vostok.Metrics
@@ -14,24 +15,32 @@ namespace Vostok.Metrics
 
         public IMetricEventWriter WriteEvent()
         {
-            return EnrichWithContext(
-                new AirlockMetricEventWriter(configuration.Airlock, configuration.EventRoutingKey));
+            var writer = new AirlockMetricEventWriter(configuration.Airlock, configuration.EventRoutingKey);
+            EnrichWithContext(writer);
+            EnrichWithHostname(writer);
+            return writer;
         }
 
         public IMetricEventWriter WriteMetric()
         {
-            return EnrichWithContext(
-                new AirlockMetricEventWriter(configuration.Airlock, configuration.MetricRoutingKey));
+            var writer = new AirlockMetricEventWriter(configuration.Airlock, configuration.MetricRoutingKey);
+            EnrichWithContext(writer);
+            EnrichWithHostname(writer);
+            return writer;
         }
 
-        private IMetricEventWriter EnrichWithContext(IMetricEventWriter writer)
+        private void EnrichWithContext(IMetricEventWriter writer)
         {
             foreach (var pair in Context.Properties.Current)
             {
                 if (configuration.ContextFieldsWhitelist.Contains(pair.Key))
                     writer.SetTag(pair.Key, Convert.ToString(pair.Value));
             }
-            return writer;
+        }
+
+        private void EnrichWithHostname(IMetricEventWriter writer)
+        {
+            writer.SetTag("host", HttpClientHostname.Get());
         }
     }
 }
