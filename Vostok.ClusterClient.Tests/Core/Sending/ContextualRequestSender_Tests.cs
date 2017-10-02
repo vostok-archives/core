@@ -39,7 +39,7 @@ namespace Vostok.Clusterclient.Core.Sending
 
             var log = new TestOutputLog(outputHelper);
 
-            context = new RequestContext(request, Strategy.SingleReplica, Budget.WithRemaining(timeout), log, CancellationToken.None, null, int.MaxValue);
+            context = new RequestContext(request, Strategy.SingleReplica, Budget.WithRemaining(timeout), log, CancellationToken.None, null, int.MaxValue, null);
             contextualSender = new ContextualRequestSender(baseSender, context);
         }
 

@@ -51,5 +51,11 @@ namespace Vostok.Clusterclient.Modules
         /// Gets or sets the maximum count of replicas a request may use.
         /// </summary>
         int MaximumReplicasToUse { get; set; }
+
+        /// <summary>
+        /// Gets or sets operation name.
+        /// </summary>
+        [CanBeNull]
+        string OperationName { get; }
     }
 }

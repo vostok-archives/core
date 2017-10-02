@@ -126,7 +126,7 @@ namespace Vostok.Clusterclient.Core.Modules
         [Fact]
         public void Should_reset_replica_results_in_native_context_implementation()
         {
-            var contextImpl = new RequestContext(request, null, Budget.Infinite, context.Log, CancellationToken.None, null, int.MaxValue);
+            var contextImpl = new RequestContext(request, null, Budget.Infinite, context.Log, CancellationToken.None, null, int.MaxValue, null);
 
             contextImpl.SetReplicaResult(new ReplicaResult(new Uri("http://replica1"), Responses.Timeout, ResponseVerdict.Reject, TimeSpan.Zero));
             contextImpl.SetReplicaResult(new ReplicaResult(new Uri("http://replica2"), Responses.Timeout, ResponseVerdict.Reject, TimeSpan.Zero));
