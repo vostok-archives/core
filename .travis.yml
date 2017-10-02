@@ -1,7 +1,7 @@
 language: csharp
 sudo: required
 dist: trusty
-mono: latest
+mono: none
 dotnet: 2.0.0
 addons:
   apt:
@@ -26,10 +26,8 @@ solution: Vostok.Core.sln
 
 install:
   - nuget restore Vostok.Core.sln
-  - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
 
 script:
-  - dotnet restore
   - cd Vostok.Core.Tests
   - dotnet build -c Release -f netcoreapp2.0
   - dotnet xunit
