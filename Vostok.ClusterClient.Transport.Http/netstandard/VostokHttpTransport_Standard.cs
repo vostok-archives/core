@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -9,9 +10,8 @@ using Vostok.Logging;
 namespace Vostok.Clusterclient.Transport.Http
 {
     // TODO(iloktionov): 1. Tune CurlHandler in case it backs our handler (see SetCurlOption function with CURLOPT_CONNECTTIMEOUT_MS)
-    // TODO(iloktionov): 2. Classify errors from WinHttpHandler (they are Win32Exceptions, see Interop.WinHttp in corefx)
-    // TODO(iloktionov): 3. Classify errors from CurlHandler (they are CurlExceptions, see Interop.CURLcode in corefx)
-    // TODO(iloktionov): 4. Functional tests.
+    // TODO(iloktionov): 2. Classify errors from CurlHandler (they are CurlExceptions, see Interop.CURLcode in corefx)
+    // TODO(iloktionov): 3. Functional tests.
     public partial class VostokHttpTransport : IDisposable
     {
         private readonly ILog log;
@@ -57,7 +57,7 @@ namespace Vostok.Clusterclient.Transport.Http
             }
             catch (Exception error)
             {
-                return HandleGenericError(request, timeout, error);
+                return HandleGenericError(request, error);
             }
         }
 
@@ -101,11 +101,23 @@ namespace Vostok.Clusterclient.Transport.Http
             return new Response(ResponseCode.RequestTimeout);
         }
 
-        private Response HandleGenericError(Request request, TimeSpan timeout, Exception error)
+        private Response HandleGenericError(Request request, Exception error)
         {
+            error = error.InnerException ?? error;
+
+            if (error is Win32Exception win32Error)
+                return HandleWin32Error(request, win32Error);
+
             LogUnknownException(request, error);
 
             return new Response(ResponseCode.UnknownFailure);
+        }
+
+        private Response HandleWin32Error(Request request, Win32Exception error)
+        {
+            LogWin32Error(request, error);
+
+            return WinHttpErrorsHandler.Handle(error);
         }
 
         #region Logging
@@ -118,6 +130,11 @@ namespace Vostok.Clusterclient.Transport.Http
         private void LogUnknownException(Request request, Exception error)
         {
             log.Error($"Unknown error in sending request to {request.Url.Authority}. ", error);
+        }
+
+        private void LogWin32Error(Request request, Win32Exception error)
+        {
+            log.Error($"WinAPI error with code {error.NativeErrorCode} while sending request to {request.Url.Authority}.", error);
         }
 
         #endregion
