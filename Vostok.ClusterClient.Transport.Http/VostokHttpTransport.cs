@@ -23,6 +23,7 @@ namespace Vostok.Clusterclient.Transport.Http
         private readonly VostokHttpTransportSettings settings;
         private readonly ILog log;
         private readonly ConnectTimeLimiter connectTimeLimiter;
+        private readonly ThreadPoolMonitor threadPoolMonitor;
 
         public VostokHttpTransport(ILog log)
             : this(new VostokHttpTransportSettings(), log)
@@ -35,6 +36,7 @@ namespace Vostok.Clusterclient.Transport.Http
             this.log = log ?? throw new ArgumentNullException(nameof(log));
 
             connectTimeLimiter = new ConnectTimeLimiter(settings, log);
+            threadPoolMonitor = ThreadPoolMonitor.Instance;
         }
 
         public async Task<Response> SendAsync(Request request, TimeSpan timeout, CancellationToken cancellationToken)
@@ -61,7 +63,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 // (iloktionov): Если выполнившееся задание не кастуется к Task<Response>, сработал таймаут.
                 state.CancelRequest();
                 LogRequestTimeout(request, timeout);
-                // TODO(iloktionov): fix threadpool if needed
+                threadPoolMonitor.ReportAndFixIfNeeded(log);
 
                 // (iloktionov): Попытаемся дождаться завершения задания по отправке запроса перед тем, как возвращать результат:
                 await Task.WhenAny(senderTask.ContinueWith(_ => {}), Task.Delay(RequestAbortTimeout)).ConfigureAwait(false);
