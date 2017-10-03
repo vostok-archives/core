@@ -11,16 +11,14 @@ namespace Vostok.Clusterclient.Transport.Http
 
     internal class ConnectTimeLimiter
     {
-        private readonly TimeSpan? connectTimeout;
         private readonly ILog log;
 
-        public ConnectTimeLimiter(TimeSpan? connectTimeout, ILog log)
+        public ConnectTimeLimiter(ILog log)
         {
-            this.connectTimeout = connectTimeout;
             this.log = log;
         }
 
-        public Task<HttpActionStatus> LimitConnectTime(Task<HttpActionStatus> mainTask, Request request, HttpWebRequestState state)
+        public Task<HttpActionStatus> LimitConnectTime(Task<HttpActionStatus> mainTask, Request request, HttpWebRequestState state, TimeSpan? connectTimeout)
         {
             if (connectTimeout == null)
                 return mainTask;
@@ -37,10 +35,10 @@ namespace Vostok.Clusterclient.Transport.Http
             if (ConnectTimeoutHelper.IsSocketConnected(state.Request, log))
                 return mainTask;
 
-            return LimitConnectTimeInternal(mainTask, request, state);
+            return LimitConnectTimeInternal(mainTask, request, state, connectTimeout);
         }
 
-        private async Task<HttpActionStatus> LimitConnectTimeInternal(Task<HttpActionStatus> mainTask, Request request, HttpWebRequestState state)
+        private async Task<HttpActionStatus> LimitConnectTimeInternal(Task<HttpActionStatus> mainTask, Request request, HttpWebRequestState state, TimeSpan? connectTimeout)
         {
             using (var timeoutCancellation = new CancellationTokenSource())
             {

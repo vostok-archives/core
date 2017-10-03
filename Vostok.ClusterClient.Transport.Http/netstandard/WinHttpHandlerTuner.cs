@@ -16,7 +16,7 @@ namespace Vostok.Clusterclient.Transport.Http
         private static volatile Func<HttpClientHandler, SafeHandle> handleExtractor;
         private static volatile bool canTune = true;
 
-        public static void Tune(HttpClientHandler handler, TimeSpan connectTimeout, ILog log)
+        public static void Tune(HttpClientHandler handler, TimeSpan? connectTimeout, ILog log)
         {
             if (!canTune)
                 return;
@@ -30,7 +30,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 if (handle == null)
                     return;
 
-                if (!WinHttpSetTimeouts(handle, 0, (int) connectTimeout.TotalMilliseconds, 0, 0))
+                if (!WinHttpSetTimeouts(handle, 0, (int) (connectTimeout?.TotalMilliseconds ?? 0d), 0, 0))
                     throw new Win32Exception();
             }
             catch (Exception error)

@@ -15,7 +15,7 @@ namespace Vostok.Clusterclient.Transport.Http.Helpers
 
         public TestServer()
         {
-            port = GetFreePort();
+            port = FreeTcpPortFinder.GetFreePort();
             listener = new HttpListener();
             listener.Prefixes.Add($"http://+:{port}/");
         }
@@ -77,20 +77,6 @@ namespace Vostok.Clusterclient.Transport.Http.Helpers
                 Query = request.QueryString,
                 Body = bodyStream.ToArray()
             };
-        }
-
-        private static int GetFreePort()
-        {
-            var listener = new TcpListener(IPAddress.Loopback, 0);
-            try
-            {
-                listener.Start();
-                return ((IPEndPoint)listener.LocalEndpoint).Port;
-            }
-            finally
-            {
-                listener.Stop();
-            }
         }
     }
 }

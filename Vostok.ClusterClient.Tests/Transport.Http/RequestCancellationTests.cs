@@ -44,25 +44,6 @@ namespace Vostok.Clusterclient.Transport.Http
         }
 
         [Fact]
-        public void Cancellation_should_work_correctly_when_server_is_slow_to_transmit_response_body()
-        {
-            using (var server = TestServer.StartNew(ctx =>
-            {
-                ctx.Response.StatusCode = 200;
-                ctx.Response.ContentLength64 = 10;
-
-                for (var i = 0; i < 10; i++)
-                {
-                    Thread.Sleep(100);
-                    ctx.Response.OutputStream.WriteByte(0xFF);
-                }
-            }))
-            {
-                SendWithCancellation(Request.Get(server.Url)).Code.Should().Be(ResponseCode.Canceled);
-            }
-        }
-
-        [Fact]
         public void Cancellation_should_work_correctly_when_server_connection_cannot_be_established()
         {
             SendWithCancellation(Request.Get("http://193.54.62.128:6153/")).Code.Should().Be(ResponseCode.Canceled);

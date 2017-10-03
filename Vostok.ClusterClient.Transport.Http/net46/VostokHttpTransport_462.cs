@@ -28,7 +28,7 @@ namespace Vostok.Clusterclient.Transport.Http
         {
             this.log = log ?? throw new ArgumentNullException(nameof(log));
 
-            connectTimeLimiter = new ConnectTimeLimiter(ConnectionTimeout, log);
+            connectTimeLimiter = new ConnectTimeLimiter(log);
             threadPoolMonitor = ThreadPoolMonitor.Instance;
         }
 
@@ -94,7 +94,7 @@ namespace Vostok.Clusterclient.Transport.Http
 
                         if (request.Content != null)
                         {
-                            status = await connectTimeLimiter.LimitConnectTime(SendRequestBodyAsync(request, state), request, state).ConfigureAwait(false);
+                            status = await connectTimeLimiter.LimitConnectTime(SendRequestBodyAsync(request, state), request, state, ConnectionTimeout).ConfigureAwait(false);
 
                             if (status == HttpActionStatus.ConnectionFailure)
                                 continue;
@@ -109,7 +109,7 @@ namespace Vostok.Clusterclient.Transport.Http
 
                         status = request.Content != null
                             ? await GetResponseAsync(request, state).ConfigureAwait(false)
-                            : await connectTimeLimiter.LimitConnectTime(GetResponseAsync(request, state), request, state).ConfigureAwait(false);
+                            : await connectTimeLimiter.LimitConnectTime(GetResponseAsync(request, state), request, state, ConnectionTimeout).ConfigureAwait(false);
 
                         if (status == HttpActionStatus.ConnectionFailure)
                             continue;
