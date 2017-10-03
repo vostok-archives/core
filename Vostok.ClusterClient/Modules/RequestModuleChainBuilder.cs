@@ -18,7 +18,7 @@ namespace Vostok.Clusterclient.Modules
             var requestSender = new RequestSender(config, storageProvider, responseClassifier, requestConverter, config.Transport);
             var resultStatusSelector = new ClusterResultStatusSelector();
 
-            var modules = new List<IRequestModule>(11 + config.Modules?.Count ?? 0)
+            var modules = new List<IRequestModule>(14 + config.Modules?.Count ?? 0)
             {
                 new ErrorCatchingModule(),
                 new RequestTransformationModule(config.RequestTransforms),
@@ -27,6 +27,9 @@ namespace Vostok.Clusterclient.Modules
 
             if (config.Modules != null)
                 modules.AddRange(config.Modules);
+
+            if (config.EnableTracing)
+                modules.Add(new TracingModule(config.ServiceName));
 
             modules.Add(new LoggingModule(config.LogRequestDetails, config.LogResultDetails));
             modules.Add(new ResponseTransformationModule(config.ResponseTransforms));

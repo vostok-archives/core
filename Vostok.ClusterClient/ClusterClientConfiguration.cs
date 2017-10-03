@@ -37,6 +37,7 @@ namespace Vostok.Clusterclient
             TransferDistributedContext = ClusterClientDefaults.TransferDistributedContext;
             IncludeRequestTimeoutHeader = ClusterClientDefaults.IncludeRequestTimeoutHeader;
             IncludeClientIdentityHeader = ClusterClientDefaults.IncludeClientIdentityHeader;
+            EnableTracing = ClusterClientDefaults.EnableTracing;
         }
 
         public ILog Log { get; }
@@ -90,6 +91,10 @@ namespace Vostok.Clusterclient
         public bool IncludeRequestTimeoutHeader { get; set; }
 
         public bool IncludeClientIdentityHeader { get; set; }
+
+        public bool EnableTracing { get; set; }
+
+        public string ServiceName { get; set; }
 
         public bool IsValid => !Validate().Any();
 

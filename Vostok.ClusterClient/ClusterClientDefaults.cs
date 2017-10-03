@@ -37,6 +37,7 @@ namespace Vostok.Clusterclient
         public const bool TransferDistributedContext = true;
         public const bool IncludeRequestTimeoutHeader = true;
         public const bool IncludeClientIdentityHeader = true;
+        public const bool EnableTracing = true;
 
         public const int MaxReplicasUsedPerRequest = 3;
 

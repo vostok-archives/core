@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
+using Vostok.Commons;
 
 namespace Vostok.Clusterclient.Model
 {
@@ -137,14 +138,9 @@ namespace Vostok.Clusterclient.Model
             builder.Append(Method);
             builder.Append(" ");
 
-            var urlString = Url.ToString();
-
-            if (!includeQuery)
-            {
-                var queryBeginning = urlString.IndexOf("?", StringComparison.Ordinal);
-                if (queryBeginning >= 0)
-                    urlString = urlString.Substring(0, queryBeginning);
-            }
+            var urlString = includeQuery 
+                ? Url.ToString() 
+                : Url.ToStringWithoutQuery();
 
             builder.Append(urlString);
 

@@ -203,5 +203,17 @@ namespace Vostok.Clusterclient
         /// <para>This parameter is optional and has a default value (see <see cref="ClusterClientDefaults.IncludeClientIdentityHeader"/>).</para>
         /// </summary>
         bool IncludeClientIdentityHeader { get; set; }
+
+        /// <summary>
+        /// <para>Gets or sets whether to enable tracing.</para>
+        /// <para>This parameter is optional and has a default value (see <see cref="ClusterClientDefaults.EnableTracing"/>).</para>
+        /// </summary>
+        bool EnableTracing { get; set; }
+
+        /// <summary>
+        /// <para>Gets or sets service name.</para>
+        /// <para>This parameter is optional and has no default value.</para>
+        /// </summary>
+        string ServiceName { get; set; }
     }
 }

@@ -61,6 +61,9 @@ namespace Vostok.Clusterclient
             if (configuration.TransferDistributedContext)
                 configuration.Transport = new TransportWithDistributedContext(configuration.Transport);
 
+            if (configuration.EnableTracing)
+                configuration.Transport = new TransportWithTracing(configuration.Transport);
+
             configuration.Transport = new TransportWithAuxiliaryHeaders(configuration.Transport, configuration);
 
             ReplicaStorageProvider = ReplicaStorageProviderFactory.Create(configuration.ReplicaStorageScope);
