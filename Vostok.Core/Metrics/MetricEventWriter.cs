@@ -11,6 +11,7 @@ namespace Vostok.Metrics
         public MetricEventWriter(Action<MetricEvent> commit)
         {
             this.commit = commit;
+            //TODO (@ezsilmar) Do it more efficiently
             this.metricEvent = new MetricEvent
             {
                 Timestamp = DateTimeOffset.UtcNow,
