@@ -50,6 +50,9 @@ namespace Vostok.Tracing
 
             foreach (var inheritableProperty in configuration.InheritableProperties)
             {
+                if (!parentSpan.Annotations.ContainsKey(inheritableProperty))
+                    continue;
+
                 var annotation = parentSpan.Annotations[inheritableProperty];
                 SetAnnotation(inheritableProperty, annotation);
             }
