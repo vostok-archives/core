@@ -8,8 +8,11 @@ namespace Vostok.Clusterclient.Modules
 {
     internal class TracingModule : IRequestModule
     {
+        private readonly string serviceName;
+
         public TracingModule(string serviceName)
         {
+            this.serviceName = serviceName;
         }
 
         public async Task<ClusterResult> ExecuteAsync(IRequestContext context, Func<IRequestContext, Task<ClusterResult>> next)
@@ -19,6 +22,9 @@ namespace Vostok.Clusterclient.Modules
 
             using (var span = Trace.BeginSpan(operationName))
             {
+                if (!string.IsNullOrEmpty(serviceName))
+                    span.SetAnnotation("serviceName", serviceName);
+
                 span.SetAnnotation("kind", "cluster-client");
                 span.SetAnnotation("component", "cluster-client");
                 span.SetAnnotation("cluster.strategy", context.Strategy.GetType().Name);
