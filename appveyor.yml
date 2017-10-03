@@ -17,7 +17,7 @@ before_build:
       $xml.Save($xmlPath)
 after_build:
   - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient\bin\Release\Vostok.ClusterClient.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
-  - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient.Transport.Http\bin\Release\Vostok.ClusterClient.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
+  - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient.Transport.Http\bin\Release\Vostok.ClusterClient.Transport.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
 test_script:
   - ps: dotnet test "$env:appveyor_build_folder\Vostok.ClusterClient.Tests\Vostok.ClusterClient.Tests.csproj" --logger "trx;LogFileName=clusterclient-tests.trx"
 after_test:
