@@ -34,11 +34,10 @@ namespace Vostok.Clusterclient.Modules
 
                 span.SetAnnotation("kind", "cluster-client");
                 span.SetAnnotation("component", "cluster-client");
-                span.SetAnnotation("cluster.strategy", context.Strategy.GetType().Name);
+                span.SetAnnotation("cluster.strategy", context.Strategy.ToString());
                 span.SetAnnotation("http.url", context.Request.Url.ToStringWithoutQuery());
                 span.SetAnnotation("http.method", context.Request.Method);
-                if (context.Request.Content != null)
-                    span.SetAnnotation("http.requestСontentLength", context.Request.Content.Length);
+                span.SetAnnotation("http.requestСontentLength", context.Request.Content?.Length ?? 0);
 
                 clusterResult = await next(context).ConfigureAwait(false);
 

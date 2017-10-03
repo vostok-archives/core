@@ -37,10 +37,11 @@ namespace Vostok.Clusterclient.Core.Modules
             {
                 ["kind"] = "cluster-client",
                 ["component"] = "cluster-client",
-                ["cluster.strategy"] = "ParallelRequestStrategy",
+                ["cluster.strategy"] = "Parallel-2",
                 ["cluster.status"] = "Success",
                 ["http.url"] = "vostok/process",
                 ["http.method"] = "GET",
+                ["http.requestСontentLength"] = "0",
                 ["http.responseСontentLength"] = "0",
                 ["http.code"] = "409",
                 ["serviceName"] = "serviceName"

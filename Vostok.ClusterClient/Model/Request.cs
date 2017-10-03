@@ -138,7 +138,9 @@ namespace Vostok.Clusterclient.Model
             builder.Append(Method);
             builder.Append(" ");
 
-            var urlString = Url.ToStringWithoutQuery();
+            var urlString = includeQuery 
+                ? Url.ToString() 
+                : Url.ToStringWithoutQuery();
 
             builder.Append(urlString);
 
