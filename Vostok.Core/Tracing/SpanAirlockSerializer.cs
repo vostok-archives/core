@@ -33,7 +33,6 @@ namespace Vostok.Tracing
                 TraceId = reader.ReadGuid(),
                 SpanId = reader.ReadGuid(),
                 ParentSpanId = reader.ReadNullableStruct(x => x.ReadGuid()),
-                OperationName = reader.ReadString(),
                 BeginTimestamp = new DateTimeOffset(reader.ReadInt64(), TimeSpan.Zero),
                 EndTimestamp = reader.ReadNullableStruct(x => new DateTimeOffset(x.ReadInt64(), TimeSpan.Zero)),
                 Annotations = reader.ReadDictionary(r => r.ReadString(), r => r.ReadString())
