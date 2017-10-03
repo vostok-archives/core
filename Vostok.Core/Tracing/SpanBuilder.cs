@@ -47,7 +47,7 @@ namespace Vostok.Tracing
                 return;
             }
 
-            foreach (var inheritableProperty in configuration.InheritableProperties)
+            foreach (var inheritableProperty in configuration.InheritedFieldsWhitelist)
             {
                 if (!parentSpan.Annotations.ContainsKey(inheritableProperty))
                     continue;

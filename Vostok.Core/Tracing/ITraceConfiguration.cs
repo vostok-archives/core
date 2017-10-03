@@ -8,7 +8,7 @@ namespace Vostok.Tracing
     {
         ISet<string> ContextFieldsWhitelist { get; }
 
-        ISet<string> InheritableProperties { get; }
+        ISet<string> InheritedFieldsWhitelist { get; }
 
         Func<bool> IsEnabled { get; set; }
 

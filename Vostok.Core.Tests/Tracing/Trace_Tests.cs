@@ -21,7 +21,7 @@ namespace Vostok.Tracing
         {
             const string customKey = "customKey";
             const string customValue = "customValue";
-            Trace.Configuration.InheritableProperties.Add(customKey);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(customKey);
             airlock.Push(Arg.Any<string>(), Arg.Do<Span>(x =>
             {
                 x.Annotations.Keys.Should().Contain(customKey);
