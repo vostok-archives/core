@@ -82,8 +82,7 @@ namespace Vostok.Clusterclient
             TimeSpan? timeout = null,
             IRequestStrategy strategy = null,
             CancellationToken cancellationToken = default(CancellationToken),
-            RequestPriority? priority = null,
-            string operationName = null)
+            RequestPriority? priority = null)
         {
             return pipelineDelegate(
                 CreateContext(
@@ -92,14 +91,13 @@ namespace Vostok.Clusterclient
                     strategy ?? configuration.DefaultRequestStrategy,
                     cancellationToken,
                     priority ?? configuration.DefaultPriority,
-                    configuration.MaxReplicasUsedPerRequest,
-                    operationName)
+                    configuration.MaxReplicasUsedPerRequest)
             );
         }
 
-        private RequestContext CreateContext(Request request, TimeSpan timeout, IRequestStrategy strategy, CancellationToken cancellationToken, RequestPriority? priority, int maxReplicasToUse, string operationName)
+        private RequestContext CreateContext(Request request, TimeSpan timeout, IRequestStrategy strategy, CancellationToken cancellationToken, RequestPriority? priority, int maxReplicasToUse)
         {
-            return new RequestContext(request, strategy, RequestTimeBudget.StartNew(timeout, BudgetPrecision), configuration.Log, cancellationToken, priority, maxReplicasToUse, operationName);
+            return new RequestContext(request, strategy, RequestTimeBudget.StartNew(timeout, BudgetPrecision), configuration.Log, cancellationToken, priority, maxReplicasToUse);
         }
     }
 }

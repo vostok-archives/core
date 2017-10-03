@@ -18,7 +18,7 @@ namespace Vostok.Clusterclient.Core.Sending
         {
             var log = new TestOutputLog(outputHelper);
 
-            context = new RequestContext(Request.Get("foo/bar"), Strategy.Sequential2, Budget.Infinite, log, CancellationToken.None, null, int.MaxValue, null);
+            context = new RequestContext(Request.Get("foo/bar"), Strategy.Sequential2, Budget.Infinite, log, CancellationToken.None, null, int.MaxValue);
         }
 
         [Fact]

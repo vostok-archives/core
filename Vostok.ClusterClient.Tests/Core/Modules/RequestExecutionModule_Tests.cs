@@ -51,7 +51,7 @@ namespace Vostok.Clusterclient.Core.Modules
 
             var log = new TestOutputLog(outputHelper);
 
-            context = new RequestContext(Request.Get("foo/bar"), Substitute.For<IRequestStrategy>(), Budget.Infinite, log, CancellationToken.None, null, int.MaxValue, null);
+            context = new RequestContext(Request.Get("foo/bar"), Substitute.For<IRequestStrategy>(), Budget.Infinite, log, CancellationToken.None, null, int.MaxValue);
             context.Strategy.SendAsync(null, null, null, null, 0, default(CancellationToken))
                 .ReturnsForAnyArgs(
                     async info =>
@@ -140,7 +140,7 @@ namespace Vostok.Clusterclient.Core.Modules
 
             tokenSource.Cancel();
 
-            context = new RequestContext(context.Request, context.Strategy, context.Budget, context.Log, tokenSource.Token, null, int.MaxValue, null);
+            context = new RequestContext(context.Request, context.Strategy, context.Budget, context.Log, tokenSource.Token, null, int.MaxValue);
 
             Action action = () => Execute();
 

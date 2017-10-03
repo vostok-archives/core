@@ -31,7 +31,6 @@ namespace Vostok.Clusterclient.Core.Modules
             var request = new Request("GET", new Uri("vostok/process?p1=p", UriKind.Relative));
             requestContext.Request.Returns(request);
             requestContext.Strategy.Returns(new ParallelRequestStrategy(2));
-            requestContext.OperationName.Returns((string) null);
             var response = new Response(ResponseCode.Conflict);
             var clusterResult = new ClusterResult(ClusterResultStatus.Success, new List<ReplicaResult>(), response, request);
             var expectedAnnotations = new Dictionary<string, string>

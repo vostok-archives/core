@@ -24,7 +24,6 @@ namespace Vostok.Clusterclient
             [CanBeNull] TimeSpan? timeout = null, 
             [CanBeNull] IRequestStrategy strategy = null, 
             CancellationToken cancellationToken = default(CancellationToken),
-            [CanBeNull] RequestPriority? priority = null,
-            [CanBeNull] string operationName = null);
+            [CanBeNull] RequestPriority? priority = null);
     }
 }

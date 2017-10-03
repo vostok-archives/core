@@ -19,8 +19,7 @@ namespace Vostok.Clusterclient.Modules
             ILog log, 
             CancellationToken cancellationToken, 
             RequestPriority? priority,
-            int maximumReplicasToUse,
-            string operationName)
+            int maximumReplicasToUse)
         {
             Request = request;
             Strategy = strategy;
@@ -29,7 +28,6 @@ namespace Vostok.Clusterclient.Modules
             Priority = priority;
             CancellationToken = cancellationToken;
             MaximumReplicasToUse = maximumReplicasToUse;
-            OperationName = operationName;
 
             ResetReplicaResults();
         }
@@ -47,8 +45,6 @@ namespace Vostok.Clusterclient.Modules
         public RequestPriority? Priority { get; }
 
         public int MaximumReplicasToUse { get; set; }
-
-        public string OperationName { get; }
 
         public void SetReplicaResult(ReplicaResult result)
         {
