@@ -8,15 +8,20 @@ namespace Vostok.Metrics
         private readonly Action<MetricEvent> commit;
         private readonly MetricEvent metricEvent;
 
+        private readonly Dictionary<string, string> tags;
+        private readonly Dictionary<string, double> values;
+
         public MetricEventWriter(Action<MetricEvent> commit)
         {
             this.commit = commit;
+            tags = new Dictionary<string, string>();
+            values = new Dictionary<string, double>();
             //TODO (@ezsilmar) Do it more efficiently
             this.metricEvent = new MetricEvent
             {
                 Timestamp = DateTimeOffset.UtcNow,
-                Tags = new Dictionary<string, string>(),
-                Values = new Dictionary<string, double>()
+                Tags = tags,
+                Values = values
             };
         }
 
@@ -28,13 +33,13 @@ namespace Vostok.Metrics
 
         public IMetricEventWriter SetTag(string key, string value)
         {
-            metricEvent.Tags[key] = value;
+            tags[key] = value;
             return this;
         }
 
         public IMetricEventWriter SetValue(string key, double value)
         {
-            metricEvent.Values[key] = value;
+            values[key] = value;
             return this;
         }
 
