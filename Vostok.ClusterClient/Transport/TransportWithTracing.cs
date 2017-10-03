@@ -23,7 +23,7 @@ namespace Vostok.Clusterclient.Transport
             {
                 span.SetAnnotation("kind", "http-client");
                 span.SetAnnotation("component", "cluster-client");
-                span.SetAnnotation("http.url", request.Url.ToString(false));
+                span.SetAnnotation("http.url", request.Url.ToStringWithoutQuery());
                 span.SetAnnotation("http.method", request.Method);
                 if (request.Content != null)
                     span.SetAnnotation("http.requestСontentLength", request.Content.Length);
