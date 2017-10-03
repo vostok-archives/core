@@ -13,6 +13,7 @@ using Vostok.Clusterclient.Strategies;
 using Vostok.Clusterclient.Topology;
 using Vostok.Clusterclient.Transforms;
 using Vostok.Clusterclient.Transport;
+using Vostok.Commons.Model;
 using Vostok.Logging;
 
 namespace Vostok.Clusterclient

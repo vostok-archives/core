@@ -3,6 +3,7 @@ using System.Threading;
 using JetBrains.Annotations;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Strategies;
+using Vostok.Commons.Model;
 
 namespace Vostok.Clusterclient
 {
@@ -21,7 +22,8 @@ namespace Vostok.Clusterclient
             [NotNull] Request request,
             [CanBeNull] TimeSpan? timeout = null,
             [CanBeNull] IRequestStrategy strategy = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default(CancellationToken),
+            [CanBeNull] RequestPriority? priority = null)
         {
             return client.SendAsync(request, timeout, strategy, cancellationToken).GetAwaiter().GetResult();
         }

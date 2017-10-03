@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Strategies;
+using Vostok.Commons.Model;
 using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Modules

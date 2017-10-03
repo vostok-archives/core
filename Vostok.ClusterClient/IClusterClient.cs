@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Strategies;
+using Vostok.Commons.Model;
 
 namespace Vostok.Clusterclient
 {

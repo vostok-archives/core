@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
+using Vostok.Commons.Model;
 
 namespace Vostok.Clusterclient.Modules
 {
@@ -8,7 +9,8 @@ namespace Vostok.Clusterclient.Modules
     {
         public Task<ClusterResult> ExecuteAsync(IRequestContext context, Func<IRequestContext, Task<ClusterResult>> next)
         {
-            // TODO(iloktionov): implement
+            if (context.Priority.HasValue)
+                RequestPriorityContext.Current = context.Priority;
 
             return next(context);
         }
