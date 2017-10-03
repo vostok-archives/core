@@ -13,6 +13,6 @@ namespace Vostok.Logging
 
         public string Exception { get; set; }
 
-        public IReadOnlyDictionary<string, string> Properties { get; set; }
+        public IDictionary<string, string> Properties { get; set; }
     }
 }
