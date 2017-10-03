@@ -1,75 +1,73 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace Vostok.Metrics
 {
     public static class IMetricScope_Extensions
     {
-        public static IMetricScope WithTag(
+        public static void CpuLoad(
             this IMetricScope scope,
-            string key,
-            string value)
+            TimeSpan period)
         {
-            return new MetricScopeTagEnricher(
-                scope,
-                new Dictionary<string, string> {{key, value}});
+            var cpuUsage = new CpuUsageMeter();
+            scope.Gauge(period, "cpu", () =>
+            {
+                var processUsage = cpuUsage.Reset().ProcessUsage;
+                return processUsage;
+            });
         }
 
-        public static IMetricScope WithTags(
+        public static void MemoryUsage(
             this IMetricScope scope,
-            IReadOnlyDictionary<string, string> tags)
+            TimeSpan period)
         {
-            return new MetricScopeTagEnricher(scope, tags);
         }
 
-        public static IEventStopwatch EventStopwatch(
-            this IMetricScope scope)
-        {
-            return new EventStopwatch(scope);
-        }
-
-        public static void Gauge(
+        public static void NetworkUsage(
             this IMetricScope scope,
-            TimeSpan period,
-            string name,
-            Func<double> getValue)
+            TimeSpan period)
         {
-            var clock = MetricClocks.Get(period);
-            clock.Register(
-                timestamp =>
-                {
-                    var value = getValue();
-                    SendMetricToScope(scope, name, timestamp, value);
-                });
         }
 
-        public static ICounter Counter(
+        public static void DiskUsage(
             this IMetricScope scope,
-            TimeSpan period,
-            string name)
+            TimeSpan period)
         {
-            var counter = new Counter();
-            var clock = MetricClocks.Get(period);
-            clock.Register(
-                timestamp =>
-                {
-                    var value = counter.Reset();
-                    SendMetricToScope(scope, name, timestamp, value);
-                });
-            return counter;
         }
 
-        private static void SendMetricToScope(
-            IMetricScope scope,
-            string name,
-            DateTimeOffset timestamp,
-            double value)
+        public static void ThreadPool(
+            this IMetricScope scope,
+            TimeSpan period)
         {
-            scope
-                .WriteMetric()
-                .SetTimestamp(timestamp)
-                .SetValue(name, value)
-                .Commit();
+        }
+
+        public static void GC(
+            this IMetricScope scope,
+            TimeSpan period)
+        {
+        }
+
+        public static void Uptime(
+            this IMetricScope scope,
+            TimeSpan period)
+        {
+            var startTimestamp = DateTimeOffset.UtcNow;
+            scope.Gauge(
+                period,
+                "uptime",
+                () => (DateTimeOffset.UtcNow - startTimestamp).TotalMilliseconds);
+        }
+
+        public static void SystemMetrics(this IMetricScope scope, TimeSpan period)
+        {
+            var systemScope = scope.WithTag("type", "system");
+            systemScope.CpuLoad(period);
+            systemScope.MemoryUsage(period);
+            systemScope.DiskUsage(period);
+            systemScope.NetworkUsage(period);
+            systemScope.ThreadPool(period);
+            systemScope.GC(period);
+            systemScope.Uptime(period);
         }
     }
 }
