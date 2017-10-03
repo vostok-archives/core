@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,20 +9,20 @@ namespace Vostok.Clusterclient.Transport.Http.Helpers
 {
     internal class TestServer : IDisposable
     {
-        public const int Port = 52423;
-
         private readonly HttpListener listener;
+        private readonly int port;
         private volatile ReceivedRequest lastRequest;
 
         public TestServer()
         {
+            port = GetFreePort();
             listener = new HttpListener();
-            listener.Prefixes.Add($"http://+:{Port}/");
+            listener.Prefixes.Add($"http://+:{port}/");
         }
 
         public ReceivedRequest LastRequest => lastRequest;
 
-        public Uri Url => new Uri($"http://localhost:{Port}/");
+        public Uri Url => new Uri($"http://localhost:{port}/");
 
         public static TestServer StartNew(Action<HttpListenerContext> handle)
         {
@@ -76,6 +77,20 @@ namespace Vostok.Clusterclient.Transport.Http.Helpers
                 Query = request.QueryString,
                 Body = bodyStream.ToArray()
             };
+        }
+
+        private static int GetFreePort()
+        {
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+            try
+            {
+                listener.Start();
+                return ((IPEndPoint)listener.LocalEndpoint).Port;
+            }
+            finally
+            {
+                listener.Stop();
+            }
         }
     }
 }

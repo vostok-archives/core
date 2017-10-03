@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Security;
 using Vostok.Clusterclient.Model;
 
@@ -22,6 +23,7 @@ namespace Vostok.Clusterclient.Transport.Http
 
             TuneRequestParameters(webRequest, timeout);
             SetHttpMethod(webRequest, request);
+            SetContentLength(webRequest, request);
             SetHeaders(webRequest, request);
 
             return webRequest;
@@ -60,8 +62,72 @@ namespace Vostok.Clusterclient.Transport.Http
 
             foreach (var header in request.Headers)
             {
+                if (TryHandleSpecialHeader(webRequest, header))
+                    continue;
+
                 webRequest.Headers.Set(header.Name, header.Value);
             }
+        }
+
+        private static void SetContentLength(HttpWebRequest webRequest, Request request)
+        {
+            webRequest.ContentLength = request.Content?.Length ?? 0;
+        }
+
+        private static bool TryHandleSpecialHeader(HttpWebRequest webRequest, Header header)
+        {
+            if (header.Name.Equals(HeaderNames.Accept))
+            {
+                webRequest.Accept = header.Value;
+                return true;
+            }
+
+            if (header.Name.Equals(HeaderNames.ContentLength))
+                return true;
+
+            if (header.Name.Equals(HeaderNames.ContentType))
+            {
+                webRequest.ContentType = header.Value;
+                return true;
+            }
+
+            if (header.Name.Equals(HeaderNames.Host))
+            {
+                webRequest.Host = header.Value;
+                return true;
+            }
+
+            if (header.Name.Equals(HeaderNames.IfModifiedSince))
+            {
+                webRequest.IfModifiedSince = DateTime.Parse(header.Value);
+                return true;
+            }
+
+            if (header.Name.Equals(HeaderNames.Range))
+            {
+                var ranges = RangeHeaderValue.Parse(header.Value);
+
+                foreach (var range in ranges.Ranges)
+                {
+                    webRequest.AddRange(ranges.Unit, range.From ?? 0, range.To ?? 0);
+                }
+
+                return true;
+            }
+
+            if (header.Name.Equals(HeaderNames.Referer))
+            {
+                webRequest.Referer = header.Value;
+                return true;
+            }
+
+            if (header.Name.Equals(HeaderNames.UserAgent))
+            {
+                webRequest.UserAgent = header.Value;
+                return true;
+            }
+
+            return false;
         }
     }
 }

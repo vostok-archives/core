@@ -2,6 +2,7 @@
 using System.Threading;
 using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
+using Vostok.Commons.Threading;
 using Vostok.Logging;
 using Xunit.Abstractions;
 
@@ -16,6 +17,8 @@ namespace Vostok.Clusterclient.Transport.Http
         {
             log = new TestOutputLog(outputHelper);
             transport = new VostokHttpTransport(log);
+
+            ThreadPoolUtility.Setup(log);
         }
 
         protected Response Send(Request request, TimeSpan? timeout = null, CancellationToken cancellationToken = default(CancellationToken))

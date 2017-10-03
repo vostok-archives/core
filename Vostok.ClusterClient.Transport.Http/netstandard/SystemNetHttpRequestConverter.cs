@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using Vostok.Clusterclient.Model;
 
 namespace Vostok.Clusterclient.Transport.Http
@@ -11,6 +9,8 @@ namespace Vostok.Clusterclient.Transport.Http
     {
         private static readonly Dictionary<string, HttpMethod> MethodsMapping =
             RequestMethods.All.ToDictionary(m => m, m => new HttpMethod(m));
+
+        private static readonly byte[] EmptyByteArray = {};
 
         public static HttpRequestMessage Convert(Request request)
         {
@@ -31,10 +31,17 @@ namespace Vostok.Clusterclient.Transport.Http
 
         private static bool TryAddHeader(Header header, HttpRequestMessage message)
         {
-            // TODO(iloktionov): message.Content can be null here.
-            return SystemNetHttpHeaderUtilities.IsContentHeader(header.Name)
-                ? message.Content.Headers.TryAddWithoutValidation(header.Name, header.Value)
-                : message.Headers.TryAddWithoutValidation(header.Name, header.Value);
+            if (SystemNetHttpHeaderUtilities.IsContentHeader(header.Name))
+            {
+                if (message.Content == null)
+                {
+                    message.Content = new ByteArrayContent(EmptyByteArray);
+                }
+
+                return message.Content.Headers.TryAddWithoutValidation(header.Name, header.Value);
+            }
+
+            return message.Headers.TryAddWithoutValidation(header.Name, header.Value);
         }
     }
 }
