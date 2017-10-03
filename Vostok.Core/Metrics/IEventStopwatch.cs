@@ -2,7 +2,7 @@
 
 namespace Vostok.Metrics
 {
-    public interface ITimer : IDisposable
+    public interface IEventStopwatch : IDisposable
     {
         void SetTag(string key, string value);
         void SetValue(string key, double value);

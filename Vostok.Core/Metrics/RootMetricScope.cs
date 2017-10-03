@@ -15,7 +15,8 @@ namespace Vostok.Metrics
 
         public IMetricEventWriter WriteEvent()
         {
-            var writer = new AirlockMetricEventWriter(configuration.Airlock, configuration.EventRoutingKey);
+            var writer = new MetricEventWriter(
+                metricEvent => configuration.Reporter?.SendEvent(metricEvent));
             EnrichWithContext(writer);
             EnrichWithHostname(writer);
             return writer;
@@ -23,7 +24,8 @@ namespace Vostok.Metrics
 
         public IMetricEventWriter WriteMetric()
         {
-            var writer = new AirlockMetricEventWriter(configuration.Airlock, configuration.MetricRoutingKey);
+            var writer = new MetricEventWriter(
+                metricEvent => configuration.Reporter?.SendMetric(metricEvent));
             EnrichWithContext(writer);
             EnrichWithHostname(writer);
             return writer;

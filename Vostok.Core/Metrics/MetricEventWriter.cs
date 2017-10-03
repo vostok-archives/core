@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vostok.Airlock;
 
 namespace Vostok.Metrics
 {
-    internal class AirlockMetricEventWriter : IMetricEventWriter
+    internal class MetricEventWriter : IMetricEventWriter
     {
-        private readonly IAirlock airlock;
-        private readonly string routingKey;
+        private readonly Action<MetricEvent> commit;
         private readonly MetricEvent metricEvent;
 
-        public AirlockMetricEventWriter(
-            IAirlock airlock,
-            string routingKey)
+        public MetricEventWriter(Action<MetricEvent> commit)
         {
-            this.airlock = airlock;
-            this.routingKey = routingKey;
+            this.commit = commit;
             this.metricEvent = new MetricEvent
             {
                 Timestamp = DateTimeOffset.UtcNow,
@@ -24,24 +19,27 @@ namespace Vostok.Metrics
             };
         }
 
-        public void SetTimestamp(DateTimeOffset offset)
+        public IMetricEventWriter SetTimestamp(DateTimeOffset offset)
         {
             metricEvent.Timestamp = offset;
+            return this;
         }
 
-        public void SetTag(string key, string value)
+        public IMetricEventWriter SetTag(string key, string value)
         {
             metricEvent.Tags[key] = value;
+            return this;
         }
 
-        public void SetValue(string key, double value)
+        public IMetricEventWriter SetValue(string key, double value)
         {
             metricEvent.Values[key] = value;
+            return this;
         }
 
         public void Commit()
         {
-            airlock.Push(routingKey, metricEvent);
+            commit(metricEvent);
         }
     }
 }

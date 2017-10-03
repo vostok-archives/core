@@ -2,12 +2,12 @@
 
 namespace Vostok.Metrics
 {
-    internal class Timer : ITimer
+    internal class EventStopwatch : IEventStopwatch
     {
         private readonly IMetricEventWriter writer;
         private readonly Stopwatch sw;
 
-        public Timer(IMetricScope scope)
+        public EventStopwatch(IMetricScope scope)
         {
             writer = scope.WriteEvent();
             sw = Stopwatch.StartNew();
