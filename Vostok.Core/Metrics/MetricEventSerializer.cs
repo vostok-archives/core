@@ -28,27 +28,27 @@ namespace Vostok.Metrics
             }
         }
 
-        public MetricEvent Deserialize(IAirlockDeserializationSink sink)
+        public MetricEvent Deserialize(IAirlockSource source)
         {
             var metricEvent = new MetricEvent();
 
-            metricEvent.Timestamp = new DateTimeOffset(sink.Reader.ReadInt64(), TimeSpan.Zero);
+            metricEvent.Timestamp = new DateTimeOffset(source.Reader.ReadInt64(), TimeSpan.Zero);
 
-            var count = sink.Reader.ReadInt32();
+            var count = source.Reader.ReadInt32();
             metricEvent.Tags = new Dictionary<string, string>(count);
             for (var i = 0; i < count; i++)
             {
-                var key = sink.Reader.ReadString();
-                var value = sink.Reader.ReadString();
+                var key = source.Reader.ReadString();
+                var value = source.Reader.ReadString();
                 metricEvent.Tags[key] = value;
             }
 
-            count = sink.Reader.ReadInt32();
+            count = source.Reader.ReadInt32();
             metricEvent.Values = new Dictionary<string, double>(count);
             for (var i = 0; i < count; i++)
             {
-                var key = sink.Reader.ReadString();
-                var value = sink.Reader.ReadDouble();
+                var key = source.Reader.ReadString();
+                var value = source.Reader.ReadDouble();
                 metricEvent.Values[key] = value;
             }
 
