@@ -1,9 +1,8 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
-using Vostok.Commons;
+using Vostok.Commons.Extensions.Uri;
 
-namespace Vostok.Common
+namespace Vostok.Common.Extensions.Uri
 {
     public class UrlExtensions_Tests
     {
@@ -17,7 +16,7 @@ namespace Vostok.Common
         [TestCase("http://vostok/binary/1234567890abcdef/process/", "http://vostok/binary/{hex}/process/")]
         public void Normalize_should_return_normalizedUrl(string urlString, string normalizeUrl)
         {
-            var uri = new Uri(urlString);
+            var uri = new System.Uri(urlString);
 
             var actual = uri.Normalize();
 
