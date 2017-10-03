@@ -48,7 +48,6 @@ namespace Vostok.Clusterclient.Core.Modules
             };
             airlock.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
             {
-                span.OperationName.Should().Be("vostok/process");
                 span.Annotations.ShouldBeEquivalentTo(expectedAnnotations);
             }));
 

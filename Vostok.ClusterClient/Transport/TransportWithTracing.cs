@@ -19,7 +19,7 @@ namespace Vostok.Clusterclient.Transport
         public async Task<Response> SendAsync(Request request, TimeSpan timeout, CancellationToken cancellationToken)
         {
             Response response;
-            using (var span = Trace.BeginSpan(null))
+            using (var span = Trace.BeginSpan())
             {
                 span.SetAnnotation("kind", "http-client");
                 span.SetAnnotation("component", "cluster-client");

@@ -20,7 +20,7 @@ namespace Vostok.Clusterclient.Modules
             ClusterResult clusterResult;
             var operationName = context.OperationName ?? context.Request.Url.Normalize();
 
-            using (var span = Trace.BeginSpan(operationName))
+            using (var span = Trace.BeginSpan())
             {
                 if (!string.IsNullOrEmpty(serviceName))
                     span.SetAnnotation("serviceName", serviceName);

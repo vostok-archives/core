@@ -46,7 +46,6 @@ namespace Vostok.Clusterclient.Core.Transport
             };
             airlock.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
             {
-                span.OperationName.Should().BeNull();
                 span.Annotations.ShouldBeEquivalentTo(expectedAnnotations);
             }));
 
