@@ -22,8 +22,4 @@
     <ProjectReference Include="..\Vostok.ClusterClient\Vostok.ClusterClient.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Transport.Http\" />
-  </ItemGroup>
-
 </Project>
