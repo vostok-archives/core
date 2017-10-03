@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using Vostok.Commons.Collections;
 
 namespace Vostok.Metrics
 {
     internal class MetricEventWriter : IMetricEventWriter
     {
+        private readonly PoolHandle<MetricEvent> metricEventHandle;
         private readonly Action<MetricEvent> commit;
-        private readonly MetricEvent metricEvent;
 
         private readonly Dictionary<string, string> tags;
         private readonly Dictionary<string, double> values;
 
-        public MetricEventWriter(Action<MetricEvent> commit)
+        public MetricEventWriter(PoolHandle<MetricEvent> metricEventHandle, Action<MetricEvent> commit)
         {
+            this.metricEventHandle = metricEventHandle;
             this.commit = commit;
-            tags = new Dictionary<string, string>();
-            values = new Dictionary<string, double>();
-            //TODO (@ezsilmar) Do it more efficiently
-            this.metricEvent = new MetricEvent
-            {
-                Timestamp = DateTimeOffset.UtcNow,
-                Tags = tags,
-                Values = values
-            };
+            tags = (Dictionary<string, string>) metricEventHandle.Resource.Tags;
+            values = (Dictionary<string, double>) metricEventHandle.Resource.Values;
+            metricEventHandle.Resource.Timestamp = DateTimeOffset.UtcNow;
         }
 
         public IMetricEventWriter SetTimestamp(DateTimeOffset offset)
