@@ -22,7 +22,7 @@ namespace Vostok.Tracing
             AirlockSerializerRegistry.Register(new SpanAirlockSerializer());
         }
 
-        public static ISpanBuilder BeginSpan(string operationName)
+        public static ISpanBuilder BeginSpan()
         {
             var isEnabled = Configuration.IsEnabled();
             var airlock = Configuration.Airlock;
@@ -34,7 +34,7 @@ namespace Vostok.Tracing
             var pooledSpan = spanPool.AcquireHandle();
             var contextScope = TraceContextScope.Begin();
 
-            return new SpanBuilder(operationName, airlockRoutingKey, airlock, pooledSpan, contextScope, configuration);
+            return new SpanBuilder(airlockRoutingKey, airlock, pooledSpan, contextScope, configuration);
         }
 
         public static ITraceConfiguration Configuration => configuration;

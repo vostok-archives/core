@@ -8,6 +8,7 @@
     <Product>Vostok</Product>
     <RootNamespace>Vostok</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
 </Project>

@@ -5,7 +5,7 @@ namespace Vostok.Commons.Binary
 {
     public interface IBinaryReader
     {
-        long Position { get; set; }
+        int Position { get; set; }
 
         int ReadInt32();
         long ReadInt64();
@@ -22,9 +22,9 @@ namespace Vostok.Commons.Binary
         double ReadDouble();
 
         string ReadString(Encoding encoding);
-        string ReadString(Encoding encoding, int length);
+        string ReadString(Encoding encoding, int size);
 
         byte[] ReadByteArray();
-        byte[] ReadByteArray(int length);
+        byte[] ReadByteArray(int size);
     }
 }

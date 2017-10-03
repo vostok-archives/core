@@ -8,6 +8,8 @@ namespace Vostok.Tracing
     {
         ISet<string> ContextFieldsWhitelist { get; }
 
+        ISet<string> InheritedFieldsWhitelist { get; }
+
         Func<bool> IsEnabled { get; set; }
 
         Func<string> AirlockRoutingKey { get; set; }

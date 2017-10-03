@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Vostok.Logging
+namespace Vostok.Logging.Airlock
 {
     public sealed class LogEventData
     {
         public DateTimeOffset Timestamp { get; set; }
 
-        public string LogLevel { get; set; }
+        public LogLevel Level { get; set; }
 
-        public string MessageTemplate { get; set; }
+        public string Message { get; set; }
 
         public string Exception { get; set; }
 

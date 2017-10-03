@@ -8,15 +8,18 @@ namespace Vostok.Tracing
 {
     internal class SpanBuilder : ISpanBuilder
     {
+        private const string SpanContextKey = "Vostok.Tracing.CurrentSpan";
+
         private readonly string airlockRoutingKey;
         private readonly IAirlock airlock;
         private readonly PoolHandle<Span> spanHandle;
         private readonly TraceContextScope contextScope;
         private readonly TraceConfiguration configuration;
         private readonly Stopwatch stopwatch;
+        private readonly Span parentSpan;
+        private readonly IDisposable spanContextScope;
 
         public SpanBuilder(
-            string operationName,
             string airlockRoutingKey,
             IAirlock airlock,
             PoolHandle<Span> spanHandle,
@@ -30,8 +33,11 @@ namespace Vostok.Tracing
             this.configuration = configuration;
 
             stopwatch = Stopwatch.StartNew();
+            parentSpan = Context.Properties.Get<Span>(SpanContextKey);
+            spanContextScope = Context.Properties.Use(SpanContextKey, Span);
 
-            InitializeSpan(operationName);
+            InitializeSpan();
+            EnrichSpanWithInheritedFields();
             EnrichSpanWithContext();
         }
 
@@ -72,17 +78,29 @@ namespace Vostok.Tracing
             {
                 CleanupSpan();
                 spanHandle.Dispose();
+                spanContextScope.Dispose();
                 contextScope.Dispose();
             }
         }
 
-        private void InitializeSpan(string operationName)
+        private void InitializeSpan()
         {
-            Span.OperationName = operationName;
             Span.TraceId = contextScope.Current.TraceId;
             Span.SpanId = contextScope.Current.SpanId;
             Span.ParentSpanId = contextScope.Parent?.SpanId;
             Span.BeginTimestamp = DateTimeOffset.UtcNow; // TODO(iloktionov): придумать что-нибудь поточнее
+        }
+
+        private void EnrichSpanWithInheritedFields()
+        {
+            if (parentSpan == null)
+                return;
+
+            foreach (var field in configuration.InheritedFieldsWhitelist)
+            {
+                if (parentSpan.Annotations.TryGetValue(field, out var value))
+                    SetAnnotation(field, value);
+            }
         }
 
         private void EnrichSpanWithContext()
@@ -101,7 +119,6 @@ namespace Vostok.Tracing
 
         private void CleanupSpan()
         {
-            Span.OperationName = null;
             Span.Annotations.Clear();
         }
     }

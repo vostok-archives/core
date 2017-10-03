@@ -1,5 +1,8 @@
 version: '1.0.0-pre{build}'
 image: Visual Studio 2017
+nuget:
+  project_feed: true
+  disable_publish_on_pr: true
 install:
   - dotnet restore
 configuration: Release
@@ -15,10 +18,10 @@ before_build:
       $xml.Project.PropertyGroup.AppendChild($version)
       $xml.Save($xmlPath)
 after_build:
-  - ps: if (!$env:appveyor_pull_request_number -and $env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.Core\bin\Release\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
+  - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.Core\bin\Release\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
 test_script:
   - ps: dotnet test "$env:appveyor_build_folder\Vostok.Core.Tests\Vostok.Core.Tests.csproj" --logger "trx;LogFileName=core-tests.trx"
 after_test:
   - ps: |
       $wc = New-Object 'System.Net.WebClient'
-      $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.Core.Tests\TestResults\core-tests.trx")
+      $wc.UploadFile("https://ci.appveyor.com/api/testresults/nunit3/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.Core.Tests\TestResults\core-tests.trx")
