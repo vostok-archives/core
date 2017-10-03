@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Vostok.Logging.Logs
 {
     public class LogEventFormatter_Tests
     {
-        [Theory]
-        [MemberData(nameof(FormatMessage_Cases))]
+        [TestCaseSource(nameof(FormatMessage_Cases))]
         public void FormatMessage(string template, object[] parameters, string expected)
         {
             LogEventFormatter.FormatMessage(template, parameters).Should().Be(expected);
         }
-
-        [Theory]
-        [MemberData(nameof(FormatProperties_Cases))]
+        
+        [TestCaseSource(nameof(FormatProperties_Cases))]
         public void FormatProperties(IReadOnlyDictionary<string, object> properties, string expected)
         {
             LogEventFormatter.FormatProperties(properties).Should().Be(expected);

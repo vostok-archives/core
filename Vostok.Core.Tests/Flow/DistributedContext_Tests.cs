@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using NUnit.Framework;
 using Vostok.Flow.Serializers;
-using Xunit;
 
 namespace Vostok.Flow
 {
@@ -25,8 +25,7 @@ namespace Vostok.Flow
             yield return new object[] {true, "bool|True" };
         }
 
-        [Theory]
-        [MemberData(nameof(GenerateData))]
+        [TestCaseSource(nameof(GenerateData))]
         public void SerializeDistributedContext_should_return_stringValue_by_obj_from_context(object obj, string stringValue)
         {
             const string key = "key";
@@ -40,7 +39,7 @@ namespace Vostok.Flow
             distributedContext[0].Value.Should().Be(stringValue);
         }
 
-        [Fact]
+        [Test]
         public void SerializeDistributedContext_should_not_return_stringValue_by_value_equals_null()
         {
             const string key = "key";
@@ -52,9 +51,8 @@ namespace Vostok.Flow
 
             distributedContext.Length.Should().Be(0);
         }
-
-        [Theory]
-        [MemberData(nameof(GenerateData))]
+        
+        [TestCaseSource(nameof(GenerateData))]
         public void PopulateDistributedProperties_should_set_obj_in_context_by_stringValue(object obj, string stringValue)
         {
             const string key = "key";
@@ -69,7 +67,7 @@ namespace Vostok.Flow
             Context.Properties.Current[key].ShouldBeEquivalentTo(obj);
         }
 
-        [Fact]
+        [Test]
         public void GenerateData_should_contain_all_serialized_types()
         {
             var serializedTypes = GetAllTypedSerializers()

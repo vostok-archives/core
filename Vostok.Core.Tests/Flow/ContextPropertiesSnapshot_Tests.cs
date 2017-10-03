@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Vostok.Flow
 {
     public class ContextPropertiesSnapshot_Tests
     {
-        [Fact]
+        [Test]
         public void Empty_instance_should_not_contain_any_properties()
         {
             ContextPropertiesSnapshot.Empty.Should().BeEmpty();
         }
 
-        [Fact]
+        [Test]
         public void Empty_instance_should_have_zero_count()
         {
             ContextPropertiesSnapshot.Empty.Count.Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void Should_be_able_to_add_a_property_to_empty_instance()
         {
             var properties = ContextPropertiesSnapshot.Empty.Set("k", "v");
@@ -28,7 +28,7 @@ namespace Vostok.Flow
             properties["k"].Should().Be("v");
         }
 
-        [Fact]
+        [Test]
         public void Should_not_modify_empty_instance_when_deriving_from_it()
         {
             ContextPropertiesSnapshot.Empty.Set("k", "v");
@@ -38,7 +38,7 @@ namespace Vostok.Flow
             ContextPropertiesSnapshot.Empty.Count.Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void Should_be_case_sensitive_when_comparing_property_names()
         {
             var properties = new ContextPropertiesSnapshot(1)
@@ -50,7 +50,7 @@ namespace Vostok.Flow
             properties.Keys.Should().Equal("key", "KEY");
         }
 
-        [Fact]
+        [Test]
         public void Set_should_be_able_to_expand_beyond_initial_capacity()
         {
             var properties = new ContextPropertiesSnapshot(1)
@@ -65,7 +65,7 @@ namespace Vostok.Flow
             properties.Keys.Should().Equal("k1", "k2", "k3", "k4", "k5");
         }
 
-        [Fact]
+        [Test]
         public void Set_should_return_same_instance_when_replacing_a_property_with_same_value()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -78,7 +78,7 @@ namespace Vostok.Flow
             propertiesAfter.Should().BeSameAs(propertiesBefore);
         }
 
-        [Fact]
+        [Test]
         public void Set_should_replace_existing_property_when_provided_with_a_different_value()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -95,7 +95,7 @@ namespace Vostok.Flow
             propertiesAfter["k3"].Should().Be("v3");
         }
 
-        [Fact]
+        [Test]
         public void Set_should_not_modify_base_instance_when_deriving_from_it_by_replacing_existing_property()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -112,7 +112,7 @@ namespace Vostok.Flow
             propertiesBefore["k3"].Should().Be("v3");
         }
 
-        [Fact]
+        [Test]
         public void Set_should_be_able_to_grow_properties_when_adding_unique_names_without_spoiling_base_instance()
         {
             var properties = new ContextPropertiesSnapshot(0);
@@ -134,7 +134,7 @@ namespace Vostok.Flow
             }
         }
 
-        [Fact]
+        [Test]
         public void Set_should_correctly_handle_forking_multiple_instances_from_a_single_base()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -158,7 +158,7 @@ namespace Vostok.Flow
             propertiesAfter2["k4"].Should().Be("v4-2");
         }
 
-        [Fact]
+        [Test]
         public void Remove_should_correctly_remove_first_property()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -175,7 +175,7 @@ namespace Vostok.Flow
             propertiesAfter.ContainsKey("k1").Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void Remove_should_correctly_remove_last_property()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -192,7 +192,7 @@ namespace Vostok.Flow
             propertiesAfter.ContainsKey("k5").Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void Remove_should_correctly_remove_a_property_from_the_middle()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -209,7 +209,7 @@ namespace Vostok.Flow
             propertiesAfter.ContainsKey("k3").Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void Remove_should_correctly_remove_the_only_property_in_collection()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -222,7 +222,7 @@ namespace Vostok.Flow
             propertiesAfter.Should().BeEmpty();
         }
 
-        [Fact]
+        [Test]
         public void Remove_should_return_same_instance_when_removing_a_property_which_is_not_present()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -237,7 +237,7 @@ namespace Vostok.Flow
             propertiesAfter.Should().BeSameAs(propertiesBefore);
         }
 
-        [Fact]
+        [Test]
         public void Remove_should_not_spoil_base_insance()
         {
             var propertiesBefore = ContextPropertiesSnapshot.Empty
@@ -261,7 +261,7 @@ namespace Vostok.Flow
             propertiesBefore["k5"].Should().Be("v5");
         }
 
-        [Fact]
+        [Test]
         public void Indexer_should_throw_when_properties_are_empty()
         {
             Action action = () => ContextPropertiesSnapshot.Empty["name"].GetHashCode();
@@ -269,7 +269,7 @@ namespace Vostok.Flow
             action.ShouldThrowExactly<KeyNotFoundException>();
         }
 
-        [Fact]
+        [Test]
         public void Indexer_should_return_null_when_property_with_given_name_does_not_exist()
         {
             var properties = ContextPropertiesSnapshot.Empty
@@ -281,7 +281,7 @@ namespace Vostok.Flow
             action.ShouldThrowExactly<KeyNotFoundException>();
         }
 
-        [Fact]
+        [Test]
         public void Indexer_should_return_correct_values_for_existing_property_names()
         {
             var properties = ContextPropertiesSnapshot.Empty
@@ -292,7 +292,7 @@ namespace Vostok.Flow
             properties["name2"].Should().Be("value2");
         }
 
-        [Fact]
+        [Test]
         public void Indexer_should_be_case_sensitive_when_comparing_property_names()
         {
             var properties = ContextPropertiesSnapshot.Empty
