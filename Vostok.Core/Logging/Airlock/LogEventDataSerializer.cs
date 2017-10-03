@@ -2,7 +2,7 @@
 using Vostok.Airlock;
 using Vostok.Commons.Binary;
 
-namespace Vostok.Logging
+namespace Vostok.Logging.Airlock
 {
     public class LogEventDataSerializer : IAirlockSerializer<LogEventData>, IAirlockDeserializer<LogEventData>
     {
@@ -13,8 +13,8 @@ namespace Vostok.Logging
             return new LogEventData
             {
                 Timestamp = new DateTimeOffset(reader.ReadInt64(), TimeSpan.Zero),
-                LogLevel = reader.ReadString(),
-                MessageTemplate = reader.ReadString(),
+                Level = (LogLevel) reader.ReadInt32(),
+                Message = reader.ReadString(),
                 Exception = reader.ReadString(),
                 Properties = reader.ReadDictionary(r => r.ReadString(), r => r.ReadString())
             };
@@ -25,8 +25,8 @@ namespace Vostok.Logging
             var writer = sink.Writer;
 
             writer.Write(item.Timestamp.UtcTicks);
-            writer.Write(item.LogLevel);
-            writer.Write(item.MessageTemplate);
+            writer.Write((int) item.Level);
+            writer.Write(item.Message);
             writer.Write(item.Exception);
             writer.WriteDictionary(item.Properties, (w, s) => w.Write(s), (w, o) => w.Write(o));
         }
