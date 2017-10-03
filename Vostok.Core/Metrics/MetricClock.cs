@@ -36,6 +36,7 @@ namespace Vostok.Metrics
 
                 foreach (var action in actions)
                 {
+                    //TODO (@ezsilmar) try catch and log here
                     action(aggregationTimestamp);
                 }
 
