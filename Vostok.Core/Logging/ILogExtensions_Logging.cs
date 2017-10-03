@@ -1,20 +1,27 @@
 using System;
-using System.Collections.Generic;
 
 namespace Vostok.Logging
 {
     public static class ILogExtensions_Logging
     {
-        private static readonly IReadOnlyDictionary<string, object> empty = new Dictionary<string, object>();
-
         public static void Info(this ILog log, string message)
         {
             log.Log(LogLevel.Info, null, message, Array.Empty<object>());
         }
 
+        public static void Info(this ILog log, Exception exception)
+        {
+            log.Log(LogLevel.Info, exception, string.Empty, Array.Empty<object>());
+        }
+
         public static void Info(this ILog log, string messageTemplate, params object[] parameters)
         {
             log.Log(LogLevel.Info, null, messageTemplate, parameters);
+        }
+
+        public static void Info(this ILog log, string message, Exception exception)
+        {
+            log.Log(LogLevel.Info, exception, message, Array.Empty<object>());
         }
 
         public static void Info(this ILog log, Exception exception, string message)
@@ -32,9 +39,19 @@ namespace Vostok.Logging
             log.Log(LogLevel.Error, null, message, Array.Empty<object>());
         }
 
+        public static void Error(this ILog log, Exception exception)
+        {
+            log.Log(LogLevel.Error, exception, string.Empty, Array.Empty<object>());
+        }
+
         public static void Error(this ILog log, string messageTemplate, params object[] parameters)
         {
             log.Log(LogLevel.Error, null, messageTemplate, parameters);
+        }
+
+        public static void Error(this ILog log, string message, Exception exception)
+        {
+            log.Log(LogLevel.Error, exception, message, Array.Empty<object>());
         }
 
         public static void Error(this ILog log, Exception exception, string message)
@@ -52,9 +69,19 @@ namespace Vostok.Logging
             log.Log(LogLevel.Fatal, null, message, Array.Empty<object>());
         }
 
+        public static void Fatal(this ILog log, Exception exception)
+        {
+            log.Log(LogLevel.Fatal, exception, string.Empty, Array.Empty<object>());
+        }
+
         public static void Fatal(this ILog log, string messageTemplate, params object[] parameters)
         {
             log.Log(LogLevel.Fatal, null, messageTemplate, parameters);
+        }
+
+        public static void Fatal(this ILog log, string message, Exception exception)
+        {
+            log.Log(LogLevel.Fatal, exception, message, Array.Empty<object>());
         }
 
         public static void Fatal(this ILog log, Exception exception, string message)
@@ -72,9 +99,19 @@ namespace Vostok.Logging
             log.Log(LogLevel.Debug, null, message, Array.Empty<object>());
         }
 
+        public static void Debug(this ILog log, Exception exception)
+        {
+            log.Log(LogLevel.Debug, exception, string.Empty, Array.Empty<object>());
+        }
+
         public static void Debug(this ILog log, string messageTemplate, params object[] parameters)
         {
             log.Log(LogLevel.Debug, null, messageTemplate, parameters);
+        }
+
+        public static void Debug(this ILog log, string message, Exception exception)
+        {
+            log.Log(LogLevel.Debug, exception, message, Array.Empty<object>());
         }
 
         public static void Debug(this ILog log, Exception exception, string message)
@@ -92,9 +129,19 @@ namespace Vostok.Logging
             log.Log(LogLevel.Trace, null, message, Array.Empty<object>());
         }
 
+        public static void Trace(this ILog log, Exception exception)
+        {
+            log.Log(LogLevel.Trace, exception, string.Empty, Array.Empty<object>());
+        }
+
         public static void Trace(this ILog log, string messageTemplate, params object[] parameters)
         {
             log.Log(LogLevel.Trace, null, messageTemplate, parameters);
+        }
+
+        public static void Trace(this ILog log, string message, Exception exception)
+        {
+            log.Log(LogLevel.Trace, exception, message, Array.Empty<object>());
         }
 
         public static void Trace(this ILog log, Exception exception, string message)
@@ -112,9 +159,19 @@ namespace Vostok.Logging
             log.Log(LogLevel.Warn, null, message, Array.Empty<object>());
         }
 
+        public static void Warn(this ILog log, Exception exception)
+        {
+            log.Log(LogLevel.Warn, exception, string.Empty, Array.Empty<object>());
+        }
+
         public static void Warn(this ILog log, string messageTemplate, params object[] parameters)
         {
             log.Log(LogLevel.Warn, null, messageTemplate, parameters);
+        }
+
+        public static void Warn(this ILog log, string message, Exception exception)
+        {
+            log.Log(LogLevel.Warn, exception, message, Array.Empty<object>());
         }
 
         public static void Warn(this ILog log, Exception exception, string message)
@@ -129,7 +186,7 @@ namespace Vostok.Logging
 
         private static void Log(this ILog log, LogLevel level, Exception exception, string message, params object[] parameters)
         {
-            log.Log(new LogEvent(level, exception, message, parameters, empty));
+            log.Log(new LogEvent(level, exception, message, parameters));
         }
     }
 }

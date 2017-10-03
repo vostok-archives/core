@@ -2,6 +2,12 @@
 
 namespace Vostok.Airlock
 {
+    public static class AirlockEventTypes {
+        public const short Logging = 1;
+        public const short Metrics = 2;
+        public const short Tracing = 3;
+    }
+
     public class EventRecord
     {
         public long Timestamp { get; set; }
