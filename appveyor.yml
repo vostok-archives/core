@@ -15,6 +15,16 @@ before_build:
       $version.AppendChild($versionText)
       $xml.Project.PropertyGroup.AppendChild($version)
       $xml.Save($xmlPath)
+  - ps: |
+      $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
+      Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber"
+      $xmlPath = "$env:appveyor_build_folder\Vostok.ClusterClient.Transport.Http\Vostok.ClusterClient.Transport.Http.csproj"
+      $xml = [xml](get-content $xmlPath)
+      $version = $xml.CreateElement("Version")
+      $versionText = $xml.CreateTextNode($env:appveyor_build_version)
+      $version.AppendChild($versionText)
+      $xml.Project.PropertyGroup.AppendChild($version)
+      $xml.Save($xmlPath)
 after_build:
   - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient\bin\Release\Vostok.ClusterClient.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
   - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient.Transport.Http\bin\Release\Vostok.ClusterClient.Transport.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
