@@ -18,7 +18,6 @@ namespace Vostok.Tracing
         private readonly Span parentSpan;
 
         public SpanBuilder(
-            string operationName,
             string airlockRoutingKey,
             IAirlock airlock,
             PoolHandle<Span> spanHandle,
@@ -35,7 +34,7 @@ namespace Vostok.Tracing
 
             parentSpan = Context.Properties.Get<Span>(SpanContextName);
 
-            InitializeSpan(operationName ?? parentSpan?.OperationName);
+            InitializeSpan();
             EnrichSpanWithContext();
             EnrichSpanFromParentSpan();
             Context.Properties.Set(SpanContextName, Span);
@@ -100,9 +99,8 @@ namespace Vostok.Tracing
             }
         }
 
-        private void InitializeSpan(string operationName)
+        private void InitializeSpan()
         {
-            Span.OperationName = operationName;
             Span.TraceId = contextScope.Current.TraceId;
             Span.SpanId = contextScope.Current.SpanId;
             Span.ParentSpanId = contextScope.Parent?.SpanId;
@@ -125,7 +123,6 @@ namespace Vostok.Tracing
 
         private void CleanupSpan()
         {
-            Span.OperationName = null;
             Span.Annotations.Clear();
         }
     }

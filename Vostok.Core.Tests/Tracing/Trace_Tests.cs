@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Vostok.Airlock;
@@ -29,72 +28,16 @@ namespace Vostok.Tracing
                 x.Annotations[customKey].Should().Contain(customValue);
             }));
 
-            using (var span = Trace.BeginSpan(null))
+            using (var span = Trace.BeginSpan())
             {
                 span.SetAnnotation(customKey, customValue);
-                using (Trace.BeginSpan(null))
+                using (Trace.BeginSpan())
                 {
                     
                 }
             }
 
             airlock.Received(2).Push(Arg.Any<string>(), Arg.Any<Span>());
-        }
-
-        [Test]
-        public void BeginSpan_should_inherit_operation_name_when_operationName_is_null()
-        {
-            var writeOperaionNames = new List<string>();
-            airlock.Push(Arg.Any<string>(), Arg.Do<Span>(x => writeOperaionNames.Add(x.OperationName)));
-
-            using (Trace.BeginSpan("operationName"))
-            {
-                using (Trace.BeginSpan(null))
-                {
-                    
-                }
-            }
-
-            writeOperaionNames.ShouldBeEquivalentTo(new[] { "operationName", "operationName" });
-        }
-
-        [Test]
-        public void BeginSpan_should_not_inherit_operation_name_when_operationName_is_not_null()
-        {
-            var writeOperaionNames = new List<string>();
-            airlock.Push(Arg.Any<string>(), Arg.Do<Span>(x => writeOperaionNames.Add(x.OperationName)));
-
-            using (Trace.BeginSpan("operationName"))
-            {
-                using (Trace.BeginSpan("operationName2"))
-                {
-                    
-                }
-            }
-
-            writeOperaionNames.ShouldBeEquivalentTo(new[] {"operationName", "operationName2"});
-        }
-
-        [Test]
-        public void BeginSpan_should_inherit_operation_name_from_parent()
-        {
-            var writeOperaionNames = new List<string>();
-            airlock.Push(Arg.Any<string>(), Arg.Do<Span>(x => writeOperaionNames.Add(x.OperationName)));
-
-            using (Trace.BeginSpan("operationName"))
-            {
-                using (Trace.BeginSpan("operationName2"))
-                {
-                    
-                }
-
-                using (Trace.BeginSpan(null))
-                {
-                    
-                }
-            }
-
-            writeOperaionNames.ShouldBeEquivalentTo(new[] {"operationName", "operationName2", "operationName" });
         }
     }
 }
