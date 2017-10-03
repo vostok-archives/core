@@ -38,6 +38,7 @@ namespace Vostok.Tracing
             InitializeSpan(operationName ?? parentSpan?.OperationName);
             EnrichSpanWithContext();
             EnrichSpanFromParentSpan();
+            Context.Properties.Set(SpanContextName, Span);
         }
 
         private void EnrichSpanFromParentSpan()
