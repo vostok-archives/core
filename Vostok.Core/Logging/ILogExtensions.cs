@@ -10,6 +10,11 @@ namespace Vostok.Logging
             return log.ForContext(typeof(T));
         }
 
+        public static ILog ForContext<T>(this ILog log, T _)
+        {
+            return log.ForContext(typeof(T));
+        }
+
         public static ILog ForContext(this ILog log, Type source)
         {
             return log.ForContext("SourceContext", source.FullName);
