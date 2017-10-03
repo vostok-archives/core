@@ -28,6 +28,7 @@
         public const string ContentType = "Content-Type";
         public const string ContentLanguage = "Content-Language";
         public const string ContentLocation = "Content-Location";
+        public const string ContentDisposition = "Content-Disposition";
         public const string ContentRange = "Content-Range";
         public const string ContentMD5 = "Content-MD5";
         public const string Date = "Date";

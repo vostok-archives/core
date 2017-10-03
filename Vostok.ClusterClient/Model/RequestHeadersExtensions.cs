@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using JetBrains.Annotations;
 
@@ -194,6 +195,18 @@ namespace Vostok.Clusterclient.Model
         }
 
         /// <summary>
+        /// <para>Returns a <see cref="HeaderNames.IfModifiedSince"/> header formatted with <paramref name="format"/>.</para>
+        /// </summary>
+        [Pure]
+        public static DateTime? GetIfModifiedSinceHeader([NotNull] this Request request, string format = "R")
+        {
+            var strHeader = request.Headers?[HeaderNames.IfModifiedSince];
+            return strHeader == null
+                ? (DateTime?)null
+                : DateTime.ParseExact(strHeader, format, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
         /// <para>Returns a new <see cref="Request"/> instance with <see cref="HeaderNames.Range"/> header set to given <paramref name="value"/>.</para>
         /// <para>See <see cref="Request.WithHeader"/> for more details.</para>
         /// </summary>
@@ -216,6 +229,34 @@ namespace Vostok.Clusterclient.Model
                 throw new ArgumentException($"At least one of '{nameof(from)}' and '{nameof(to)}' parameters must be non-null.");
 
             return WithRangeHeader(request, $"{unit}={from}-{to}");
+        }
+
+        /// <summary>
+        /// <para>Returns a <see cref="HeaderNames.Range"/> header/>.</para>
+        /// </summary>
+        [Pure]
+        public static (long? From, long? To, string Unit)? GetRangeHeader([NotNull] this Request request)
+        {
+            var strHeader = request.Headers?[HeaderNames.Range];
+
+            if (strHeader == null)
+                return null;
+
+            var unitsWithRange = strHeader.Split(new[] {"="}, StringSplitOptions.RemoveEmptyEntries);
+
+            if(unitsWithRange.Length != 2)
+                throw new ArgumentException($"Invalid {nameof(HeaderNames.Range)} header - {strHeader}");
+
+            var unit = unitsWithRange[0];
+            var ranges = unitsWithRange[1].Split(new[] {"-"}, StringSplitOptions.RemoveEmptyEntries);
+
+            if (ranges.Length != 2)
+                throw new ArgumentException($"Invalid {nameof(HeaderNames.Range)} header - {strHeader}");
+
+            var from = string.IsNullOrEmpty(ranges[0]) ? (long?)null : long.Parse(ranges[0]);
+            var to = string.IsNullOrEmpty(ranges[1]) ? (long?)null : long.Parse(ranges[1]);
+
+            return (from, to, unit);
         }
 
         /// <summary>
@@ -245,6 +286,18 @@ namespace Vostok.Clusterclient.Model
             var valueCollection = HeaderValuesWithQualityCollection.Parse(currentValue);
             valueCollection.Add(value, quality);
             return request.WithHeader(name, valueCollection.ToString());
+        }
+
+        /// <summary>
+        /// <para>Returns a <see cref="HeaderNames.ContentLength"/> header/>.</para>
+        /// </summary>
+        [Pure]
+        public static long? GetContentLengthHeader([NotNull] this Request request)
+        {
+            var strHeader = request.Headers?[HeaderNames.ContentLength];
+            return strHeader == null
+                ? (long?)null
+                : long.Parse(strHeader);
         }
     }
 }

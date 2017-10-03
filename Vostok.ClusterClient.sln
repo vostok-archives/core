@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.ClusterClient", "Vostok.ClusterClient\Vostok.ClusterClient.csproj", "{5E0DBEF6-7CBC-458E-8044-E04ACDCD9C8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vostok.ClusterClient.Tests", "Vostok.ClusterClient.Tests\Vostok.ClusterClient.Tests.csproj", "{2636F780-73A6-465E-B2E3-B54F093A1369}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.ClusterClient.Tests", "Vostok.ClusterClient.Tests\Vostok.ClusterClient.Tests.csproj", "{2636F780-73A6-465E-B2E3-B54F093A1369}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.ClusterClient.Transport.Http", "Vostok.ClusterClient.Transport.Http\Vostok.ClusterClient.Transport.Http.csproj", "{D30077C2-819B-493C-BD87-F1701093D640}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{2636F780-73A6-465E-B2E3-B54F093A1369}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2636F780-73A6-465E-B2E3-B54F093A1369}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2636F780-73A6-465E-B2E3-B54F093A1369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D30077C2-819B-493C-BD87-F1701093D640}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D30077C2-819B-493C-BD87-F1701093D640}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D30077C2-819B-493C-BD87-F1701093D640}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D30077C2-819B-493C-BD87-F1701093D640}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

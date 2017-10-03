@@ -5,6 +5,7 @@ using NSubstitute;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Modules;
 using Vostok.Logging;
+using Vostok.Logging.Logs;
 using Xunit;
 
 namespace Vostok.Clusterclient.Core.Modules

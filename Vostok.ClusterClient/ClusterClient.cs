@@ -9,6 +9,7 @@ using Vostok.Clusterclient.Topology;
 using Vostok.Clusterclient.Transforms;
 using Vostok.Clusterclient.Transport;
 using Vostok.Logging;
+using Vostok.Logging.Logs;
 
 namespace Vostok.Clusterclient
 {
@@ -46,7 +47,7 @@ namespace Vostok.Clusterclient
         /// <exception cref="ClusterClientException">Configuration was incomplete or invalid.</exception>
         public ClusterClient(ILog log, ClusterClientSetup setup)
         {
-            configuration = new ClusterClientConfiguration((log ?? new SilentLog()));
+            configuration = new ClusterClientConfiguration(log ?? new SilentLog());
 
             setup(configuration);
 

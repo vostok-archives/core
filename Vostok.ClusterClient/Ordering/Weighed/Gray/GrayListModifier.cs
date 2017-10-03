@@ -5,6 +5,7 @@ using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Ordering.Storage;
 using Vostok.Logging;
+using Vostok.Logging.Logs;
 
 namespace Vostok.Clusterclient.Ordering.Weighed.Gray
 {
