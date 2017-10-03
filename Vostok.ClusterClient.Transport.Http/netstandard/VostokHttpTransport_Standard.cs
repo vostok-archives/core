@@ -36,6 +36,12 @@ namespace Vostok.Clusterclient.Transport.Http
 
         public async Task<Response> SendAsync(Request request, TimeSpan timeout, CancellationToken cancellationToken)
         {
+            if (timeout.TotalMilliseconds < 1)
+            {
+                LogRequestTimeout(request, timeout);
+                return new Response(ResponseCode.RequestTimeout);
+            }
+
             try
             {
                 var requestMessage = SystemNetHttpRequestConverter.Convert(request);
