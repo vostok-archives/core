@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Commons;
 using Vostok.Tracing;
@@ -8,6 +9,13 @@ namespace Vostok.Clusterclient.Modules
 {
     internal class TracingModule : IRequestModule
     {
+        static TracingModule()
+        {
+            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotations.OperationName);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotations.OperationName);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotations.ServiceName);
+        }
+
         private readonly string serviceName;
 
         public TracingModule(string serviceName)

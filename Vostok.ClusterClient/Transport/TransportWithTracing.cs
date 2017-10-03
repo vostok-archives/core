@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Tracing;
 using Vostok.Commons;
@@ -9,6 +10,13 @@ namespace Vostok.Clusterclient.Transport
 {
     internal class TransportWithTracing : ITransport
     {
+        static TransportWithTracing()
+        {
+            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotations.OperationName);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotations.OperationName);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotations.ServiceName);
+        }
+
         private readonly ITransport transport;
 
         public TransportWithTracing(ITransport transport)
