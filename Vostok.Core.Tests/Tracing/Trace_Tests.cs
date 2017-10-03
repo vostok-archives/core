@@ -14,26 +14,31 @@ namespace Vostok.Tracing
         {
             airlock = Substitute.For<IAirlock>();
             Trace.Configuration.Airlock = airlock;
+            Trace.Configuration.InheritedFieldsWhitelist.Clear();
         }
 
         [Test]
-        public void BeginSpan_should_inherit_custom_field()
+        public void BeginSpan_should_inherit_custom_field_from_whitelist()
         {
             const string customKey = "customKey";
             const string customValue = "customValue";
+
             Trace.Configuration.InheritedFieldsWhitelist.Add(customKey);
-            airlock.Push(Arg.Any<string>(), Arg.Do<Span>(x =>
-            {
-                x.Annotations.Keys.Should().Contain(customKey);
-                x.Annotations[customKey].Should().Contain(customValue);
-            }));
+
+            airlock.Push(
+                Arg.Any<string>(),
+                Arg.Do<Span>(
+                    x =>
+                    {
+                        x.Annotations.Keys.Should().Contain(customKey);
+                        x.Annotations[customKey].Should().Contain(customValue);
+                    }));
 
             using (var span = Trace.BeginSpan())
             {
                 span.SetAnnotation(customKey, customValue);
                 using (Trace.BeginSpan())
                 {
-                    
                 }
             }
 

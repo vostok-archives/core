@@ -8,7 +8,8 @@ namespace Vostok.Tracing
 {
     internal class SpanBuilder : ISpanBuilder
     {
-        private const string SpanContextName = "Vostok.Tracing.Span";
+        private const string SpanContextKey = "Vostok.Tracing.CurrentSpan";
+
         private readonly string airlockRoutingKey;
         private readonly IAirlock airlock;
         private readonly PoolHandle<Span> spanHandle;
@@ -16,6 +17,7 @@ namespace Vostok.Tracing
         private readonly TraceConfiguration configuration;
         private readonly Stopwatch stopwatch;
         private readonly Span parentSpan;
+        private readonly IDisposable spanContextScope;
 
         public SpanBuilder(
             string airlockRoutingKey,
@@ -31,30 +33,12 @@ namespace Vostok.Tracing
             this.configuration = configuration;
 
             stopwatch = Stopwatch.StartNew();
-
-            parentSpan = Context.Properties.Get<Span>(SpanContextName);
+            parentSpan = Context.Properties.Get<Span>(SpanContextKey);
+            spanContextScope = Context.Properties.Use(SpanContextKey, Span);
 
             InitializeSpan();
+            EnrichSpanWithInheritedFields();
             EnrichSpanWithContext();
-            EnrichSpanFromParentSpan();
-            Context.Properties.Set(SpanContextName, Span);
-        }
-
-        private void EnrichSpanFromParentSpan()
-        {
-            if (parentSpan == null)
-            {
-                return;
-            }
-
-            foreach (var inheritableProperty in configuration.InheritedFieldsWhitelist)
-            {
-                if (!parentSpan.Annotations.ContainsKey(inheritableProperty))
-                    continue;
-
-                var annotation = parentSpan.Annotations[inheritableProperty];
-                SetAnnotation(inheritableProperty, annotation);
-            }
         }
 
         public bool IsCanceled { get; set; } = false;
@@ -94,8 +78,8 @@ namespace Vostok.Tracing
             {
                 CleanupSpan();
                 spanHandle.Dispose();
+                spanContextScope.Dispose();
                 contextScope.Dispose();
-                Context.Properties.Set(SpanContextName, parentSpan);
             }
         }
 
@@ -105,6 +89,18 @@ namespace Vostok.Tracing
             Span.SpanId = contextScope.Current.SpanId;
             Span.ParentSpanId = contextScope.Parent?.SpanId;
             Span.BeginTimestamp = DateTimeOffset.UtcNow; // TODO(iloktionov): придумать что-нибудь поточнее
+        }
+
+        private void EnrichSpanWithInheritedFields()
+        {
+            if (parentSpan == null)
+                return;
+
+            foreach (var field in configuration.InheritedFieldsWhitelist)
+            {
+                if (parentSpan.Annotations.TryGetValue(field, out var value))
+                    SetAnnotation(field, value);
+            }
         }
 
         private void EnrichSpanWithContext()
