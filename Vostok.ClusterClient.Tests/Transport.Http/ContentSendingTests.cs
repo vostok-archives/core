@@ -21,7 +21,7 @@ namespace Vostok.Clusterclient.Transport.Http
         [InlineData(500)]
         [InlineData(4096)]
         [InlineData(1024 * 1024)]
-        [InlineData(16 * 1024 * 1024)]
+        [InlineData(4 * 1024 * 1024)]
         public void Should_be_able_to_send_content_of_given_size(int size)
         {
             using (var server = TestServer.StartNew(ctx => ctx.Response.StatusCode = 200))
