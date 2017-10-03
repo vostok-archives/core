@@ -17,16 +17,27 @@ namespace Vostok.Metrics
 
         public CpuUsageStats Reset()
         {
-            var systemTimeDelta = GetSystemTimeDelta();
-            var cpuDelta = GetCpuDelta();
-
-            var processUsage = systemTimeDelta == 0 ? 0 : (double) cpuDelta/systemTimeDelta;
-            processUsage /= Environment.ProcessorCount;
-
-            return new CpuUsageStats
+            try
             {
-                ProcessUsage = processUsage
-            };
+
+                var systemTimeDelta = GetSystemTimeDelta();
+                var cpuDelta = GetCpuDelta();
+
+                var processUsage = systemTimeDelta == 0 ? 0 : (double) cpuDelta/systemTimeDelta;
+                processUsage /= Environment.ProcessorCount;
+
+                return new CpuUsageStats
+                {
+                    ProcessUsage = processUsage
+                };
+            }
+            catch (Exception)
+            {
+                return new CpuUsageStats
+                {
+                    ProcessUsage = 0
+                };
+            }
         }
 
         private long GetCpuDelta()

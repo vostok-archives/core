@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace Vostok.Metrics
 {
-    public static class IMetricScope_Extensions
+    public static class IMetricScope_Extensions_SystemMetrics
     {
         public static void CpuLoad(
             this IMetricScope scope,

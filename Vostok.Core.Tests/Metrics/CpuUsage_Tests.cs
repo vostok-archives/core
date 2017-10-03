@@ -6,7 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Vostok.Metrics;
 
-namespace Vostok.Flow
+namespace Vostok.Metrics
 {
     public class CpuUsage_Tests
     {
