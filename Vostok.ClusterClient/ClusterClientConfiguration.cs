@@ -34,6 +34,8 @@ namespace Vostok.Clusterclient
             LogReplicaResults = ClusterClientDefaults.LogReplicaResults;
             MaxReplicasUsedPerRequest = ClusterClientDefaults.MaxReplicasUsedPerRequest;
             TransferDistributedContext = ClusterClientDefaults.TransferDistributedContext;
+            IncludeRequestTimeoutHeader = ClusterClientDefaults.IncludeRequestTimeoutHeader;
+            IncludeClientIdentityHeader = ClusterClientDefaults.IncludeClientIdentityHeader;
         }
 
         public ILog Log { get; }
@@ -83,6 +85,10 @@ namespace Vostok.Clusterclient
         public bool LogReplicaResults { get; set; }
 
         public bool TransferDistributedContext { get; set; }
+
+        public bool IncludeRequestTimeoutHeader { get; set; }
+
+        public bool IncludeClientIdentityHeader { get; set; }
 
         public bool IsValid => !Validate().Any();
 

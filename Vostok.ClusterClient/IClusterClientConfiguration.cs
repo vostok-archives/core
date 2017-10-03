@@ -190,5 +190,17 @@ namespace Vostok.Clusterclient
         /// <para>This parameter is optional and has a default value (see <see cref="ClusterClientDefaults.TransferDistributedContext"/>).</para>
         /// </summary>
         bool TransferDistributedContext { get; set; }
+
+        /// <summary>
+        /// <para>Gets or sets whether to include a <see cref="HeaderNames.XKonturRequestTimeout"/> header in request.</para>
+        /// <para>This parameter is optional and has a default value (see <see cref="ClusterClientDefaults.IncludeRequestTimeoutHeader"/>).</para>
+        /// </summary>
+        bool IncludeRequestTimeoutHeader { get; set; }
+
+        /// <summary>
+        /// <para>Gets or sets whether to include a <see cref="HeaderNames.XKonturClientIdentity"/> header in request.</para>
+        /// <para>This parameter is optional and has a default value (see <see cref="ClusterClientDefaults.IncludeClientIdentityHeader"/>).</para>
+        /// </summary>
+        bool IncludeClientIdentityHeader { get; set; }
     }
 }
