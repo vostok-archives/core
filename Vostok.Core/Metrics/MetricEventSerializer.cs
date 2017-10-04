@@ -5,7 +5,7 @@ using Vostok.Commons.Binary;
 
 namespace Vostok.Metrics
 {
-    public class MetricEventSerializer : 
+    public class MetricEventSerializer :
         IAirlockSerializer<MetricEvent>,
         IAirlockDeserializer<MetricEvent>
     {
@@ -30,29 +30,32 @@ namespace Vostok.Metrics
 
         public MetricEvent Deserialize(IAirlockSource source)
         {
-            var metricEvent = new MetricEvent();
-
-            metricEvent.Timestamp = new DateTimeOffset(source.Reader.ReadInt64(), TimeSpan.Zero);
+            var timestamp = new DateTimeOffset(source.Reader.ReadInt64(), TimeSpan.Zero);
 
             var count = source.Reader.ReadInt32();
-            metricEvent.Tags = new Dictionary<string, string>(count);
+            var tags = new Dictionary<string, string>(count);
             for (var i = 0; i < count; i++)
             {
                 var key = source.Reader.ReadString();
                 var value = source.Reader.ReadString();
-                metricEvent.Tags[key] = value;
+                tags[key] = value;
             }
 
             count = source.Reader.ReadInt32();
-            metricEvent.Values = new Dictionary<string, double>(count);
+            var values = new Dictionary<string, double>(count);
             for (var i = 0; i < count; i++)
             {
                 var key = source.Reader.ReadString();
                 var value = source.Reader.ReadDouble();
-                metricEvent.Values[key] = value;
+                values[key] = value;
             }
 
-            return metricEvent;
+            return new MetricEvent
+            {
+                Timestamp = timestamp,
+                Tags = tags,
+                Values = values
+            };
         }
     }
 }

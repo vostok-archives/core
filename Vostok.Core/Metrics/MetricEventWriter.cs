@@ -6,41 +6,44 @@ namespace Vostok.Metrics
     internal class MetricEventWriter : IMetricEventWriter
     {
         private readonly Action<MetricEvent> commit;
-        private readonly MetricEvent metricEvent;
+        private DateTimeOffset timestamp;
+        private readonly Dictionary<string, string> tags;
+        private readonly Dictionary<string, double> values;
 
         public MetricEventWriter(Action<MetricEvent> commit)
         {
             this.commit = commit;
-            //TODO (@ezsilmar) Do it more efficiently
-            this.metricEvent = new MetricEvent
-            {
-                Timestamp = DateTimeOffset.UtcNow,
-                Tags = new Dictionary<string, string>(),
-                Values = new Dictionary<string, double>()
-            };
+            timestamp = DateTimeOffset.UtcNow;
+            tags = new Dictionary<string, string>();
+            values = new Dictionary<string, double>();
         }
 
-        public IMetricEventWriter SetTimestamp(DateTimeOffset offset)
+        public IMetricEventWriter SetTimestamp(DateTimeOffset timestamp)
         {
-            metricEvent.Timestamp = offset;
+            this.timestamp = timestamp;
             return this;
         }
 
         public IMetricEventWriter SetTag(string key, string value)
         {
-            metricEvent.Tags[key] = value;
+            tags[key] = value;
             return this;
         }
 
         public IMetricEventWriter SetValue(string key, double value)
         {
-            metricEvent.Values[key] = value;
+            values[key] = value;
             return this;
         }
 
         public void Commit()
         {
-            commit(metricEvent);
+            commit(new MetricEvent
+            {
+                Timestamp = timestamp,
+                Tags = tags,
+                Values = values
+            });
         }
     }
 }
