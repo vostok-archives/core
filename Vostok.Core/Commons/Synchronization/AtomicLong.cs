@@ -27,6 +27,11 @@ namespace Vostok.Commons.Synchronization
             return Interlocked.Decrement(ref value);
         }
 
+        public long Add(long diff)
+        {
+            return Interlocked.Add(ref value, diff);
+        }
+
         public bool TrySet(long newValue, long expectedValue)
         {
             return Interlocked.CompareExchange(ref value, newValue, expectedValue) == expectedValue;
