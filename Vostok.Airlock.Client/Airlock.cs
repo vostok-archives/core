@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
 
 namespace Vostok.Airlock
 {
@@ -9,7 +8,7 @@ namespace Vostok.Airlock
         private readonly AirlockConfig config;
         private readonly MemoryManager memoryManager;
         private readonly RecordWriter recordWriter;
-        private readonly ConcurrentDictionary<string, BufferPool> bufferPools;
+        private readonly ConcurrentDictionary<string, IBufferPool> bufferPools;
 
         public Airlock(AirlockConfig config)
         {
@@ -17,7 +16,12 @@ namespace Vostok.Airlock
 
             memoryManager = new MemoryManager(config.MaximumMemoryConsumption.Bytes, (int) config.InitialPooledBufferSize.Bytes);
             recordWriter = new RecordWriter(new RecordSerializer());
-            bufferPools = new ConcurrentDictionary<string, BufferPool>();
+            bufferPools = new ConcurrentDictionary<string, IBufferPool>();
+
+            var requestSender = new RequestSender(config);
+            var commonBatchBuffer = new byte[config.MaximumBatchSizeToSend.Bytes];
+            var dataBatchesFactory = new DataBatchesFactory(bufferPools, commonBatchBuffer, config.Log);
+            var dataSender = new DataSender(dataBatchesFactory, requestSender, config.Log);
         }
 
         public void Push<T>(string routingKey, T item, DateTimeOffset? timestamp = null)
@@ -28,7 +32,7 @@ namespace Vostok.Airlock
             recordWriter.Write(item, serializer, timestamp ?? DateTimeOffset.UtcNow, ObtainBufferPool(routingKey));
         }
 
-        private BufferPool ObtainBufferPool(string routingKey)
+        private IBufferPool ObtainBufferPool(string routingKey)
         {
             return bufferPools.GetOrAdd(routingKey, _ => new BufferPool(memoryManager, config.InitialPooledBuffersCount));
         }
