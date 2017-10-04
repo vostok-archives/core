@@ -19,12 +19,12 @@ namespace Vostok.Airlock
             bufferPools = new ConcurrentDictionary<string, BufferPool>();
         }
 
-        public void Push<T>(string routingKey, T item)
+        public void Push<T>(string routingKey, T item, DateTimeOffset? timestamp = null)
         {
             if (!AirlockSerializerRegistry.TryGet<T>(out var serializer))
                 return;
 
-            recordWriter.Write(item, serializer, DateTimeOffset.UtcNow, ObtainBufferPool(routingKey));
+            recordWriter.Write(item, serializer, timestamp ?? DateTimeOffset.UtcNow, ObtainBufferPool(routingKey));
         }
 
         private BufferPool ObtainBufferPool(string routingKey)

@@ -17,7 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Vostok.ClusterClient" Version="1.0.0-pre000070" />
     <PackageReference Include="Vostok.ClusterClient.Transport.Http" Version="1.0.0-pre000070" />
-    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000127" />
+    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000138" />
   </ItemGroup>
 
 </Project>
