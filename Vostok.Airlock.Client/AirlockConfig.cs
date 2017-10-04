@@ -23,7 +23,7 @@ namespace Vostok.Airlock
 
         public int InitialPooledBuffersCount { get; set; } = 16;
 
-        public TimeSpan SendPeriod { get; set; } = 5.Seconds();
+        public TimeSpan SendPeriod { get; set; } = 2.Seconds();
 
         public TimeSpan SendPeriodCap { get; set; } = 5.Minutes();
 
