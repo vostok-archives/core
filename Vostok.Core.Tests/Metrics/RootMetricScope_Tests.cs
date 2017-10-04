@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Vostok.Metrics
 {
-    public class RootMetricScopeTests
+    public class RootMetricScope_Tests
     {
         private IMetricConfiguration metricConfiguration;
         private IMetricEventReporter eventReporter;

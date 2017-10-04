@@ -8,7 +8,7 @@ using Vostok.Flow;
 
 namespace Vostok.Metrics
 {
-    public class MetricWriterTests
+    public class MetricWriter_Tests
     {
         private Action<MetricEvent> commitAction;
         private MetricEventWriter writer;
