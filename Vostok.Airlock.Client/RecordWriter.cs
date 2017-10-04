@@ -27,7 +27,7 @@ namespace Vostok.Airlock
             {
                 if (serializationSucceeded)
                 {
-                    buffer.IncrementWrittenCount();
+                    buffer.WrittenRecords++;
                 }
                 else
                 {

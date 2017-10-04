@@ -8,16 +8,16 @@
         public void MakeSnapshot()
         {
             SnapshotLength = Position;
-            SnapshotCount = writtenCount;
+            SnapshotCount = WrittenRecords;
         }
 
-        public void RemoveSnapshot()
+        public void CancelSnapshot()
         {
             SnapshotLength = 0;
             SnapshotCount = 0;
         }
 
-        public void ResetSnapshot()
+        public void CleanupSnapshot()
         {
             if (SnapshotLength > 0)
             {
@@ -36,7 +36,7 @@
 
             if (SnapshotCount > 0)
             {
-                writtenCount -= SnapshotCount;
+                WrittenRecords -= SnapshotCount;
                 SnapshotCount = 0;
             }
         }

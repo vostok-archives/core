@@ -7,7 +7,6 @@ namespace Vostok.Airlock
     {
         private readonly BinaryBufferWriter binaryWriter;
         private readonly IMemoryManager memoryManager;
-        private int writtenCount;
 
         public Buffer(BinaryBufferWriter binaryWriter, IMemoryManager memoryManager)
         {
@@ -17,6 +16,8 @@ namespace Vostok.Airlock
 
         public Guid Id { get; } = Guid.NewGuid();
 
+        public int WrittenRecords { get; set; }
+
         public int Position
         {
             get => binaryWriter.Position;
@@ -24,10 +25,5 @@ namespace Vostok.Airlock
         }
 
         public byte[] InternalBuffer => binaryWriter.Buffer;
-
-        public void IncrementWrittenCount()
-        {
-            writtenCount++;
-        }
     }
 }

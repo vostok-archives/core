@@ -33,11 +33,11 @@ namespace Vostok.Airlock
             });
         }
 
-        public async Task<RequestSendResult> SendAsync(ArraySegment<byte> serializedBatch)
+        public async Task<RequestSendResult> SendAsync(ArraySegment<byte> serializedMessage)
         {
             var request = Request.Post("send")
                 .WithHeader("apikey", config.ApiKey)
-                .WithContent(serializedBatch);
+                .WithContent(serializedMessage);
 
             var result = await client.SendAsync(request).ConfigureAwait(false);
 

@@ -7,14 +7,15 @@ namespace Vostok.Airlock
         Guid Id { get; }
 
         int Position { get; set; }
+        int WrittenRecords { get; set; }
+
         byte[] InternalBuffer { get; }
+
         int SnapshotLength { get; }
         int SnapshotCount { get; }
 
         void MakeSnapshot();
-        void RemoveSnapshot();
-        void ResetSnapshot();
-
-        void IncrementWrittenCount();
+        void CancelSnapshot();
+        void CleanupSnapshot();
     }
 }
