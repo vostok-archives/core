@@ -50,11 +50,11 @@ namespace Vostok.Airlock
         {
             if (result == RequestSendResult.Success)
             {
-                log.Info($"Airlock. Successfully sent batch of size {batch.SerializedMessage.Count.Bytes()} in {elapsed}.");
+                log.Info($"Successfully sent batch of size {batch.SerializedMessage.Count.Bytes()} in {elapsed}.");
             }
             else
             {
-                log.Warn($"Airlock. Failed to send batch of size {batch.SerializedMessage.Count.Bytes()} with result '{result}' in {elapsed}.");
+                log.Warn($"Failed to send batch of size {batch.SerializedMessage.Count.Bytes()} with result '{result}' in {elapsed}.");
             }
         }
     }
