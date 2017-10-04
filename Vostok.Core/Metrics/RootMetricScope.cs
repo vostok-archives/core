@@ -63,7 +63,7 @@ namespace Vostok.Metrics
 
         private void EnrichWithHostname(IMetricEventWriter writer)
         {
-            writer.SetTag("host", HttpClientHostname.Get());
+            writer.SetTag("host", HostnameProvider.Get());
         }
     }
 }

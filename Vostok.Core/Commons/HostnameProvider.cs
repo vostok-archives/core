@@ -2,11 +2,11 @@
 
 namespace Vostok.Commons
 {
-    public static class HttpClientHostname
+    public static class HostnameProvider
     {
         private static readonly string hostname;
 
-        static HttpClientHostname()
+        static HostnameProvider()
         {
             try
             {
