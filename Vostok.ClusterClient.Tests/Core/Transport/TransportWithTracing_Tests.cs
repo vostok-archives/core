@@ -36,13 +36,13 @@ namespace Vostok.Clusterclient.Core.Transport
             transport.SendAsync(request, timeout, cancellationToken).Returns(response);
             var expectedAnnotations = new Dictionary<string, string>
             {
-                ["kind"] = "http-client",
-                ["component"] = "cluster-client",
-                ["http.url"] = "http://vostok/process",
-                ["http.method"] = "POST",
-                ["http.requestСontentLength"] = "10",
-                ["http.responseСontentLength"] = "0",
-                ["http.code"] = "400"
+                [TracingAnnotationNames.Kind] = "http-client",
+                [TracingAnnotationNames.Component] = "cluster-client",
+                [TracingAnnotationNames.HttpUrl] = "http://vostok/process",
+                [TracingAnnotationNames.HttpMethod] = "POST",
+                [TracingAnnotationNames.HttpRequestContentLength] = "10",
+                [TracingAnnotationNames.HttpResponseContentLength] = "0",
+                [TracingAnnotationNames.HttpCode] = "400"
             };
             airlock.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
             {

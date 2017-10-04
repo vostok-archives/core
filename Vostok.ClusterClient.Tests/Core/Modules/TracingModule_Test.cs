@@ -35,16 +35,16 @@ namespace Vostok.Clusterclient.Core.Modules
             var clusterResult = new ClusterResult(ClusterResultStatus.Success, new List<ReplicaResult>(), response, request);
             var expectedAnnotations = new Dictionary<string, string>
             {
-                ["kind"] = "cluster-client",
-                ["component"] = "cluster-client",
-                ["cluster.strategy"] = "Parallel-2",
-                ["cluster.status"] = "Success",
-                ["http.url"] = "vostok/process",
-                ["http.method"] = "GET",
-                ["http.requestСontentLength"] = "0",
-                ["http.responseСontentLength"] = "0",
-                ["http.code"] = "409",
-                ["serviceName"] = "serviceName"
+                [TracingAnnotationNames.Kind] = "cluster-client",
+                [TracingAnnotationNames.Component] = "cluster-client",
+                [TracingAnnotationNames.ClusterStrategy] = "Parallel-2",
+                [TracingAnnotationNames.ClusterStatus] = "Success",
+                [TracingAnnotationNames.HttpUrl] = "vostok/process",
+                [TracingAnnotationNames.HttpMethod] = "GET",
+                [TracingAnnotationNames.HttpRequestContentLength] = "0",
+                [TracingAnnotationNames.HttpResponseContentLength] = "0",
+                [TracingAnnotationNames.HttpCode] = "409",
+                [TracingAnnotationNames.ServiceName] = "serviceName"
             };
             airlock.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
             {
