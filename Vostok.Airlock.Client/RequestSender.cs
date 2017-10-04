@@ -37,7 +37,7 @@ namespace Vostok.Airlock
         public async Task<RequestSendResult> SendAsync(ArraySegment<byte> serializedMessage)
         {
             var request = Request.Post("send")
-                .WithHeader("apikey", config.ApiKey)
+                .WithHeader("x-apikey", config.ApiKey)
                 .WithContent(serializedMessage);
 
             var result = await client.SendAsync(request).ConfigureAwait(false);
