@@ -19,7 +19,7 @@ namespace Vostok.Tracing
                     Annotations = new Dictionary<string, string>()
                 });
 
-            AirlockSerializerRegistry.Register(TracingConstants.AirlockDataType, new SpanAirlockSerializer());
+            AirlockSerializerRegistry.Register(new SpanAirlockSerializer());
         }
 
         public static ISpanBuilder BeginSpan()
