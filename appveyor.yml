@@ -4,10 +4,6 @@ nuget:
   project_feed: true
   disable_publish_on_pr: true
 install:
-  - nuget sources add -name core -source https://ci.appveyor.com/nuget/core-2nbdf5dfgymf
-  - dotnet restore
-configuration: Release
-before_build:
   - ps: |
       $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
       Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber"
@@ -28,6 +24,9 @@ before_build:
       $version.AppendChild($versionText)
       $xml.Project.PropertyGroup.AppendChild($version)
       $xml.Save($xmlPath)
+  - nuget sources add -name core -source https://ci.appveyor.com/nuget/core-2nbdf5dfgymf
+  - dotnet restore
+configuration: Release
 after_build:
   - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient\bin\Release\Vostok.ClusterClient.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
   - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient.Transport.Http\bin\Release\Vostok.ClusterClient.Transport.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
