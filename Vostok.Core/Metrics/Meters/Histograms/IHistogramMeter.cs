@@ -1,4 +1,4 @@
-﻿namespace Vostok.Metrics.Histograms
+﻿namespace Vostok.Metrics.Meters.Histograms
 {
     public interface IHistogramMeter
     {

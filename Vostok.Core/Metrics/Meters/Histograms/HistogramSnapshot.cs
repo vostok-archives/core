@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Vostok.Metrics.Histograms
+namespace Vostok.Metrics.Meters.Histograms
 {
     public class HistogramSnapshot
     {
