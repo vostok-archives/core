@@ -41,7 +41,7 @@ namespace Vostok.Commons.Collections
         {
             if (isDisposed)
             {
-                DisposableResource(resource);
+                DisposeResource(resource);
             }
             else
             {
@@ -71,11 +71,11 @@ namespace Vostok.Commons.Collections
             }
             
             Interlocked.Decrement(ref allocated);
-            DisposableResource(resource);
+            DisposeResource(resource);
             return true;
         }
 
-        private void DisposableResource(T resource)
+        private void DisposeResource(T resource)
         {
             if (resourceIsDisposable)
             {
