@@ -38,8 +38,8 @@ namespace Vostok.Airlock
                     if (buffers.Count == 0)
                     {
                         LogDroppingLargeBuffer(buffer);
-                        buffer.ScheduleGarbageCollection();
-                        buffer.CollectGarbageIfScheduled();
+                        buffer.ReleaseSnapshot();
+                        buffer.CleanupSnapshot();
                         continue;
                     }
 

@@ -6,26 +6,19 @@
         public int SnapshotCount { get; private set; }
         public bool SnapshotIsGarbage { get; private set; }
 
-        public void MakeSnapshot()
+        public void Snapshot()
         {
             SnapshotLength = Position;
             SnapshotCount = WrittenRecords;
             SnapshotIsGarbage = false;
         }
 
-        public void CancelSnapshot()
-        {
-            SnapshotLength = 0;
-            SnapshotCount = 0;
-            SnapshotIsGarbage = false;
-        }
-
-        public void ScheduleGarbageCollection()
+        public void ReleaseSnapshot()
         {
             SnapshotIsGarbage = true;
         }
 
-        public void CollectGarbageIfScheduled()
+        public void CleanupSnapshot()
         {
             if (!SnapshotIsGarbage)
                 return;

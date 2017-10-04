@@ -14,9 +14,8 @@ namespace Vostok.Airlock
         int SnapshotLength { get; }
         int SnapshotCount { get; }
 
-        void MakeSnapshot();
-        void CancelSnapshot();
-        void ScheduleGarbageCollection();
-        void CollectGarbageIfScheduled();
+        void Snapshot();
+        void ReleaseSnapshot();
+        void CleanupSnapshot();
     }
 }

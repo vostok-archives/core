@@ -29,14 +29,14 @@ namespace Vostok.Airlock
         {
             var result = buffers.TryDequeue(out buffer) || TryCreateBuffer(out buffer);
             if (result)
-                buffer.CollectGarbageIfScheduled();
+                buffer.CleanupSnapshot();
 
             return result;
         }
 
         public void Release(IBuffer buffer)
         {
-            buffer.CollectGarbageIfScheduled();
+            buffer.CleanupSnapshot();
             buffers.Enqueue(buffer);
         }
 
@@ -48,8 +48,8 @@ namespace Vostok.Airlock
             {
                 if (buffer.Position > 0)
                 {
-                    buffer.CollectGarbageIfScheduled();
-                    buffer.MakeSnapshot();
+                    buffer.CleanupSnapshot();
+                    buffer.Snapshot();
                     (snapshot ?? (snapshot = new List<IBuffer>())).Add(buffer);
                 }
             });
