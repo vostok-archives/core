@@ -8,10 +8,10 @@ namespace Vostok.Airlock
         private readonly long maxMemoryForBuffers;
         private long currentSize;
 
-        public MemoryManager(int initialBuffersSize, long maxMemoryForBuffers)
+        public MemoryManager(long maxMemoryForBuffers, int initialBuffersSize)
         {
-            this.initialBuffersSize = initialBuffersSize;
             this.maxMemoryForBuffers = maxMemoryForBuffers;
+            this.initialBuffersSize = initialBuffersSize;
         }
 
         public bool TryCreateBuffer(out byte[] buffer)
