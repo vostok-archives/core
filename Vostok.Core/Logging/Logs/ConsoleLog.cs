@@ -17,18 +17,8 @@ namespace Vostok.Logging.Logs
 
         private readonly object syncLock = new object();
 
-        private readonly LogLevel minLevel;
-
-        public ConsoleLog(LogLevel minLevel = LogLevel.Trace)
-        {
-            this.minLevel = minLevel;
-        }
-
         public void Log(LogEvent logEvent)
         {
-            if (logEvent.Level < minLevel)
-                return;
-
             lock (syncLock)
             {
                 var oldColor = Console.ForegroundColor;
@@ -40,7 +30,7 @@ namespace Vostok.Logging.Logs
 
         public bool IsEnabledFor(LogLevel level)
         {
-            return level >= minLevel;
+            return true;
         }
     }
 }
