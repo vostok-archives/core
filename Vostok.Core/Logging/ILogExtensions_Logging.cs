@@ -184,7 +184,7 @@ namespace Vostok.Logging
             log.Log(LogLevel.Warn, exception, messageTemplate, parameters);
         }
 
-        private static void Log(this ILog log, LogLevel level, Exception exception, string message, params object[] parameters)
+        public static void Log(this ILog log, LogLevel level, Exception exception, string message, params object[] parameters)
         {
             log.Log(new LogEvent(level, exception, message, parameters));
         }
