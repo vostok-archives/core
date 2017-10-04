@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace Vostok.Airlock
+﻿namespace Vostok.Airlock
 {
     internal interface IBuffer : IAirlockSink
     {
-        Guid Id { get; }
-
         int Position { get; set; }
         int WrittenRecords { get; set; }
 
@@ -14,8 +10,8 @@ namespace Vostok.Airlock
         int SnapshotLength { get; }
         int SnapshotCount { get; }
 
-        void Snapshot();
-        void ReleaseSnapshot();
-        void CleanupSnapshot();
+        void MakeSnapshot();
+        void DiscardSnapshot();
+        void CollectGarbage();
     }
 }

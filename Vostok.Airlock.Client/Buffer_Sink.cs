@@ -5,7 +5,7 @@ namespace Vostok.Airlock
 {
     internal partial class Buffer
     {
-        private AirlockWriteStream writeStream;
+        private volatile AirlockWriteStream writeStream;
 
         public Stream WriteStream => writeStream ?? (writeStream = new AirlockWriteStream(this));
 

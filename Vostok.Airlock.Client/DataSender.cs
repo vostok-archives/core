@@ -42,7 +42,7 @@ namespace Vostok.Airlock
         {
             foreach (var buffer in batch.ParticipatingBuffers)
             {
-                buffer.ReleaseSnapshot();
+                buffer.DiscardSnapshot();
             }
         }
 

@@ -14,8 +14,6 @@ namespace Vostok.Airlock
             this.memoryManager = memoryManager;
         }
 
-        public Guid Id { get; } = Guid.NewGuid();
-
         public int WrittenRecords { get; set; }
 
         public int Position
