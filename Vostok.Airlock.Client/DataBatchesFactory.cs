@@ -27,7 +27,11 @@ namespace Vostok.Airlock
                 var routingKey = pair.Key;
                 var bufferPool = pair.Value;
 
-                foreach (var buffer in bufferPool.GetSnapshot())
+                var snapshot = bufferPool.GetSnapshot();
+                if (snapshot == null)
+                    continue;
+
+                foreach (var buffer in snapshot)
                 {
                     if (builder.TryAdd(routingKey, buffer))
                     {
