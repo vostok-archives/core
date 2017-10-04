@@ -27,6 +27,6 @@ namespace Vostok.Airlock
 
         public TimeSpan SendPeriodCap { get; set; } = 5.Minutes();
 
-        public TimeSpan RequestTimeout { get; set; } = 20.Seconds();
+        public TimeSpan RequestTimeout { get; set; } = 30.Seconds();
     }
 }
