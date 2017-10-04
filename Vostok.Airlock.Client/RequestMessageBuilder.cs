@@ -35,7 +35,7 @@ namespace Vostok.Airlock
 
         private bool Fits(string routingKey, IBuffer buffer)
         {
-            var requiredSpace = buffer.Position + sizeof (int) + sizeof (int) + Encoding.UTF8.GetMaxByteCount(routingKey.Length);
+            var requiredSpace = buffer.SnapshotLength + sizeof (int) + sizeof (int) + Encoding.UTF8.GetMaxByteCount(routingKey.Length);
             var remainingSpace = writer.Buffer.Length - writer.Position;
 
             return requiredSpace <= remainingSpace;
@@ -60,8 +60,8 @@ namespace Vostok.Airlock
         private void WriteRecordsGroup(string routingKey, IBuffer buffer)
         {
             writer.Write(routingKey);
-            writer.Write(buffer.WrittenRecords);
-            writer.WriteWithoutLengthPrefix(buffer.InternalBuffer, 0, buffer.Position);
+            writer.Write(buffer.SnapshotCount);
+            writer.WriteWithoutLengthPrefix(buffer.InternalBuffer, 0, buffer.SnapshotLength);
         }
     }
 }
