@@ -8,9 +8,9 @@ namespace Vostok.Airlock
 {
     internal class AirlockWriteStream : Stream
     {
-        private readonly BinaryBufferWriter writer;
+        private readonly IBinaryWriter writer;
 
-        public AirlockWriteStream(BinaryBufferWriter writer)
+        public AirlockWriteStream(IBinaryWriter writer)
         {
             this.writer = writer;
         }
