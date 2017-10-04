@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Vostok.Clusterclient;
 using Vostok.Clusterclient.Model;
@@ -8,6 +6,7 @@ using Vostok.Clusterclient.Ordering.Weighed;
 using Vostok.Clusterclient.Strategies;
 using Vostok.Clusterclient.Transport.Http;
 using Vostok.Commons.Extensions.UnitConvertions;
+using Vostok.Logging;
 
 namespace Vostok.Airlock
 {
@@ -16,11 +15,11 @@ namespace Vostok.Airlock
         private readonly AirlockConfig config;
         private readonly ClusterClient client;
 
-        public RequestSender(AirlockConfig config)
+        public RequestSender(AirlockConfig config, ILog log)
         {
             this.config = config;
 
-            client = new ClusterClient(config.Log, configuration =>
+            client = new ClusterClient(log, configuration =>
             {
                 configuration.ServiceName = "airlock";
                 configuration.ClusterProvider = config.ClusterProvider;

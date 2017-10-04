@@ -2,16 +2,12 @@
 using Vostok.Clusterclient.Topology;
 using Vostok.Commons.Extensions.UnitConvertions;
 using Vostok.Commons.Model;
-using Vostok.Logging;
-using Vostok.Logging.Logs;
 
 namespace Vostok.Airlock
 {
     public class AirlockConfig
     {
         public IClusterProvider ClusterProvider { get; set; } = new FixedClusterProvider(new Uri("http://192.168.0.75:8888/"));
-
-        public ILog Log { get; set; } = new SilentLog();
 
         public string ApiKey = "insert api key here";
 

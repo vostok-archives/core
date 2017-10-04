@@ -13,19 +13,17 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-
             AirlockSerializerRegistry.Register(new Serializer());
 
             var config = new AirlockConfig
             {
                 ApiKey = "UniversalApiKey",
                 ClusterProvider = new FixedClusterProvider(new Uri("http://192.168.0.75:8888/")),
-                Log = new ConsoleLog(),
                 SendPeriod = 1.Seconds(),
                 SendPeriodCap = 30.Seconds(),
             };
 
-            var airlock = new Airlock(config);
+            var airlock = new Airlock(config, new ConsoleLog());
 
             while (true)
             {
