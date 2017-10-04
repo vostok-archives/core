@@ -6,7 +6,7 @@ namespace Vostok.Airlock
     {
         Guid Id { get; }
 
-        int Position { get; }
+        int Position { get; set; }
         byte[] InternalBuffer { get; }
         int SnapshotLength { get; }
         int SnapshotCount { get; }
