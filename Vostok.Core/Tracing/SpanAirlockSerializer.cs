@@ -5,7 +5,7 @@ using Vostok.Commons.Binary;
 
 namespace Vostok.Tracing
 {
-    internal class SpanAirlockSerializer : IAirlockSerializer<Span>, IAirlockDeserializer<Span>
+    public class SpanAirlockSerializer : IAirlockSerializer<Span>, IAirlockDeserializer<Span>
     {
         private const byte FormatVersion = 1;
 
