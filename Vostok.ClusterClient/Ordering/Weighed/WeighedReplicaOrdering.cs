@@ -6,6 +6,7 @@ using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Ordering.Storage;
 using Vostok.Commons.Collections;
+using Vostok.Commons.Utilities;
 
 namespace Vostok.Clusterclient.Ordering.Weighed
 {

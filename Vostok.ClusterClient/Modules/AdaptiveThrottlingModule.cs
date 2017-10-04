@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
+using Vostok.Commons.Utilities;
 using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Modules

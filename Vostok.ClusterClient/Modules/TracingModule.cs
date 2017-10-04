@@ -11,9 +11,9 @@ namespace Vostok.Clusterclient.Modules
     {
         static TracingModule()
         {
-            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotations.OperationName);
-            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotations.OperationName);
-            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotations.ServiceName);
+            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotationNames.OperationName);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.OperationName);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.ServiceName);
         }
 
         private readonly string serviceName;
@@ -30,20 +30,20 @@ namespace Vostok.Clusterclient.Modules
             using (var span = Trace.BeginSpan())
             {
                 if (!string.IsNullOrEmpty(serviceName))
-                    span.SetAnnotation("serviceName", serviceName);
+                    span.SetAnnotation(TracingAnnotationNames.ServiceName, serviceName);
 
-                span.SetAnnotation("kind", "cluster-client");
-                span.SetAnnotation("component", "cluster-client");
-                span.SetAnnotation("cluster.strategy", context.Strategy.ToString());
-                span.SetAnnotation("http.url", context.Request.Url.ToStringWithoutQuery());
-                span.SetAnnotation("http.method", context.Request.Method);
-                span.SetAnnotation("http.requestСontentLength", context.Request.Content?.Length ?? 0);
+                span.SetAnnotation(TracingAnnotationNames.Kind, "cluster-client");
+                span.SetAnnotation(TracingAnnotationNames.Component, "cluster-client");
+                span.SetAnnotation(TracingAnnotationNames.ClusterStrategy, context.Strategy.ToString());
+                span.SetAnnotation(TracingAnnotationNames.HttpUrl, context.Request.Url.ToStringWithoutQuery());
+                span.SetAnnotation(TracingAnnotationNames.HttpMethod, context.Request.Method);
+                span.SetAnnotation(TracingAnnotationNames.HttpRequestContentLength, context.Request.Content?.Length ?? 0);
 
                 clusterResult = await next(context).ConfigureAwait(false);
 
-                span.SetAnnotation("cluster.status", clusterResult.Status);
-                span.SetAnnotation("http.code", (int) clusterResult.Response.Code);
-                span.SetAnnotation("http.responseСontentLength", clusterResult.Response.Content.Length);
+                span.SetAnnotation(TracingAnnotationNames.ClusterStatus, clusterResult.Status);
+                span.SetAnnotation(TracingAnnotationNames.HttpCode, (int) clusterResult.Response.Code);
+                span.SetAnnotation(TracingAnnotationNames.HttpResponseContentLength, clusterResult.Response.Content.Length);
             }
 
             return clusterResult;

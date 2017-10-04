@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Tracing;
 using Vostok.Commons;
@@ -12,9 +11,9 @@ namespace Vostok.Clusterclient.Transport
     {
         static TransportWithTracing()
         {
-            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotations.OperationName);
-            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotations.OperationName);
-            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotations.ServiceName);
+            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotationNames.OperationName);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.OperationName);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.ServiceName);
         }
 
         private readonly ITransport transport;
@@ -30,16 +29,16 @@ namespace Vostok.Clusterclient.Transport
 
             using (var span = Trace.BeginSpan())
             {
-                span.SetAnnotation("kind", "http-client");
-                span.SetAnnotation("component", "cluster-client");
-                span.SetAnnotation("http.url", request.Url.ToStringWithoutQuery());
-                span.SetAnnotation("http.method", request.Method);
-                span.SetAnnotation("http.requestСontentLength", request.Content?.Length ?? 0);
+                span.SetAnnotation(TracingAnnotationNames.Kind, "http-client");
+                span.SetAnnotation(TracingAnnotationNames.Component, "cluster-client");
+                span.SetAnnotation(TracingAnnotationNames.HttpUrl, request.Url.ToStringWithoutQuery());
+                span.SetAnnotation(TracingAnnotationNames.HttpMethod, request.Method);
+                span.SetAnnotation(TracingAnnotationNames.HttpRequestContentLength, request.Content?.Length ?? 0);
 
                 response = await transport.SendAsync(request, timeout, cancellationToken).ConfigureAwait(false);
 
-                span.SetAnnotation("http.code", (int) response.Code);
-                span.SetAnnotation("http.responseСontentLength", response.Content.Length);
+                span.SetAnnotation(TracingAnnotationNames.HttpCode, (int) response.Code);
+                span.SetAnnotation(TracingAnnotationNames.HttpResponseContentLength, response.Content.Length);
             }
 
             return response;

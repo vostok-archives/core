@@ -1,5 +1,6 @@
 ﻿using System;
 using Vostok.Clusterclient.Helpers;
+using Vostok.Commons.Utilities;
 
 namespace Vostok.Clusterclient.Retry
 {

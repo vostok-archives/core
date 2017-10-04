@@ -2,11 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Strategies;
 using Vostok.Commons.Model;
 using Vostok.Flow;
+using Vostok.Tracing;
 
 namespace Vostok.Clusterclient
 {
@@ -29,7 +29,7 @@ namespace Vostok.Clusterclient
             [CanBeNull] RequestPriority? priority = null,
             [CanBeNull] string operationName = null)
         {
-            using (operationName == null ? null : Context.Properties.Use(TracingAnnotations.OperationName, operationName))
+            using (operationName == null ? null : Context.Properties.Use(TracingAnnotationNames.OperationName, operationName))
             {
                 return await client.SendAsync(request, timeout, strategy, cancellationToken, priority).ConfigureAwait(false);
             }
@@ -52,7 +52,7 @@ namespace Vostok.Clusterclient
             [CanBeNull] RequestPriority? priority = null,
             [CanBeNull] string operationName = null)
         {
-            using (operationName == null ? null : Context.Properties.Use(TracingAnnotations.OperationName, operationName))
+            using (operationName == null ? null : Context.Properties.Use(TracingAnnotationNames.OperationName, operationName))
             {
                 return client.SendAsync(request, timeout, strategy, cancellationToken, priority).GetAwaiter().GetResult();
             }
