@@ -11,7 +11,7 @@ namespace Vostok.Airlock
         public AirlockSink(BinaryBufferWriter writer)
         {
             this.writer = writer;
-            
+
             stream = new AirlockWriteStream(writer);
         }
 

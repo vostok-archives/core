@@ -15,6 +15,11 @@ namespace Vostok.Airlock
             this.writer = writer;
         }
 
+        public override bool CanRead => false;
+        public override bool CanSeek => false;
+        public override bool CanWrite => true;
+        public override bool CanTimeout => false;
+
         public override void Write(byte[] buffer, int offset, int count)
         {
             writer.WriteWithoutLengthPrefix(buffer, offset, count);
@@ -40,11 +45,6 @@ namespace Vostok.Airlock
         {
             return Task.CompletedTask;
         }
-
-        public override bool CanRead => false;
-        public override bool CanSeek => false;
-        public override bool CanWrite => true;
-        public override bool CanTimeout => false;
 
         #region Not supported
 
