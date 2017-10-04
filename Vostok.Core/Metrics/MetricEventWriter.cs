@@ -1,21 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using Vostok.Commons;
 using Vostok.Commons.Collections;
+using Vostok.Flow;
 
 namespace Vostok.Metrics
 {
     internal class MetricEventWriter : IMetricEventWriter
     {
         private readonly IPool<MetricEventWriter> originPool;
+        private readonly IMetricConfiguration configuration;
         private readonly Action<MetricEvent> commit;
 
         private readonly Dictionary<string, string> tags;
         private readonly Dictionary<string, double> values;
         private readonly MetricEvent metricEvent;
 
-        public MetricEventWriter(IPool<MetricEventWriter> originPool, Action<MetricEvent> commit)
+        public MetricEventWriter(
+            IPool<MetricEventWriter> originPool,
+            IMetricConfiguration configuration,
+            Action<MetricEvent> commit)
         {
             this.originPool = originPool;
+            this.configuration = configuration;
             this.commit = commit;
             tags = new Dictionary<string, string>();
             values = new Dictionary<string, double>();
@@ -25,6 +32,13 @@ namespace Vostok.Metrics
                 Values = values,
                 Timestamp = DateTimeOffset.UtcNow
             };
+        }
+
+        public void Initialize()
+        {
+            SetTimestamp(DateTimeOffset.UtcNow);
+            EnrichWithContext();
+            EnrichWithHostname();
         }
 
         public IMetricEventWriter SetTimestamp(DateTimeOffset offset)
@@ -56,6 +70,20 @@ namespace Vostok.Metrics
         {
             tags.Clear();
             values.Clear();
+        }
+
+        private void EnrichWithContext()
+        {
+            foreach (var pair in Context.Properties.Current)
+            {
+                if (configuration.ContextFieldsWhitelist.Contains(pair.Key))
+                    SetTag(pair.Key, Convert.ToString(pair.Value));
+            }
+        }
+
+        private void EnrichWithHostname()
+        {
+            SetTag("host", HostnameProvider.Get());
         }
     }
 }

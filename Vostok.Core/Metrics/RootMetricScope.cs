@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Vostok.Commons;
-using Vostok.Commons.Collections;
-using Vostok.Flow;
+﻿using Vostok.Commons.Collections;
 
 namespace Vostok.Metrics
 {
@@ -19,51 +14,27 @@ namespace Vostok.Metrics
             this.eventWriterPool = new UnlimitedLazyPool<MetricEventWriter>(
                 () => new MetricEventWriter(
                     eventWriterPool,
+                    configuration,
                     metricEvent => configuration.Reporter?.SendEvent(metricEvent)));
             this.metricWriterPool = new UnlimitedLazyPool<MetricEventWriter>(
                 () => new MetricEventWriter(
                     metricWriterPool,
+                    configuration,
                     metricEvent => configuration.Reporter?.SendMetric(metricEvent)));
         }
 
         public IMetricEventWriter WriteEvent()
         {
             var writer = eventWriterPool.Acquire();
-            EnrichWithCommonFields(writer);
+            writer.Initialize();
             return writer;
         }
 
         public IMetricEventWriter WriteMetric()
         {
             var writer = metricWriterPool.Acquire();
-            EnrichWithCommonFields(writer);
+            writer.Initialize();
             return writer;
-        }
-
-        private void EnrichWithCommonFields(MetricEventWriter writer)
-        {
-            SetTimestamp(writer);
-            EnrichWithContext(writer);
-            EnrichWithHostname(writer);
-        }
-
-        private void SetTimestamp(MetricEventWriter writer)
-        {
-            writer.SetTimestamp(DateTimeOffset.UtcNow);
-        }
-
-        private void EnrichWithContext(IMetricEventWriter writer)
-        {
-            foreach (var pair in Context.Properties.Current)
-            {
-                if (configuration.ContextFieldsWhitelist.Contains(pair.Key))
-                    writer.SetTag(pair.Key, Convert.ToString(pair.Value));
-            }
-        }
-
-        private void EnrichWithHostname(IMetricEventWriter writer)
-        {
-            writer.SetTag("host", HostnameProvider.Get());
         }
     }
 }
