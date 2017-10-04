@@ -23,7 +23,7 @@ namespace Vostok.Clusterclient.Transport.Http
         {
             this.log = log ?? throw new ArgumentNullException(nameof(log));
 
-            connectionTimeout = 500.Milliseconds();
+            connectionTimeout = 2.Seconds();
 
             handler = CreateClientHandler();
 

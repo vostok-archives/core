@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
 using Vostok.Commons.Collections;
+using Vostok.Commons.Extensions.UnitConvertions;
 using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Transport.Http
@@ -34,7 +35,7 @@ namespace Vostok.Clusterclient.Transport.Http
 
         public int ConnectionAttempts { get; set; } = 1;
 
-        public TimeSpan? ConnectionTimeout { get; set; } = TimeSpan.FromMilliseconds(500);
+        public TimeSpan? ConnectionTimeout { get; set; } = 2.Seconds();
 
         public async Task<Response> SendAsync(Request request, TimeSpan timeout, CancellationToken cancellationToken)
         {
