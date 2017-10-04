@@ -14,6 +14,8 @@ install:
       $version.AppendChild($versionText)
       $xml.Project.PropertyGroup.AppendChild($version)
       $xml.Save($xmlPath)
+  - nuget sources add -name core -source https://ci.appveyor.com/nuget/core-2nbdf5dfgymf
+  - nuget sources add -name clusterclient -source https://ci.appveyor.com/nuget/clusterclient-d6xfj0mriok1
   - dotnet restore
 configuration: Release
 after_build:
