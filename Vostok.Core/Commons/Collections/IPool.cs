@@ -1,6 +1,8 @@
-﻿namespace Vostok.Commons.Collections
+﻿using System;
+
+namespace Vostok.Commons.Collections
 {
-    public interface IPool<T>
+    public interface IPool<T> : IDisposable
     {
         int Allocated { get; }
         int Available { get; }
