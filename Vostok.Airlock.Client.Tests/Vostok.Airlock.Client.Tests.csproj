@@ -14,9 +14,9 @@
     <PackageReference Include="NSubstitute" Version="2.0.3" />
     <PackageReference Include="NUnit" Version="3.8.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
-    <PackageReference Include="Vostok.ClusterClient" Version="1.0.0-pre000071" />
-    <PackageReference Include="Vostok.ClusterClient.Transport.Http" Version="1.0.0-pre000071" />
-    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000140" />
+    <PackageReference Include="Vostok.ClusterClient" Version="1.0.0-pre000072" />
+    <PackageReference Include="Vostok.ClusterClient.Transport.Http" Version="1.0.0-pre000072" />
+    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000145" />
   </ItemGroup>
 
   <ItemGroup>

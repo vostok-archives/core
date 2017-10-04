@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Vostok.Commons.Binary;
+using Vostok.Commons.Utilities;
 
 namespace Vostok.Airlock
 {
@@ -8,6 +9,8 @@ namespace Vostok.Airlock
     {
         private readonly IMemoryManager memoryManager;
         private readonly ConcurrentQueue<IBuffer> buffers;
+        private readonly HashSet<IBuffer> snapshotSieve;
+        private readonly object snapshotLock;
 
         public BufferPool(IMemoryManager memoryManager, int initialBuffersCount)
         {
@@ -23,6 +26,9 @@ namespace Vostok.Airlock
                 }
                 else break;
             }
+
+            snapshotSieve = new HashSet<IBuffer>(ReferenceEqualityComparer<IBuffer>.Instance);
+            snapshotLock = new object();
         }
 
         public bool TryAcquire(out IBuffer buffer)
@@ -42,18 +48,32 @@ namespace Vostok.Airlock
 
         public List<IBuffer> GetSnapshot()
         {
-            List<IBuffer> snapshot = null;
-
-            buffers.ForEachSafe(buffer =>
+            lock (snapshotLock)
             {
-                if (buffer.Position > 0)
-                {
-                    buffer.MakeSnapshot();
-                    (snapshot ?? (snapshot = new List<IBuffer>())).Add(buffer);
-                }
-            });
+                snapshotSieve.Clear();
 
-            return snapshot;
+                var initialCount = buffers.Count;
+                var snapshot = null as List<IBuffer>;
+
+                for (var i = 0; i < initialCount; i++)
+                {
+                    if (!buffers.TryDequeue(out var buffer))
+                        break;
+
+                    if (!snapshotSieve.Add(buffer))
+                        break;
+
+                    if (buffer.Position > 0)
+                    {
+                        buffer.MakeSnapshot();
+                        (snapshot ?? (snapshot = new List<IBuffer>())).Add(buffer);
+                    }
+
+                    buffers.Enqueue(buffer);
+                }
+
+                return snapshot;
+            }
         }
 
         private bool TryCreateBuffer(out IBuffer buffer)
