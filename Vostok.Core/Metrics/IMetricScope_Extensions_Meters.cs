@@ -1,4 +1,5 @@
 ﻿using System;
+using Vostok.Metrics.Meters;
 
 namespace Vostok.Metrics
 {
