@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using Vostok.Commons.Synchronization;
 using Vostok.Logging;
 using Vostok.Logging.Logs;
 
@@ -12,6 +13,7 @@ namespace Vostok.Airlock
         private readonly RecordWriter recordWriter;
         private readonly ConcurrentDictionary<string, IBufferPool> bufferPools;
         private readonly DataSenderDaemon dataSenderDaemon;
+        private readonly AtomicLong lostItemsCount;
 
         public Airlock(AirlockConfig config, ILog log = null)
         {
@@ -21,6 +23,7 @@ namespace Vostok.Airlock
             memoryManager = new MemoryManager(config.MaximumMemoryConsumption.Bytes, (int) config.InitialPooledBufferSize.Bytes);
             recordWriter = new RecordWriter(new RecordSerializer());
             bufferPools = new ConcurrentDictionary<string, IBufferPool>();
+            lostItemsCount = new AtomicLong(0);
 
             var requestSender = new RequestSender(config, log);
             var commonBatchBuffer = new byte[config.MaximumBatchSizeToSend.Bytes];
@@ -30,14 +33,21 @@ namespace Vostok.Airlock
             dataSenderDaemon = new DataSenderDaemon(dataSender, config);
         }
 
+        public long LostItemsCount => lostItemsCount.Value;
+
         public void Push<T>(string routingKey, T item, DateTimeOffset? timestamp = null)
         {
             if (!AirlockSerializerRegistry.TryGet<T>(out var serializer))
                 return;
 
-            recordWriter.Write(item, serializer, timestamp ?? DateTimeOffset.UtcNow, ObtainBufferPool(routingKey));
-
-            dataSenderDaemon.Start();
+            if (recordWriter.TryWrite(item, serializer, timestamp ?? DateTimeOffset.UtcNow, ObtainBufferPool(routingKey)))
+            {
+                dataSenderDaemon.Start();
+            }
+            else
+            {
+                lostItemsCount.Increment();
+            }
         }
 
         public void Dispose()

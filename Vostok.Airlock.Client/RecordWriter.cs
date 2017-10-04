@@ -11,10 +11,10 @@ namespace Vostok.Airlock
             this.recordSerializer = recordSerializer;
         }
 
-        public void Write<T>(T item, IAirlockSerializer<T> serializer, DateTimeOffset timestamp, IBufferPool bufferPool)
+        public bool TryWrite<T>(T item, IAirlockSerializer<T> serializer, DateTimeOffset timestamp, IBufferPool bufferPool)
         {
             if (!bufferPool.TryAcquire(out var buffer))
-                return;
+                return false;
 
             var startingPosition = buffer.Position;
             var serializationSucceeded = false;
@@ -36,6 +36,8 @@ namespace Vostok.Airlock
                 
                 bufferPool.Release(buffer);
             }
+
+            return true;
         }
     }
 }
