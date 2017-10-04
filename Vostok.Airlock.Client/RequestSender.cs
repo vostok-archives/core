@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Vostok.Clusterclient;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Ordering.Weighed;
@@ -32,7 +33,7 @@ namespace Vostok.Airlock
             });
         }
 
-        public async Task<RequestSendResult> SendAsync(byte[] serializedBatch)
+        public async Task<RequestSendResult> SendAsync(ArraySegment<byte> serializedBatch)
         {
             var request = Request.Post("send")
                 .WithHeader("apikey", config.ApiKey)
