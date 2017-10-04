@@ -3,6 +3,6 @@
     public interface IHistogramReservoir : IHistogramMeter
     {
         HistogramSnapshot GetSnapshot();
-        HistogramSnapshot Reset();
+        void Reset();
     }
 }

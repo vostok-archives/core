@@ -18,22 +18,35 @@ namespace Vostok.Metrics
         [Test]
         public void Random_numbers_are_spread_uniformly()
         {
-            var random = new Random(12345);
-            for (var i = 0; i < 100*1000; i++)
+            var random = new Random(12343);
+            var measurementsCount = 50*1000;
+            var range = 1000;
+
+            for (var i = 0; i < measurementsCount; i++)
             {
-                reservoir.Add(random.Next(100));
+                reservoir.Add(random.Next(range));
             }
 
-            var snapshot = reservoir.Reset();
+            var snapshot = reservoir.GetSnapshot();
 
-            snapshot.GetQuantile(0).Should().Be(0);
-            snapshot.GetQuantile(0.25).Should().Be(25);
-            snapshot.GetQuantile(0.50).Should().Be(50);
-            snapshot.GetQuantile(0.75).Should().Be(75);
-            snapshot.GetQuantile(0.90).Should().Be(90);
-            snapshot.GetQuantile(0.95).Should().Be(95);
-            snapshot.GetQuantile(0.99).Should().Be(99);
-            snapshot.GetQuantile(1).Should().Be(1);
+            var maxError = range*0.05;
+            snapshot.MeasurementsCount.Should().Be(measurementsCount);
+            AssertQuantile(snapshot, 0, range, maxError);
+            AssertQuantile(snapshot, 0.25, range, maxError);
+            AssertQuantile(snapshot, 0.50, range, maxError);
+            AssertQuantile(snapshot, 0.75, range, maxError);
+            AssertQuantile(snapshot, 0.90, range, maxError);
+            AssertQuantile(snapshot, 0.95, range, maxError);
+            AssertQuantile(snapshot, 0.99, range, maxError);
+            AssertQuantile(snapshot, 0.999, range, maxError);
+            AssertQuantile(snapshot, 1, range, maxError);
+        }
+
+        private static void AssertQuantile(HistogramSnapshot snapshot, double quantile, int range, double maxError)
+        {
+            var result = snapshot.GetQuantile(quantile);
+            Console.WriteLine($"{quantile:F3}: {result:F3}");
+            result.Should().BeApproximately(range*quantile, maxError);
         }
     }
 }
