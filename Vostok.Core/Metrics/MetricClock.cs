@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Threading;
-using Vostok.Commons.Collections;
 
 namespace Vostok.Metrics
 {
@@ -36,8 +34,14 @@ namespace Vostok.Metrics
 
                 foreach (var action in actions)
                 {
-                    //TODO (@ezsilmar) try catch and log here
-                    action(aggregationTimestamp);
+                    try
+                    {
+                        action(aggregationTimestamp);
+                    }
+                    catch (Exception)
+                    {
+                        //TODO (@ezsilmar) Log here
+                    }
                 }
 
                 aggregationTimestamp += Period;
