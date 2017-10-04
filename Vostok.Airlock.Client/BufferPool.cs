@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Vostok.Commons.Binary;
 
 namespace Vostok.Airlock
@@ -26,12 +27,34 @@ namespace Vostok.Airlock
 
         public bool TryAcquire(out IBuffer buffer)
         {
-            return buffers.TryDequeue(out buffer) || TryCreateBuffer(out buffer);
+            var result = buffers.TryDequeue(out buffer) || TryCreateBuffer(out buffer);
+            if (result)
+                buffer.CollectGarbageIfScheduled();
+
+            return result;
         }
 
         public void Release(IBuffer buffer)
         {
+            buffer.CollectGarbageIfScheduled();
             buffers.Enqueue(buffer);
+        }
+
+        public List<IBuffer> GetSnapshot()
+        {
+            List<IBuffer> snapshot = null;
+
+            buffers.ForEachSafe(buffer =>
+            {
+                if (buffer.Position > 0)
+                {
+                    buffer.CollectGarbageIfScheduled();
+                    buffer.MakeSnapshot();
+                    (snapshot ?? (snapshot = new List<IBuffer>())).Add(buffer);
+                }
+            });
+
+            return snapshot;
         }
 
         private bool TryCreateBuffer(out IBuffer buffer)

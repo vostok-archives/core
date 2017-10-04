@@ -16,6 +16,7 @@ namespace Vostok.Airlock
 
         void MakeSnapshot();
         void CancelSnapshot();
-        void CleanupSnapshot();
+        void ScheduleGarbageCollection();
+        void CollectGarbageIfScheduled();
     }
 }
