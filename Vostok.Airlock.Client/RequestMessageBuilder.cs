@@ -50,9 +50,11 @@ namespace Vostok.Airlock
         {
             var positionBefore = writer.Position;
 
-            writer.Position = 0;
+            writer.Position = 2;
             writer.Write(groupsWritten);
-            writer.Position = positionBefore;
+
+            if (positionBefore > 2)
+                writer.Position = positionBefore;
         }
 
         private void WriteRecordsGroup(string routingKey, IBuffer buffer)

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Vostok.ClusterClient" Version="1.0.0-pre000070" />
+    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000140" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vostok.Airlock.Client\Vostok.Airlock.Client.csproj" />
+  </ItemGroup>
+
+</Project>
