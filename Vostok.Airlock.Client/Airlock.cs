@@ -3,12 +3,13 @@ using System.Collections.Concurrent;
 
 namespace Vostok.Airlock
 {
-    public class Airlock : IAirlock
+    public class Airlock : IAirlock, IDisposable
     {
         private readonly AirlockConfig config;
         private readonly MemoryManager memoryManager;
         private readonly RecordWriter recordWriter;
         private readonly ConcurrentDictionary<string, IBufferPool> bufferPools;
+        private readonly DataSenderDaemon dataSenderDaemon;
 
         public Airlock(AirlockConfig config)
         {
@@ -22,6 +23,8 @@ namespace Vostok.Airlock
             var commonBatchBuffer = new byte[config.MaximumBatchSizeToSend.Bytes];
             var dataBatchesFactory = new DataBatchesFactory(bufferPools, commonBatchBuffer, config.Log);
             var dataSender = new DataSender(dataBatchesFactory, requestSender, config.Log);
+
+            dataSenderDaemon = new DataSenderDaemon(dataSender, config);
         }
 
         public void Push<T>(string routingKey, T item, DateTimeOffset? timestamp = null)
@@ -30,6 +33,13 @@ namespace Vostok.Airlock
                 return;
 
             recordWriter.Write(item, serializer, timestamp ?? DateTimeOffset.UtcNow, ObtainBufferPool(routingKey));
+
+            dataSenderDaemon.Start();
+        }
+
+        public void Dispose()
+        {
+            dataSenderDaemon.Dispose();
         }
 
         private IBufferPool ObtainBufferPool(string routingKey)

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Vostok.Commons.Extensions.UnitConvertions;
 using Vostok.Logging;
 
@@ -21,9 +23,11 @@ namespace Vostok.Airlock
         {
             foreach (var batch in batchesFactory.CreateBatches())
             {
+                var watch = Stopwatch.StartNew();
+
                 var result = await requestSender.SendAsync(batch.SerializedMessage).ConfigureAwait(false);
 
-                LogBatchSendResult(batch, result);
+                LogBatchSendResult(batch, result, watch.Elapsed);
 
                 if (result == RequestSendResult.IntermittentFailure)
                     return DataSendResult.Backoff;
@@ -42,15 +46,15 @@ namespace Vostok.Airlock
             }
         }
 
-        private void LogBatchSendResult(IDataBatch batch, RequestSendResult result)
+        private void LogBatchSendResult(IDataBatch batch, RequestSendResult result, TimeSpan elapsed)
         {
             if (result == RequestSendResult.Success)
             {
-                log.Info($"Airlock. Successfully sent batch of size {batch.SerializedMessage.Count.Bytes()}");
+                log.Info($"Airlock. Successfully sent batch of size {batch.SerializedMessage.Count.Bytes()} in {elapsed}.");
             }
             else
             {
-                log.Warn($"Airlock. Failed to send batch of size {batch.SerializedMessage.Count.Bytes()} with result '{result}'.");
+                log.Warn($"Airlock. Failed to send batch of size {batch.SerializedMessage.Count.Bytes()} with result '{result}' in {elapsed}.");
             }
         }
     }
