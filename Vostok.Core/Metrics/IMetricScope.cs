@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Vostok.Metrics
+﻿namespace Vostok.Metrics
 {
     public interface IMetricScope
     {

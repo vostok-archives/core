@@ -5,7 +5,7 @@ using Vostok.Commons.Binary;
 
 namespace Vostok.Metrics
 {
-    public class MetricEventSerializer : 
+    public class MetricEventSerializer :
         IAirlockSerializer<MetricEvent>,
         IAirlockDeserializer<MetricEvent>
     {
