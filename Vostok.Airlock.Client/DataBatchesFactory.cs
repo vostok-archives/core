@@ -56,7 +56,7 @@ namespace Vostok.Airlock
 
         private void LogDroppingLargeBuffer(IBuffer buffer)
         {
-            log.Warn($"Dropping contents of internal buffer of size {buffer.SnapshotLength.Bytes()}. It does not fit into batch buffer size {commonBuffer.Length.Bytes()}.");
+            log.Warn($"Airlock. Dropping contents of internal buffer of size {buffer.SnapshotLength.Bytes()}. It does not fit into batch buffer size {commonBuffer.Length.Bytes()}.");
         }
     }
 }

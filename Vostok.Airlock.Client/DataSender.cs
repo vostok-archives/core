@@ -1,12 +1,57 @@
 ﻿using System.Threading.Tasks;
+using Vostok.Commons.Extensions.UnitConvertions;
+using Vostok.Logging;
 
 namespace Vostok.Airlock
 {
     internal class DataSender : IDataSender
     {
-        public Task<DataSendResult> SendAsync()
+        private readonly IDataBatchesFactory batchesFactory;
+        private readonly IRequestSender requestSender;
+        private readonly ILog log;
+
+        public DataSender(IDataBatchesFactory batchesFactory, IRequestSender requestSender, ILog log)
         {
-            throw new System.NotImplementedException();
+            this.batchesFactory = batchesFactory;
+            this.requestSender = requestSender;
+            this.log = log;
+        }
+
+        public async Task<DataSendResult> SendAsync()
+        {
+            foreach (var batch in batchesFactory.CreateBatches())
+            {
+                var result = await requestSender.SendAsync(batch.SerializedMessage).ConfigureAwait(false);
+
+                LogBatchSendResult(batch, result);
+
+                if (result == RequestSendResult.IntermittentFailure)
+                    return DataSendResult.Backoff;
+
+                ReleaseSnapshots(batch);
+            }
+
+            return DataSendResult.Ok;
+        }
+
+        private static void ReleaseSnapshots(IDataBatch batch)
+        {
+            foreach (var buffer in batch.ParticipatingBuffers)
+            {
+                buffer.ReleaseSnapshot();
+            }
+        }
+
+        private void LogBatchSendResult(IDataBatch batch, RequestSendResult result)
+        {
+            if (result == RequestSendResult.Success)
+            {
+                log.Info($"Airlock. Successfully sent batch of size {batch.SerializedMessage.Count.Bytes()}");
+            }
+            else
+            {
+                log.Warn($"Airlock. Failed to send batch of size {batch.SerializedMessage.Count.Bytes()} with result '{result}'.");
+            }
         }
     }
 }
