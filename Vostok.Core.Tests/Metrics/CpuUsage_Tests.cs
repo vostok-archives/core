@@ -10,7 +10,7 @@ namespace Vostok.Metrics
 {
     public class CpuUsage_Tests
     {
-        [Test, Explicit]
+        [Test, Ignore("explicit argument does not work in VS + Resharper")]
         public void Cpu()
         {
             Console.WriteLine("Nya");

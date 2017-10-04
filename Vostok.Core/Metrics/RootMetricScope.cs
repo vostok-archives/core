@@ -1,48 +1,40 @@
-﻿using System;
-using Vostok.Commons;
-using Vostok.Flow;
+﻿using Vostok.Commons.Collections;
 
 namespace Vostok.Metrics
 {
     public class RootMetricScope : IMetricScope
     {
         private readonly IMetricConfiguration configuration;
+        private readonly UnlimitedLazyPool<MetricEventWriter> eventWriterPool;
+        private readonly UnlimitedLazyPool<MetricEventWriter> metricWriterPool;
 
         public RootMetricScope(IMetricConfiguration configuration)
         {
             this.configuration = configuration;
+            this.eventWriterPool = new UnlimitedLazyPool<MetricEventWriter>(
+                () => new MetricEventWriter(
+                    eventWriterPool,
+                    configuration,
+                    metricEvent => configuration.Reporter?.SendEvent(metricEvent)));
+            this.metricWriterPool = new UnlimitedLazyPool<MetricEventWriter>(
+                () => new MetricEventWriter(
+                    metricWriterPool,
+                    configuration,
+                    metricEvent => configuration.Reporter?.SendMetric(metricEvent)));
         }
 
         public IMetricEventWriter WriteEvent()
         {
-            var writer = new MetricEventWriter(
-                metricEvent => configuration.Reporter?.SendEvent(metricEvent));
-            EnrichWithContext(writer);
-            EnrichWithHostname(writer);
+            var writer = eventWriterPool.Acquire();
+            writer.Initialize();
             return writer;
         }
 
         public IMetricEventWriter WriteMetric()
         {
-            var writer = new MetricEventWriter(
-                metricEvent => configuration.Reporter?.SendMetric(metricEvent));
-            EnrichWithContext(writer);
-            EnrichWithHostname(writer);
+            var writer = metricWriterPool.Acquire();
+            writer.Initialize();
             return writer;
-        }
-
-        private void EnrichWithContext(IMetricEventWriter writer)
-        {
-            foreach (var pair in Context.Properties.Current)
-            {
-                if (configuration.ContextFieldsWhitelist.Contains(pair.Key))
-                    writer.SetTag(pair.Key, Convert.ToString(pair.Value));
-            }
-        }
-
-        private void EnrichWithHostname(IMetricEventWriter writer)
-        {
-            writer.SetTag("host", HttpClientHostname.Get());
         }
     }
 }

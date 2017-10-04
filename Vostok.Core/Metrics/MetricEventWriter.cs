@@ -1,26 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using Vostok.Commons;
+using Vostok.Commons.Collections;
+using Vostok.Flow;
 
 namespace Vostok.Metrics
 {
     internal class MetricEventWriter : IMetricEventWriter
     {
+        private readonly IPool<MetricEventWriter> originPool;
+        private readonly IMetricConfiguration configuration;
         private readonly Action<MetricEvent> commit;
-        private DateTimeOffset timestamp;
+
         private readonly Dictionary<string, string> tags;
         private readonly Dictionary<string, double> values;
+        private readonly MetricEvent metricEvent;
 
-        public MetricEventWriter(Action<MetricEvent> commit)
+        public MetricEventWriter(
+            IPool<MetricEventWriter> originPool,
+            IMetricConfiguration configuration,
+            Action<MetricEvent> commit)
         {
+            this.originPool = originPool;
+            this.configuration = configuration;
             this.commit = commit;
-            timestamp = DateTimeOffset.UtcNow;
             tags = new Dictionary<string, string>();
             values = new Dictionary<string, double>();
+            metricEvent = new MetricEvent
+            {
+                Tags = tags,
+                Values = values,
+                Timestamp = DateTimeOffset.UtcNow
+            };
         }
 
-        public IMetricEventWriter SetTimestamp(DateTimeOffset timestamp)
+        public void Initialize()
         {
-            this.timestamp = timestamp;
+            SetTimestamp(DateTimeOffset.UtcNow);
+            EnrichWithContext();
+            EnrichWithHostname();
+        }
+
+        public IMetricEventWriter SetTimestamp(DateTimeOffset offset)
+        {
+            metricEvent.Timestamp = offset;
             return this;
         }
 
@@ -38,12 +61,29 @@ namespace Vostok.Metrics
 
         public void Commit()
         {
-            commit(new MetricEvent
+            commit(metricEvent);
+            Cleanup();
+            originPool.Release(this);
+        }
+
+        private void Cleanup()
+        {
+            tags.Clear();
+            values.Clear();
+        }
+
+        private void EnrichWithContext()
+        {
+            foreach (var pair in Context.Properties.Current)
             {
-                Timestamp = timestamp,
-                Tags = tags,
-                Values = values
-            });
+                if (configuration.ContextFieldsWhitelist.Contains(pair.Key))
+                    SetTag(pair.Key, Convert.ToString(pair.Value));
+            }
+        }
+
+        private void EnrichWithHostname()
+        {
+            SetTag("host", HostnameProvider.Get());
         }
     }
 }
