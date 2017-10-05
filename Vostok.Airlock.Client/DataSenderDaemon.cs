@@ -35,9 +35,11 @@ namespace Vostok.Airlock
 
         public void Dispose()
         {
-            Interlocked.Exchange(ref currentState, State_Disposed);
-
-            cancellationSource.Cancel();
+            if (Interlocked.Exchange(ref currentState, State_Disposed) != State_Disposed)
+            {
+                cancellationSource.Cancel();
+                cancellationSource.Dispose();
+            }
         }
 
         private async Task SendingRoutine()
