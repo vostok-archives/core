@@ -6,7 +6,7 @@ using Vostok.Logging.Logs;
 
 namespace Vostok.Airlock
 {
-    public class Airlock : IAirlock, IDisposable
+    public class AirlockClient : IAirlockClient, IDisposable
     {
         private readonly AirlockConfig config;
         private readonly MemoryManager memoryManager;
@@ -15,7 +15,7 @@ namespace Vostok.Airlock
         private readonly DataSenderDaemon dataSenderDaemon;
         private readonly AtomicLong lostItemsCounter;
 
-        public Airlock(AirlockConfig config, ILog log = null)
+        public AirlockClient(AirlockConfig config, ILog log = null)
         {
             this.config = config ?? throw new ArgumentNullException(nameof(config));
 

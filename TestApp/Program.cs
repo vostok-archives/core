@@ -23,7 +23,7 @@ namespace TestApp
                 SendPeriodCap = 30.Seconds(),
             };
 
-            var airlock = new Airlock(config, new ConsoleLog());
+            var airlock = new AirlockClient(config, new ConsoleLog());
 
             while (true)
             {
