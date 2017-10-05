@@ -4,7 +4,7 @@ using Vostok.Commons.Utilities;
 
 namespace Vostok.Metrics.Meters.Histograms
 {
-    public class UniformHistogramReservoir : IHistogramReservoir
+    public class UniformHistogramReservoir : IReservoirHistogramMeter
     {
         private const int ReservoirSize = 1028;
         private readonly double[] values = new double[ReservoirSize];
@@ -27,12 +27,12 @@ namespace Vostok.Metrics.Meters.Histograms
             }
         }
 
-        public HistogramSnapshot GetSnapshot()
+        public ReservoirHistogramSnapshot GetSnapshot()
         {
             var valuesCopy = new double[ReservoirSize];
             Buffer.BlockCopy(values, 0, valuesCopy, 0, ReservoirSize*sizeof(double));
             Array.Sort(valuesCopy);
-            return new HistogramSnapshot(valuesCopy, measurementsCount);
+            return new ReservoirHistogramSnapshot(valuesCopy, measurementsCount);
         }
 
         public void Reset()

@@ -68,13 +68,13 @@ namespace Vostok.Metrics
         }
 
         private static void AssertQuantile(
-            HistogramSnapshot snapshot,
+            ReservoirHistogramSnapshot snapshot,
             double quantile,
             int range,
             double maxError,
             bool log)
         {
-            var result = snapshot.GetQuantile(quantile);
+            var result = snapshot.GetUpperQuantile(quantile);
             if (log)
             {
                 Console.WriteLine($"{quantile:F3}: {result:F3}");
