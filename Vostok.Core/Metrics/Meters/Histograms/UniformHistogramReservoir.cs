@@ -39,8 +39,9 @@ namespace Vostok.Metrics.Meters.Histograms
 
         public ReservoirHistogramSnapshot GetSnapshot()
         {
-            var valuesCopy = new double[ReservoirSize];
-            Buffer.BlockCopy(values, 0, valuesCopy, 0, ReservoirSize*sizeof(double));
+            var count = Math.Min(ReservoirSize, measurementsCount);
+            var valuesCopy = new double[count];
+            Buffer.BlockCopy(values, 0, valuesCopy, 0, count*sizeof(double));
             Array.Sort(valuesCopy);
             return new ReservoirHistogramSnapshot(valuesCopy, measurementsCount);
         }

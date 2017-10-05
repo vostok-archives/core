@@ -81,5 +81,19 @@ namespace Vostok.Metrics
             }
             result.Should().BeApproximately(range*quantile, maxError);
         }
+
+        [Test]
+        public void Snapshot_should_contain_measurementCount_values_if_it_is_less_than_buckets_count()
+        {
+            var reservoir = new UniformHistogramReservoir();
+            for (var i = 0; i < 10; i++)
+            {
+                reservoir.Add(i);
+            }
+
+            var snapshot = reservoir.GetSnapshot();
+
+            snapshot.Sample.Count.Should().Be(10);
+        }
     }
 }
