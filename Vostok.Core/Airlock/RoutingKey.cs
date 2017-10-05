@@ -66,6 +66,8 @@ namespace Vostok.Airlock
 
         private static string FixInvalidChars(string s)
         {
+            if (string.IsNullOrEmpty(s))
+                throw new ArgumentException("string is null or empty", nameof(s));
             if (s.All(IsAcceptableChar))
                 return s;
             var sb = new StringBuilder(s);
