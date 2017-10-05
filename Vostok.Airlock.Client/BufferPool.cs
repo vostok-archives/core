@@ -59,6 +59,8 @@ namespace Vostok.Airlock
                 if (!snapshotSieve.Add(buffer))
                     break;
 
+                buffer.CollectGarbage();
+
                 if (buffer.Position > 0)
                 {
                     buffer.MakeSnapshot();
