@@ -15,12 +15,12 @@ namespace Vostok.Clusterclient.Core.Modules
     public class TracingModule_Test
     {
         private readonly TracingModule tracingModule;
-        private readonly IAirlock airlock;
+        private readonly IAirlockClient airlockClient;
 
         public TracingModule_Test()
         {
-            airlock = Substitute.For<IAirlock>();
-            Trace.Configuration.Airlock = airlock;
+            airlockClient = Substitute.For<IAirlockClient>();
+            Trace.Configuration.AirlockClient = airlockClient;
             tracingModule = new TracingModule("serviceName");
         }
 
@@ -46,14 +46,14 @@ namespace Vostok.Clusterclient.Core.Modules
                 [TracingAnnotationNames.HttpCode] = "409",
                 [TracingAnnotationNames.ServiceName] = "serviceName"
             };
-            airlock.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
+            airlockClient.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
             {
                 span.Annotations.ShouldBeEquivalentTo(expectedAnnotations);
             }));
 
             await tracingModule.ExecuteAsync(requestContext, x => Task.FromResult(clusterResult)).ConfigureAwait(false);
 
-            airlock.Received().Push(Arg.Any<string>(), Arg.Any<Span>());
+            airlockClient.Received().Push(Arg.Any<string>(), Arg.Any<Span>());
         }
     }
 }

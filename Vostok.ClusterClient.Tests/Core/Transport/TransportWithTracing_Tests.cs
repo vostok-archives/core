@@ -14,16 +14,16 @@ namespace Vostok.Clusterclient.Core.Transport
 {
     public class TransportWithTracing_Tests
     {
-        private readonly IAirlock airlock;
+        private readonly IAirlockClient airlockClient;
         private readonly ITransport transport;
         private readonly TransportWithTracing transportWithTracing;
 
         public TransportWithTracing_Tests()
         {
-            airlock = Substitute.For<IAirlock>();
+            airlockClient = Substitute.For<IAirlockClient>();
             transport = Substitute.For<ITransport>();
             transportWithTracing = new TransportWithTracing(transport);
-            Trace.Configuration.Airlock = airlock;
+            Trace.Configuration.AirlockClient = airlockClient;
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Vostok.Clusterclient.Core.Transport
                 [TracingAnnotationNames.HttpResponseContentLength] = "0",
                 [TracingAnnotationNames.HttpCode] = "400"
             };
-            airlock.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
+            airlockClient.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
             {
                 span.Annotations.ShouldBeEquivalentTo(expectedAnnotations);
             }));
@@ -52,7 +52,7 @@ namespace Vostok.Clusterclient.Core.Transport
             var actual = await transportWithTracing.SendAsync(request, timeout, cancellationToken).ConfigureAwait(false);
 
             actual.Should().Be(response);
-            airlock.Received().Push(Arg.Any<string>(), Arg.Any<Span>());
+            airlockClient.Received().Push(Arg.Any<string>(), Arg.Any<Span>());
         }
     }
 }
