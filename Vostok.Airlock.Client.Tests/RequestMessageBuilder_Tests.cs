@@ -20,21 +20,21 @@ namespace Vostok.Airlock
         [Test]
         public void TryAppend_should_return_true_when_group_fits_into_buffer()
         {
-            builder.TryAppend("key", CreateGroupBuffer(new string('?', 30))).Should().BeTrue();
+            builder.TryAppend("key", CreateGroupBufferSlice(new string('?', 30))).Should().BeTrue();
         }
 
         [Test]
         public void TryAppend_should_return_false_when_group_does_not_fit_into_buffer()
         {
-            builder.TryAppend("key", CreateGroupBuffer(new string('?', 200))).Should().BeFalse();
+            builder.TryAppend("key", CreateGroupBufferSlice(new string('?', 200))).Should().BeFalse();
         }
 
         [Test]
         public void TryAppend_should_correctly_assemble_message_from_multiple_record_groups()
         {
-            builder.TryAppend("key1", CreateGroupBuffer("message1"));
-            builder.TryAppend("key2", CreateGroupBuffer("message22"));
-            builder.TryAppend("key3", CreateGroupBuffer("message333"));
+            builder.TryAppend("key1", CreateGroupBufferSlice("message1"));
+            builder.TryAppend("key2", CreateGroupBufferSlice("message22"));
+            builder.TryAppend("key3", CreateGroupBufferSlice("message333"));
 
             builder.Message.Count.Should().Be(81);
 
@@ -56,16 +56,17 @@ namespace Vostok.Airlock
             reader.ReadString().Should().Be("message333"); // payload message
         }
 
-        private static IBuffer CreateGroupBuffer(string content)
+        private static BufferSlice CreateGroupBufferSlice(string content)
         {
             var groupBuffer = new Buffer(new BinaryBufferWriter(4), new MemoryManager(long.MaxValue, 4));
 
+            groupBuffer.Write(int.MaxValue); // garbage negated by slice offset
             groupBuffer.Write(content);
             groupBuffer.WrittenRecords++;
             groupBuffer.MakeSnapshot();
             groupBuffer.Write("garbage");
 
-            return groupBuffer;
+            return new BufferSlice(groupBuffer, sizeof(int), groupBuffer.SnapshotLength - sizeof(int), groupBuffer.SnapshotCount);
         }
 
     }

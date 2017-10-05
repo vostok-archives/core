@@ -6,6 +6,13 @@ namespace Vostok.Airlock
 {
     internal class RequestMessageBuilder
     {
+        public const int CommonHeaderSize = sizeof (short) + sizeof (int);
+
+        public static int EstimateEventGroupHeaderSize(string routingKey)
+        {
+            return sizeof (int) + sizeof (int) + Encoding.UTF8.GetMaxByteCount(routingKey.Length);
+        }
+
         private readonly BinaryBufferWriter writer;
         private int groupsWritten;
 
@@ -19,7 +26,7 @@ namespace Vostok.Airlock
 
         public ArraySegment<byte> Message => writer.FilledSegment;
 
-        public bool TryAppend(string routingKey, IBuffer content)
+        public bool TryAppend(string routingKey, BufferSlice content)
         {
             if (!Fits(routingKey, content))
                 return false;
@@ -33,9 +40,9 @@ namespace Vostok.Airlock
             return true;
         }
 
-        private bool Fits(string routingKey, IBuffer content)
+        private bool Fits(string routingKey, BufferSlice content)
         {
-            var requiredSpace = content.SnapshotLength + sizeof (int) + sizeof (int) + Encoding.UTF8.GetMaxByteCount(routingKey.Length);
+            var requiredSpace = content.Length + EstimateEventGroupHeaderSize(routingKey);
             var remainingSpace = writer.Buffer.Length - writer.Position;
 
             return requiredSpace <= remainingSpace;
@@ -57,11 +64,11 @@ namespace Vostok.Airlock
                 writer.Position = positionBefore;
         }
 
-        private void WriteRecordsGroup(string routingKey, IBuffer content)
+        private void WriteRecordsGroup(string routingKey, BufferSlice content)
         {
             writer.Write(routingKey);
-            writer.Write(content.SnapshotCount);
-            writer.WriteWithoutLengthPrefix(content.InternalBuffer, 0, content.SnapshotLength);
+            writer.Write(content.Count);
+            writer.WriteWithoutLengthPrefix(content.Buffer.InternalBuffer, content.Offset, content.Length);
         }
     }
 }

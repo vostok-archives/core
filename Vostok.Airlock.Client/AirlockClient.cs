@@ -29,7 +29,8 @@ namespace Vostok.Airlock
 
             var requestSender = new RequestSender(config, log);
             var commonBatchBuffer = new byte[config.MaximumBatchSizeToSend.Bytes];
-            var dataBatchesFactory = new DataBatchesFactory(bufferPools, commonBatchBuffer, log);
+            var bufferSliceFactory = new BufferSliceFactory();
+            var dataBatchesFactory = new DataBatchesFactory(bufferPools, bufferSliceFactory, commonBatchBuffer);
             var dataSender = new DataSender(dataBatchesFactory, requestSender, log, lostItemsCounter);
 
             dataSenderDaemon = new DataSenderDaemon(dataSender, config);

@@ -1,44 +1,49 @@
-﻿using System.Collections.Generic;
-using Vostok.Commons.Extensions.UnitConvertions;
-using Vostok.Logging;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Vostok.Airlock
 {
     internal class DataBatchesFactory : IDataBatchesFactory
     {
         private readonly IReadOnlyDictionary<string, IBufferPool> bufferPools;
+        private readonly IBufferSliceFactory bufferSliceFactory;
         private readonly byte[] messageBuffer;
-        private readonly ILog log;
 
-        public DataBatchesFactory(IReadOnlyDictionary<string, IBufferPool> bufferPools, byte[] messageBuffer, ILog log)
+        public DataBatchesFactory(
+            IReadOnlyDictionary<string, IBufferPool> bufferPools, 
+            IBufferSliceFactory bufferSliceFactory, 
+            byte[] messageBuffer)
         {
             this.bufferPools = bufferPools;
+            this.bufferSliceFactory = bufferSliceFactory;
             this.messageBuffer = messageBuffer;
-            this.log = log;
         }
 
         public IEnumerable<IDataBatch> CreateBatches()
         {
             var context = new DataBatchBuildingContext(messageBuffer);
 
-            foreach ((var routingKey, var buffer) in EnumerateAllBuffers())
+            foreach ((var routingKey, var bufferSlice) in EnumerateAllBufferSlices())
             {
-                foreach (var batch in HandleBuffer(routingKey, buffer, context))
-                {
+                var batch = HandleSlice(routingKey, bufferSlice, context);
+                if (batch != null)
                     yield return batch;
-                }
             }
 
             if (!context.IsEmpty)
                 yield return context.CreateBatch();
         }
 
-        private IEnumerable<(string, IBuffer)> EnumerateAllBuffers()
+        private IEnumerable<(string, BufferSlice)> EnumerateAllBufferSlices()
         {
             foreach (var pair in bufferPools)
             {
                 var routingKey = pair.Key;
                 var bufferPool = pair.Value;
+
+                var maximumSliceLength = messageBuffer.Length 
+                    - RequestMessageBuilder.CommonHeaderSize
+                    - RequestMessageBuilder.EstimateEventGroupHeaderSize(routingKey);
 
                 var snapshot = bufferPool.GetSnapshot();
                 if (snapshot == null)
@@ -46,37 +51,30 @@ namespace Vostok.Airlock
 
                 foreach (var buffer in snapshot)
                 {
-                    yield return (routingKey, buffer);
+                    foreach (var slice in bufferSliceFactory.Cut(buffer, maximumSliceLength))
+                    {
+                        yield return (routingKey, slice);
+                    }
                 }
             }
         }
 
-        private IEnumerable<IDataBatch> HandleBuffer(string routingKey, IBuffer buffer, DataBatchBuildingContext context)
+        private IDataBatch HandleSlice(string routingKey, BufferSlice slice, DataBatchBuildingContext context)
         {
-            while (true)
+            if (context.CurrentMessageBuilder.TryAppend(routingKey, slice))
             {
-                if (context.CurrentMessageBuilder.TryAppend(routingKey, buffer))
-                {
-                    context.CurrentBuffers.Add(buffer);
-                    yield break;
-                }
-
-                if (context.IsEmpty)
-                {
-                    LogDroppingLargeBuffer(buffer);
-                    buffer.DiscardSnapshot();
-                    yield break;
-                }
-
-                yield return context.CreateBatch();
-
-                context.Reset();
+                context.CurrentBuffers.Add(slice.Buffer);
+                return null;
             }
-        }
 
-        private void LogDroppingLargeBuffer(IBuffer buffer)
-        {
-            log.Warn($"Dropping contents of internal buffer of size {buffer.SnapshotLength.Bytes()} with {buffer.SnapshotCount} records. It does not fit into batch buffer size {messageBuffer.Length.Bytes()}.");
+            if (context.IsEmpty)
+                throw new Exception($"Bug! Somehow there's a buffer slice of size {slice.Length} that does not fit into max batch size {messageBuffer.Length} with overhead considered.");
+
+            var batch = context.CreateBatch();
+
+            context.Reset();
+
+            return batch;
         }
     }
 }

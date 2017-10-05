@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Vostok.Commons.Utilities;
 
 namespace Vostok.Airlock
 {
@@ -13,7 +14,7 @@ namespace Vostok.Airlock
             Reset();
         }
 
-        public List<IBuffer> CurrentBuffers { get; private set; }
+        public HashSet<IBuffer> CurrentBuffers { get; private set; }
 
         public RequestMessageBuilder CurrentMessageBuilder { get; private set; }
 
@@ -21,7 +22,7 @@ namespace Vostok.Airlock
 
         public void Reset()
         {
-            CurrentBuffers = new List<IBuffer>();
+            CurrentBuffers = new HashSet<IBuffer>(ReferenceEqualityComparer<IBuffer>.Instance);
             CurrentMessageBuilder = new RequestMessageBuilder(messageBuffer);
         }
 
