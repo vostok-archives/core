@@ -11,12 +11,14 @@ namespace Vostok.Airlock
         {
             if (buffer.SnapshotLength <= maximumSliceLength)
             {
-                yield return new BufferSlice(buffer, 0, buffer.SnapshotLength);
+                yield return new BufferSlice(buffer, 0, buffer.SnapshotLength, buffer.SnapshotCount);
                 yield break;
             }
 
             var currentOffset = 0;
             var currentSize = 0;
+            var currentCount = 0;
+
             var reader = new BinaryBufferReader(buffer.InternalBuffer, 0);
 
             for (var i = 0; i < buffer.SnapshotCount; i++)
@@ -27,27 +29,29 @@ namespace Vostok.Airlock
 
                 if (currentSize + recordLength > maximumSliceLength)
                 {
-                    yield return new BufferSlice(buffer, currentOffset, currentSize);
+                    yield return new BufferSlice(buffer, currentOffset, currentSize, currentCount);
                     currentOffset += currentSize;
                     currentSize = 0;
+                    currentCount = 0;
                 }
 
                 currentSize += recordLength;
+                currentCount++;
             }
 
             if (currentSize > 0)
-                yield return new BufferSlice(buffer, currentOffset, currentSize);
+                yield return new BufferSlice(buffer, currentOffset, currentSize, currentCount);
         }
 
         private static int ReadRecordLength(IBinaryReader reader)
         {
             reader.Position += sizeof(long);
 
-            var recordLength = sizeof(long) + reader.ReadInt32();
+            var payloadLength = reader.ReadInt32();
 
-            reader.Position += recordLength;
+            reader.Position += payloadLength;
 
-            return recordLength;
+            return sizeof(long) + sizeof(int) + payloadLength;
         }
     }
 }
