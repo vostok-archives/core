@@ -13,7 +13,7 @@ namespace Vostok.Airlock
         private readonly RecordWriter recordWriter;
         private readonly ConcurrentDictionary<string, IBufferPool> bufferPools;
         private readonly DataSenderDaemon dataSenderDaemon;
-        private readonly AtomicLong lostItemsCount;
+        private readonly AtomicLong lostItemsCounter;
 
         public Airlock(AirlockConfig config, ILog log = null)
         {
@@ -23,17 +23,17 @@ namespace Vostok.Airlock
             memoryManager = new MemoryManager(config.MaximumMemoryConsumption.Bytes, (int) config.InitialPooledBufferSize.Bytes);
             recordWriter = new RecordWriter(new RecordSerializer(config.MaximumRecordSize, log));
             bufferPools = new ConcurrentDictionary<string, IBufferPool>();
-            lostItemsCount = new AtomicLong(0);
+            lostItemsCounter = new AtomicLong(0);
 
             var requestSender = new RequestSender(config, log);
             var commonBatchBuffer = new byte[config.MaximumBatchSizeToSend.Bytes];
             var dataBatchesFactory = new DataBatchesFactory(bufferPools, commonBatchBuffer, log);
-            var dataSender = new DataSender(dataBatchesFactory, requestSender, log);
+            var dataSender = new DataSender(dataBatchesFactory, requestSender, log, lostItemsCounter);
 
             dataSenderDaemon = new DataSenderDaemon(dataSender, config);
         }
 
-        public long LostItemsCount => lostItemsCount.Value;
+        public long LostItemsCount => lostItemsCounter.Value;
 
         public void Push<T>(string routingKey, T item, DateTimeOffset? timestamp = null)
         {
@@ -46,7 +46,7 @@ namespace Vostok.Airlock
             }
             else
             {
-                lostItemsCount.Increment();
+                lostItemsCounter.Increment();
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Vostok.Airlock
 {
@@ -14,5 +15,7 @@ namespace Vostok.Airlock
         public ArraySegment<byte> SerializedMessage { get; }
 
         public IList<IBuffer> ParticipatingBuffers { get; }
+
+        public int ItemsCount => ParticipatingBuffers.Sum(buffer => buffer.SnapshotCount);
     }
 }
