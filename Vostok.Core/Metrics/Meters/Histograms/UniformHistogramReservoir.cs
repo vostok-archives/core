@@ -6,10 +6,10 @@ namespace Vostok.Metrics.Meters.Histograms
 {
     public class UniformHistogramReservoir : IHistogramReservoir
     {
-        private const int ReservoirSize = 1028*27;
+        private const int ReservoirSize = 1028;
         private readonly double[] values = new double[ReservoirSize];
 
-        private long measurementsCount;
+        private int measurementsCount;
 
         public void Add(double value)
         {
@@ -20,10 +20,10 @@ namespace Vostok.Metrics.Meters.Histograms
                 return;
             }
 
-            var rand = ThreadSafeRandom.NextLong(count);
+            var rand = ThreadSafeRandom.Next(count);
             if (rand < values.Length)
             {
-                values[(int) rand] = value;
+                values[rand] = value;
             }
         }
 
@@ -32,7 +32,7 @@ namespace Vostok.Metrics.Meters.Histograms
             var valuesCopy = new double[ReservoirSize];
             Buffer.BlockCopy(values, 0, valuesCopy, 0, ReservoirSize*sizeof(double));
             Array.Sort(valuesCopy);
-            return new HistogramSnapshot(valuesCopy, Interlocked.Read(ref measurementsCount));
+            return new HistogramSnapshot(valuesCopy, measurementsCount);
         }
 
         public void Reset()

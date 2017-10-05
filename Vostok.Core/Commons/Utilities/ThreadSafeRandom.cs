@@ -25,32 +25,9 @@ namespace Vostok.Commons.Utilities
             return ObtainRandom().Next(minValue, maxValue);
         }
 
-        public static long NextLong()
+        public static long Next(long minValue, long maxValue)
         {
-            long result = 0;
-            for (var i = 0; i < 8; i++)
-            {
-                var b = ObtainRandom().Next()%256;
-                result += b;
-                result <<= 8;
-            }
-            return Math.Abs(result);
-        }
-
-        public static long NextLong(long maxValue)
-        {
-            long bits, val;
-            do
-            {
-                bits = NextLong() & (~(1L << 63));
-                val = bits % maxValue;
-            } while (bits - val + (maxValue - 1) < 0L);
-            return val;
-        }
-
-        public static long NextLong(long minValue, long maxValue)
-        {
-            return NextLong(maxValue - minValue) + minValue;
+            return Math.Abs(BitConverter.ToInt64(NextBytes(8), 0) % (maxValue - minValue)) + minValue;
         }
 
         public static void NextBytes(byte[] buffer)
