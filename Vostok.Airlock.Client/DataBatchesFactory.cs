@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Vostok.Commons.Extensions.UnitConvertions;
 using Vostok.Logging;
 
@@ -22,6 +23,36 @@ namespace Vostok.Airlock
             var buffers = new List<IBuffer>();
             var builder = new RequestMessageBuilder(commonBuffer);
 
+            foreach ((var routingKey, var buffer) in EnumerateAllBuffers())
+            {
+                if (builder.TryAppend(routingKey, buffer))
+                {
+                    buffers.Add(buffer);
+                    continue;
+                }
+
+                // TODO(iloktionov): return larger batch instead of dropping
+                if (buffers.Count == 0)
+                {
+                    LogDroppingLargeBuffer(buffer);
+                    buffer.DiscardSnapshot();
+                    buffer.CollectGarbage();
+                    continue;
+                }
+
+                yield return new DataBatch(builder.Message, buffers);
+
+                // TODO(iloktionov): forgot to add current buffer
+                builder = new RequestMessageBuilder(commonBuffer);
+                buffers = new List<IBuffer>();
+            }
+
+            if (buffers.Count > 0)
+                yield return new DataBatch(builder.Message, buffers);
+        }
+
+        private IEnumerable<ValueTuple<string, IBuffer>> EnumerateAllBuffers()
+        {
             foreach (var pair in bufferPools)
             {
                 var routingKey = pair.Key;
@@ -33,31 +64,9 @@ namespace Vostok.Airlock
 
                 foreach (var buffer in snapshot)
                 {
-                    if (builder.TryAppend(routingKey, buffer))
-                    {
-                        buffers.Add(buffer);
-                        continue;
-                    }
-
-                    // TODO(iloktionov): return larger batch instead of dropping
-                    if (buffers.Count == 0)
-                    {
-                        LogDroppingLargeBuffer(buffer);
-                        buffer.DiscardSnapshot();
-                        buffer.CollectGarbage();
-                        continue;
-                    }
-
-                    yield return new DataBatch(builder.Message, buffers);
-
-                    // TODO(iloktionov): forgot to add current buffer
-                    builder = new RequestMessageBuilder(commonBuffer);
-                    buffers = new List<IBuffer>();
+                    yield return (routingKey, buffer);
                 }
             }
-
-            if (buffers.Count > 0)
-                yield return new DataBatch(builder.Message, buffers);
         }
 
         private void LogDroppingLargeBuffer(IBuffer buffer)
