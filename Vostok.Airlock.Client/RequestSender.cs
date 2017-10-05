@@ -39,7 +39,7 @@ namespace Vostok.Airlock
                 .WithHeader("x-apikey", config.ApiKey)
                 .WithContent(serializedMessage);
 
-            var result = await client.SendAsync(request).ConfigureAwait(false);
+            var result = await client.SendAsync(request, operationName: "send-records").ConfigureAwait(false);
 
             switch (result.Status)
             {
