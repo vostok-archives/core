@@ -59,14 +59,6 @@ namespace Vostok.Airlock
                 return false;
             }
             var routingKeyParts = routingKey.Split(Separator[0]);
-            if (routingKeyParts.Any(keyPart => !IsValidPart(keyPart)))
-            {
-                project = null;
-                environment = null;
-                service = null;
-                suffix = new string[] {};
-                return false;
-            }
             project = GetRoutingKeyPart(routingKeyParts, 0);
             environment = GetRoutingKeyPart(routingKeyParts, 1);
             service = GetRoutingKeyPart(routingKeyParts, 2);
@@ -76,7 +68,9 @@ namespace Vostok.Airlock
 
         private static string GetRoutingKeyPart(string[] routingKeyParts, int index)
         {
-            return routingKeyParts.Length > index && !string.IsNullOrEmpty(routingKeyParts[index]) ? routingKeyParts[index] : null;
+            return routingKeyParts.Length > index && !string.IsNullOrEmpty(routingKeyParts[index]) && IsValidPart(routingKeyParts[index])
+                ? routingKeyParts[index]
+                : null;
         }
 
         private static string Create(IEnumerable<string> parts)
