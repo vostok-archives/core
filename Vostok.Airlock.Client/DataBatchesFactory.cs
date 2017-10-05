@@ -8,46 +8,30 @@ namespace Vostok.Airlock
     internal class DataBatchesFactory : IDataBatchesFactory
     {
         private readonly IReadOnlyDictionary<string, IBufferPool> bufferPools;
-        private readonly byte[] commonBuffer;
+        private readonly byte[] messageBuffer;
         private readonly ILog log;
 
-        public DataBatchesFactory(IReadOnlyDictionary<string, IBufferPool> bufferPools, byte[] commonBuffer, ILog log)
+        public DataBatchesFactory(IReadOnlyDictionary<string, IBufferPool> bufferPools, byte[] messageBuffer, ILog log)
         {
             this.bufferPools = bufferPools;
-            this.commonBuffer = commonBuffer;
+            this.messageBuffer = messageBuffer;
             this.log = log;
         }
 
         public IEnumerable<IDataBatch> CreateBatches()
         {
-            var buffers = new List<IBuffer>();
-            var builder = new RequestMessageBuilder(commonBuffer);
+            var context = new DataBatchBuildingContext(messageBuffer);
 
             foreach ((var routingKey, var buffer) in EnumerateAllBuffers())
             {
-                if (builder.TryAppend(routingKey, buffer))
+                foreach (var batch in HandleBuffer(routingKey, buffer, context))
                 {
-                    buffers.Add(buffer);
-                    continue;
+                    yield return batch;
                 }
-
-                // TODO(iloktionov): return larger batch instead of dropping
-                if (buffers.Count == 0)
-                {
-                    LogDroppingLargeBuffer(buffer);
-                    buffer.DiscardSnapshot();
-                    continue;
-                }
-
-                yield return new DataBatch(builder.Message, buffers);
-
-                // TODO(iloktionov): forgot to add current buffer
-                builder = new RequestMessageBuilder(commonBuffer);
-                buffers = new List<IBuffer>();
             }
 
-            if (buffers.Count > 0)
-                yield return new DataBatch(builder.Message, buffers);
+            if (!context.IsEmpty)
+                yield return context.CreateBatch();
         }
 
         private IEnumerable<ValueTuple<string, IBuffer>> EnumerateAllBuffers()
@@ -68,9 +52,32 @@ namespace Vostok.Airlock
             }
         }
 
+        private IEnumerable<IDataBatch> HandleBuffer(string routingKey, IBuffer buffer, DataBatchBuildingContext context)
+        {
+            while (true)
+            {
+                if (context.CurrentMessageBuilder.TryAppend(routingKey, buffer))
+                {
+                    context.CurrentBuffers.Add(buffer);
+                    yield break;
+                }
+
+                if (context.IsEmpty)
+                {
+                    LogDroppingLargeBuffer(buffer);
+                    buffer.DiscardSnapshot();
+                    yield break;
+                }
+
+                yield return context.CreateBatch();
+
+                context.Reset();
+            }
+        }
+
         private void LogDroppingLargeBuffer(IBuffer buffer)
         {
-            log.Warn($"Dropping contents of internal buffer of size {buffer.SnapshotLength.Bytes()}. It does not fit into batch buffer size {commonBuffer.Length.Bytes()}.");
+            log.Warn($"Dropping contents of internal buffer of size {buffer.SnapshotLength.Bytes()} with {buffer.SnapshotCount} records. It does not fit into batch buffer size {messageBuffer.Length.Bytes()}.");
         }
     }
 }
