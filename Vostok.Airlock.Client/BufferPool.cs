@@ -23,8 +23,7 @@ namespace Vostok.Airlock
                 {
                     buffers.Enqueue(buffer);
                 }
-                else
-                    break;
+                else break;
             }
 
             snapshotSieve = new HashSet<IBuffer>(ReferenceEqualityComparer<IBuffer>.Instance);
