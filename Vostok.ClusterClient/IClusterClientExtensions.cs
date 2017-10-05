@@ -29,7 +29,7 @@ namespace Vostok.Clusterclient
             [CanBeNull] RequestPriority? priority = null,
             [CanBeNull] string operationName = null)
         {
-            using (operationName == null ? null : Context.Properties.Use(TracingAnnotationNames.OperationName, operationName))
+            using (operationName == null ? null : Context.Properties.Use(TracingAnnotationNames.Operation, operationName))
             {
                 return await client.SendAsync(request, timeout, strategy, cancellationToken, priority).ConfigureAwait(false);
             }
@@ -52,7 +52,7 @@ namespace Vostok.Clusterclient
             [CanBeNull] RequestPriority? priority = null,
             [CanBeNull] string operationName = null)
         {
-            using (operationName == null ? null : Context.Properties.Use(TracingAnnotationNames.OperationName, operationName))
+            using (operationName == null ? null : Context.Properties.Use(TracingAnnotationNames.Operation, operationName))
             {
                 return client.SendAsync(request, timeout, strategy, cancellationToken, priority).GetAwaiter().GetResult();
             }

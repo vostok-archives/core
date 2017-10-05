@@ -44,7 +44,7 @@ namespace Vostok.Clusterclient.Core.Modules
                 [TracingAnnotationNames.HttpRequestContentLength] = "0",
                 [TracingAnnotationNames.HttpResponseContentLength] = "0",
                 [TracingAnnotationNames.HttpCode] = "409",
-                [TracingAnnotationNames.ServiceName] = "serviceName"
+                [TracingAnnotationNames.Service] = "serviceName"
             };
             airlockClient.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
             {

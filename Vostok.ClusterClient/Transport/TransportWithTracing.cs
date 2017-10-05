@@ -11,9 +11,9 @@ namespace Vostok.Clusterclient.Transport
     {
         static TransportWithTracing()
         {
-            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotationNames.OperationName);
-            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.OperationName);
-            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.ServiceName);
+            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotationNames.Operation);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.Operation);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.Service);
         }
 
         private readonly ITransport transport;

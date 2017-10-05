@@ -11,9 +11,9 @@ namespace Vostok.Clusterclient.Modules
     {
         static TracingModule()
         {
-            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotationNames.OperationName);
-            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.OperationName);
-            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.ServiceName);
+            Trace.Configuration.ContextFieldsWhitelist.Add(TracingAnnotationNames.Operation);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.Operation);
+            Trace.Configuration.InheritedFieldsWhitelist.Add(TracingAnnotationNames.Service);
         }
 
         private readonly string serviceName;
@@ -30,7 +30,7 @@ namespace Vostok.Clusterclient.Modules
             using (var span = Trace.BeginSpan())
             {
                 if (!string.IsNullOrEmpty(serviceName))
-                    span.SetAnnotation(TracingAnnotationNames.ServiceName, serviceName);
+                    span.SetAnnotation(TracingAnnotationNames.Service, serviceName);
 
                 span.SetAnnotation(TracingAnnotationNames.Kind, "cluster-client");
                 span.SetAnnotation(TracingAnnotationNames.Component, "cluster-client");
