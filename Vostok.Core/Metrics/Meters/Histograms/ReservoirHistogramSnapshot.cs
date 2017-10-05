@@ -12,9 +12,9 @@ namespace Vostok.Metrics.Meters.Histograms
         {
             MeasurementsCount = measurementsCount;
             Sample = sortedValues;
-            Min = sortedValues[0];
-            Max = sortedValues[sortedValues.Count - 1];
-            Mean = sortedValues.Average();
+            Min = sortedValues.Count == 0 ? 0 : sortedValues[0];
+            Max = sortedValues.Count == 0 ? 0 : sortedValues[sortedValues.Count - 1];
+            Mean = CalculateAverage(sortedValues);
             StdDev = CalculateStdDev(sortedValues);
         }
 
@@ -45,7 +45,7 @@ namespace Vostok.Metrics.Meters.Histograms
             }
 
             var position = quantile*(Sample.Count + 1);
-            var index = (int) position;
+            var index = (int) Math.Round(position);
 
             if (index < 1)
             {
@@ -57,10 +57,17 @@ namespace Vostok.Metrics.Meters.Histograms
                 return Sample[Sample.Count - 1];
             }
 
-            var lower = Sample[index - 1];
-            var upper = Sample[index];
+            return Sample[index];
+        }
 
-            return lower + (position - Math.Floor(position)) * (upper - lower);
+        private static double CalculateAverage(IReadOnlyList<double> values)
+        {
+            if (values.Count == 0)
+            {
+                return 0;
+            }
+
+            return values.Average();
         }
 
         private static double CalculateStdDev(IReadOnlyList<double> values)

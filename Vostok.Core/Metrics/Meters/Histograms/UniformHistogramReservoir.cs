@@ -23,7 +23,7 @@ namespace Vostok.Metrics.Meters.Histograms
 
         public void Add(double value)
         {
-            var count = Interlocked.Increment(ref measurementsCount);
+            var count = ++measurementsCount;
             if (count <= values.Length)
             {
                 values[count - 1] = value;
@@ -47,7 +47,7 @@ namespace Vostok.Metrics.Meters.Histograms
 
         public void Reset()
         {
-            Interlocked.Exchange(ref measurementsCount, 0);
+            measurementsCount = 0;
         }
     }
 }

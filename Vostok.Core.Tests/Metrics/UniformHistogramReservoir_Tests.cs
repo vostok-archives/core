@@ -41,7 +41,7 @@ namespace Vostok.Metrics
             Console.WriteLine($"Success rate: {100*success/(double)total:F3}%. Tests count: {total}. Success: {success}. Failures: {failure}");
         }
 
-        [TestCase(12345, 50000, 100, true)]
+        [TestCase(12345, 50000, 100, true), Ignore("Explicit does not work")]
         public void Random_numbers_are_spread_uniformly(int seed, int measurementsCount, int range, bool log)
         {
             var reservoir = new UniformHistogramReservoir();
