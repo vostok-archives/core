@@ -2,8 +2,8 @@
 {
     public static class TracingAnnotationNames
     {
-        public const string OperationName = "operationName";
-        public const string ServiceName = "serviceName";
+        public const string Operation = "operation";
+        public const string Service = "service";
         public const string Component = "component";
         public const string Kind = "kind";
 
