@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Vostok.Airlock
 {
+    // todo (spaceorc 05.10.2017) add unit tests
     public static class RoutingKey
     {
         public const string Separator = ".";
@@ -28,6 +30,33 @@ namespace Vostok.Airlock
         public static string AddSuffix(string prefix, params string[] suffix)
         {
             return prefix + Separator + Create(suffix);
+        }
+
+        public static string ReplaceSuffix(string routingKey, params string[] suffix)
+        {
+            Parse(routingKey, out var project, out var env, out var service, out _);
+            return Create(project, env, service, suffix);
+        }
+
+        public static void Parse(string routingKey, out string project, out string environment, out string service, out string[] suffix)
+        {
+            if (!TryParse(routingKey, out project, out environment, out service, out suffix))
+                throw new InvalidOperationException($"Couldn't parse routing key '{routingKey}'");
+        }
+
+        public static bool TryParse(string routingKey, out string project, out string environment, out string service, out string[] suffix)
+        {
+            var routingKeyParts = routingKey.Split(Separator[0]);
+            project = GetRoutingKeyPart(routingKeyParts, 0);
+            environment = GetRoutingKeyPart(routingKeyParts, 1);
+            service = GetRoutingKeyPart(routingKeyParts, 2);
+            suffix = routingKeyParts.Skip(3).ToArray();
+            return project != null && environment != null && service != null;
+        }
+
+        private static string GetRoutingKeyPart(string[] routingKeyParts, int index)
+        {
+            return routingKeyParts.Length > index && !string.IsNullOrEmpty(routingKeyParts[index]) ? routingKeyParts[index] : null;
         }
 
         private static string Create(IEnumerable<string> parts)
