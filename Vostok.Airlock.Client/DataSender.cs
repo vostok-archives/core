@@ -32,13 +32,13 @@ namespace Vostok.Airlock
                 if (result == RequestSendResult.IntermittentFailure)
                     return DataSendResult.Backoff;
 
-                ReleaseSnapshots(batch);
+                DiscardSnapshots(batch);
             }
 
             return DataSendResult.Ok;
         }
 
-        private static void ReleaseSnapshots(IDataBatch batch)
+        private static void DiscardSnapshots(IDataBatch batch)
         {
             foreach (var buffer in batch.ParticipatingBuffers)
             {

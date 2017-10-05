@@ -9,7 +9,7 @@ namespace Vostok.Airlock
     {
         private readonly BinaryBufferWriter binaryWriter;
         private readonly IMemoryManager memoryManager;
-        private volatile AirlockWriteStream writeStream;
+        private AirlockWriteStream writeStream;
 
         public Buffer(BinaryBufferWriter binaryWriter, IMemoryManager memoryManager)
         {

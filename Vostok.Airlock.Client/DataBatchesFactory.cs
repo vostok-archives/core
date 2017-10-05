@@ -39,6 +39,7 @@ namespace Vostok.Airlock
                         continue;
                     }
 
+                    // TODO(iloktionov): return larger batch instead of dropping
                     if (buffers.Count == 0)
                     {
                         LogDroppingLargeBuffer(buffer);
@@ -49,6 +50,7 @@ namespace Vostok.Airlock
 
                     yield return new DataBatch(builder.Message, buffers);
 
+                    // TODO(iloktionov): forgot to add current buffer
                     builder = new RequestMessageBuilder(commonBuffer);
                     buffers = new List<IBuffer>();
                 }

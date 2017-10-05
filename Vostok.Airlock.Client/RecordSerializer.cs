@@ -5,6 +5,7 @@ namespace Vostok.Airlock
 {
     internal class RecordSerializer : IRecordSerializer
     {
+        // TODO(iloktionov): disallow very large items
         public bool TrySerialize<T>(T item, IAirlockSerializer<T> serializer, DateTimeOffset timestamp, IBuffer buffer)
         {
             try

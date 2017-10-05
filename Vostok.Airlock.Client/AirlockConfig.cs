@@ -15,9 +15,9 @@ namespace Vostok.Airlock
 
         public DataSize MaximumBatchSizeToSend { get; set; } = 4.Megabytes();
 
-        public DataSize InitialPooledBufferSize { get; set; } = 32.Kilobytes();
+        public DataSize InitialPooledBufferSize { get; set; } = 16.Kilobytes();
 
-        public int InitialPooledBuffersCount { get; set; } = 16;
+        public int InitialPooledBuffersCount { get; set; } = 32;
 
         public TimeSpan SendPeriod { get; set; } = 2.Seconds();
 

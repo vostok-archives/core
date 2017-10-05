@@ -10,7 +10,6 @@ namespace Vostok.Airlock
         private readonly IMemoryManager memoryManager;
         private readonly ConcurrentQueue<IBuffer> buffers;
         private readonly HashSet<IBuffer> snapshotSieve;
-        private readonly object snapshotLock;
 
         public BufferPool(IMemoryManager memoryManager, int initialBuffersCount)
         {
@@ -24,11 +23,11 @@ namespace Vostok.Airlock
                 {
                     buffers.Enqueue(buffer);
                 }
-                else break;
+                else
+                    break;
             }
 
             snapshotSieve = new HashSet<IBuffer>(ReferenceEqualityComparer<IBuffer>.Instance);
-            snapshotLock = new object();
         }
 
         public bool TryAcquire(out IBuffer buffer)
@@ -42,38 +41,35 @@ namespace Vostok.Airlock
 
         public void Release(IBuffer buffer)
         {
-            buffer.CollectGarbage();
             buffers.Enqueue(buffer);
         }
 
+        // Рассчитываем на то, что GetSnapshot() всегда вызывается последовательно в одной таске.
         public List<IBuffer> GetSnapshot()
         {
-            lock (snapshotLock)
+            snapshotSieve.Clear();
+
+            var initialCount = buffers.Count;
+            var snapshot = null as List<IBuffer>;
+
+            for (var i = 0; i < initialCount; i++)
             {
-                snapshotSieve.Clear();
+                if (!buffers.TryDequeue(out var buffer))
+                    break;
 
-                var initialCount = buffers.Count;
-                var snapshot = null as List<IBuffer>;
+                if (!snapshotSieve.Add(buffer))
+                    break;
 
-                for (var i = 0; i < initialCount; i++)
+                if (buffer.Position > 0)
                 {
-                    if (!buffers.TryDequeue(out var buffer))
-                        break;
-
-                    if (!snapshotSieve.Add(buffer))
-                        break;
-
-                    if (buffer.Position > 0)
-                    {
-                        buffer.MakeSnapshot();
-                        (snapshot ?? (snapshot = new List<IBuffer>())).Add(buffer);
-                    }
-
-                    buffers.Enqueue(buffer);
+                    buffer.MakeSnapshot();
+                    (snapshot ?? (snapshot = new List<IBuffer>())).Add(buffer);
                 }
 
-                return snapshot;
+                buffers.Enqueue(buffer);
             }
+
+            return snapshot;
         }
 
         private bool TryCreateBuffer(out IBuffer buffer)
