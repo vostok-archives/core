@@ -11,7 +11,7 @@ namespace Vostok.Tracing
         private const string SpanContextKey = "Vostok.Tracing.CurrentSpan";
 
         private readonly string airlockRoutingKey;
-        private readonly IAirlock airlock;
+        private readonly IAirlockClient airlockClient;
         private readonly PoolHandle<Span> spanHandle;
         private readonly TraceContextScope contextScope;
         private readonly TraceConfiguration configuration;
@@ -21,13 +21,13 @@ namespace Vostok.Tracing
 
         public SpanBuilder(
             string airlockRoutingKey,
-            IAirlock airlock,
+            IAirlockClient airlockClient,
             PoolHandle<Span> spanHandle,
             TraceContextScope contextScope,
             TraceConfiguration configuration)
         {
             this.airlockRoutingKey = airlockRoutingKey;
-            this.airlock = airlock;
+            this.airlockClient = airlockClient;
             this.spanHandle = spanHandle;
             this.contextScope = contextScope;
             this.configuration = configuration;
@@ -71,7 +71,7 @@ namespace Vostok.Tracing
                 if (!IsCanceled)
                 {
                     FinalizeSpan();
-                    airlock.Push(airlockRoutingKey, Span);
+                    airlockClient.Push(airlockRoutingKey, Span);
                 }
             }
             finally

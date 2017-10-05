@@ -7,13 +7,13 @@ namespace Vostok.Tracing
 {
     public class Trace_Tests
     {
-        private IAirlock airlock;
+        private IAirlockClient airlockClient;
 
         [SetUp]
         public void SetUp()
         {
-            airlock = Substitute.For<IAirlock>();
-            Trace.Configuration.Airlock = airlock;
+            airlockClient = Substitute.For<IAirlockClient>();
+            Trace.Configuration.AirlockClient = airlockClient;
             Trace.Configuration.InheritedFieldsWhitelist.Clear();
         }
 
@@ -25,7 +25,7 @@ namespace Vostok.Tracing
 
             Trace.Configuration.InheritedFieldsWhitelist.Add(customKey);
 
-            airlock.Push(
+            airlockClient.Push(
                 Arg.Any<string>(),
                 Arg.Do<Span>(
                     x =>
@@ -42,7 +42,7 @@ namespace Vostok.Tracing
                 }
             }
 
-            airlock.Received(2).Push(Arg.Any<string>(), Arg.Any<Span>());
+            airlockClient.Received(2).Push(Arg.Any<string>(), Arg.Any<Span>());
         }
     }
 }

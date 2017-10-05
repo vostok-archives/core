@@ -25,7 +25,7 @@ namespace Vostok.Tracing
         public static ISpanBuilder BeginSpan()
         {
             var isEnabled = Configuration.IsEnabled();
-            var airlock = Configuration.Airlock;
+            var airlock = Configuration.AirlockClient;
             var airlockRoutingKey = configuration.AirlockRoutingKey();
 
             if (!isEnabled || airlock == null || airlockRoutingKey == null)

@@ -15,6 +15,6 @@ namespace Vostok.Tracing
 
         public Func<string> AirlockRoutingKey { get; set; } = () => "tracing";
 
-        public IAirlock Airlock { get; set; }
+        public IAirlockClient AirlockClient { get; set; }
     }
 }
