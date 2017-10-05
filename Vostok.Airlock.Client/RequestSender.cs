@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Vostok.Clusterclient;
 using Vostok.Clusterclient.Model;
@@ -14,10 +15,12 @@ namespace Vostok.Airlock
     {
         private readonly AirlockConfig config;
         private readonly ClusterClient client;
+        private readonly ILog log;
 
         public RequestSender(AirlockConfig config, ILog log)
         {
             this.config = config;
+            this.log = log;
 
             client = new ClusterClient(log, configuration =>
             {
@@ -44,7 +47,14 @@ namespace Vostok.Airlock
             switch (result.Status)
             {
                 case ClusterResultStatus.Success:
-                    return result.Response.IsSuccessful ? RequestSendResult.Success : RequestSendResult.DefinitiveFailure;
+                    var response = result.Response;
+
+                    if (!response.IsSuccessful && response.Content.Length > 0)
+                    {
+                        log.Warn($"Server error message: '{response.Content}'.");
+                    }
+
+                    return response.IsSuccessful ? RequestSendResult.Success : RequestSendResult.DefinitiveFailure;
 
                 case ClusterResultStatus.TimeExpired:
                 case ClusterResultStatus.ReplicasExhausted:
