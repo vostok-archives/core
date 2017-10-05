@@ -13,6 +13,7 @@ namespace Vostok.Tracing
         public void SetUp()
         {
             airlockClient = Substitute.For<IAirlockClient>();
+            Trace.Configuration.AirlockRoutingKey = () => RoutingKey.Create("proj", "env", "serv", RoutingKey.TracesSuffix);
             Trace.Configuration.AirlockClient = airlockClient;
             Trace.Configuration.InheritedFieldsWhitelist.Clear();
         }

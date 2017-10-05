@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Vostok.Airlock
@@ -14,19 +15,24 @@ namespace Vostok.Airlock
 
         private const char UnacceptableCharPlaceholder = '-';
 
+        public static string Create(string project, string environment, string service, params string[] suffix)
+        {
+            return AddSuffix(CreatePrefix(project, environment, service), suffix);
+        }
+
         public static string CreatePrefix(string project, string environment, string service)
         {
-            return Create(project, environment, service);
+            return Create(new[] {project, environment, service});
         }
 
-        public static string Create(params string[] parts)
+        public static string AddSuffix(string prefix, params string[] suffix)
+        {
+            return prefix + Separator + Create(suffix);
+        }
+
+        private static string Create(IEnumerable<string> parts)
         {
             return string.Join(Separator, parts.Select(FixInvalidChars));
-        }
-
-        public static string AddSuffix(string prefix, string suffix)
-        {
-            return prefix + Separator + FixInvalidChars(suffix);
         }
 
         private static string FixInvalidChars(string s)
