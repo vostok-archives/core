@@ -43,6 +43,10 @@ namespace Vostok.Airlock
                 yield return new BufferSlice(buffer, currentOffset, currentSize, currentCount);
         }
 
+        // Record format:
+        // unix timestamp milliseconds (8 bytes)
+        // payload length (4 bytes)
+        // payload (??? bytes)
         private static int ReadRecordLength(IBinaryReader reader)
         {
             reader.Position += sizeof(long);

@@ -25,9 +25,10 @@ namespace Vostok.Airlock
 
             foreach ((var routingKey, var bufferSlice) in EnumerateAllBufferSlices())
             {
-                var batch = HandleSlice(routingKey, bufferSlice, context);
-                if (batch != null)
+                foreach (var batch in HandleSlice(routingKey, bufferSlice, context))
+                {
                     yield return batch;
+                }
             }
 
             if (!context.IsEmpty)
@@ -59,22 +60,20 @@ namespace Vostok.Airlock
             }
         }
 
-        private IDataBatch HandleSlice(string routingKey, BufferSlice slice, DataBatchBuildingContext context)
+        private IEnumerable<IDataBatch> HandleSlice(string routingKey, BufferSlice slice, DataBatchBuildingContext context)
         {
             if (context.CurrentMessageBuilder.TryAppend(routingKey, slice))
             {
                 context.CurrentSlices.Add(slice);
-                return null;
+                yield break;
             }
 
             if (context.IsEmpty)
                 throw new Exception($"Bug! Somehow there's a buffer slice of size {slice.Length} that does not fit into max batch size {messageBuffer.Length} with overhead considered.");
 
-            var batch = context.CreateBatch();
+            yield return context.CreateBatch();
 
             context.Reset();
-
-            return batch;
         }
     }
 }
