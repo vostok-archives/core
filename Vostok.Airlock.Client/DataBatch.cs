@@ -6,16 +6,16 @@ namespace Vostok.Airlock
 {
     internal class DataBatch : IDataBatch
     {
-        public DataBatch(ArraySegment<byte> serializedMessage, ICollection<IBuffer> participatingBuffers)
+        public DataBatch(ArraySegment<byte> serializedMessage, ICollection<BufferSlice> participatingBuffers)
         {
             SerializedMessage = serializedMessage;
-            ParticipatingBuffers = participatingBuffers;
+            ParticipatingSlices = participatingBuffers;
         }
 
         public ArraySegment<byte> SerializedMessage { get; }
 
-        public ICollection<IBuffer> ParticipatingBuffers { get; }
+        public ICollection<BufferSlice> ParticipatingSlices { get; }
 
-        public int ItemsCount => ParticipatingBuffers.Sum(buffer => buffer.SnapshotCount);
+        public int ItemsCount => ParticipatingSlices.Sum(buffer => buffer.Count);
     }
 }

@@ -7,7 +7,7 @@ namespace Vostok.Airlock
     {
         ArraySegment<byte> SerializedMessage { get; }
 
-        ICollection<IBuffer> ParticipatingBuffers { get; }
+        ICollection<BufferSlice> ParticipatingSlices { get; }
 
         int ItemsCount { get; }
     }

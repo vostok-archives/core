@@ -63,7 +63,7 @@ namespace Vostok.Airlock
         {
             if (context.CurrentMessageBuilder.TryAppend(routingKey, slice))
             {
-                context.CurrentBuffers.Add(slice.Buffer);
+                context.CurrentSlices.Add(slice);
                 return null;
             }
 

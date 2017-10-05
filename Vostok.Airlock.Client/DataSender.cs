@@ -46,9 +46,10 @@ namespace Vostok.Airlock
 
         private static void DiscardSnapshots(IDataBatch batch)
         {
-            foreach (var buffer in batch.ParticipatingBuffers)
+            foreach (var slice in batch.ParticipatingSlices)
             {
-                buffer.DiscardSnapshot();
+                // TODO(iloktionov): Fix this bullshit!
+                slice.Buffer.DiscardSnapshot();
             }
         }
 
