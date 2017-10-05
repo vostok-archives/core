@@ -29,6 +29,8 @@ namespace Vostok.Airlock
 
         public static string AddSuffix(string prefix, params string[] suffix)
         {
+            if (suffix == null || suffix.Length == 0)
+                return prefix;
             return prefix + Separator + Create(suffix);
         }
 
@@ -40,13 +42,31 @@ namespace Vostok.Airlock
 
         public static void Parse(string routingKey, out string project, out string environment, out string service, out string[] suffix)
         {
+            if (routingKey == null)
+                throw new ArgumentNullException(nameof(routingKey));
             if (!TryParse(routingKey, out project, out environment, out service, out suffix))
                 throw new InvalidOperationException($"Couldn't parse routing key '{routingKey}'");
         }
 
         public static bool TryParse(string routingKey, out string project, out string environment, out string service, out string[] suffix)
         {
+            if (routingKey == null)
+            {
+                project = null;
+                environment = null;
+                service = null;
+                suffix = new string[] {};
+                return false;
+            }
             var routingKeyParts = routingKey.Split(Separator[0]);
+            if (routingKeyParts.Any(keyPart => !IsValidPart(keyPart)))
+            {
+                project = null;
+                environment = null;
+                service = null;
+                suffix = new string[] {};
+                return false;
+            }
             project = GetRoutingKeyPart(routingKeyParts, 0);
             environment = GetRoutingKeyPart(routingKeyParts, 1);
             service = GetRoutingKeyPart(routingKeyParts, 2);
@@ -81,6 +101,13 @@ namespace Vostok.Airlock
                     sb[i] = UnacceptableCharPlaceholder;
             }
             return sb.ToString();
+        }
+
+        private static bool IsValidPart(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+                return false;
+            return s.All(t => IsAcceptableChar(t) || IsAcceptableUpperCaseChar(t));
         }
 
         private static bool IsAcceptableChar(char c)
