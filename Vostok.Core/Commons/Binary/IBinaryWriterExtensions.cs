@@ -28,9 +28,9 @@ namespace Vostok.Commons.Binary
         {
             if (values == null)
             {
-                writer.Write(0);
-                return;
+                throw new ArgumentNullException(nameof(values));
             }
+
             writer.Write(values.Count);
 
             foreach (var value in values)
@@ -47,9 +47,9 @@ namespace Vostok.Commons.Binary
         {
             if (values == null)
             {
-                writer.Write(0);
-                return;
+                throw new ArgumentNullException(nameof(values));
             }
+
             writer.Write(values.Count);
 
             foreach (var pair in values)
@@ -67,9 +67,9 @@ namespace Vostok.Commons.Binary
         {
             if (values == null)
             {
-                writer.Write(0);
-                return;
+                throw new ArgumentNullException(nameof(values));
             }
+
             writer.Write(values.Count);
 
             foreach (var pair in values)

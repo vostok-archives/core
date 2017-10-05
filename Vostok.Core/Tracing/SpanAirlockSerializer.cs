@@ -28,6 +28,7 @@ namespace Vostok.Tracing
             var version = reader.ReadByte();
             if (version != FormatVersion)
                 throw new InvalidDataException("invalid format version: " + version);
+
             return new Span
             {
                 TraceId = reader.ReadGuid(),

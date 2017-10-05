@@ -8,6 +8,7 @@ namespace Vostok.Logging.Airlock
     public class LogEventDataSerializer : IAirlockSerializer<LogEventData>, IAirlockDeserializer<LogEventData>
     {
         private const byte FormatVersion = 1;
+
         public LogEventData Deserialize(IAirlockSource source)
         {
             var reader = source.Reader;
@@ -19,9 +20,9 @@ namespace Vostok.Logging.Airlock
             {
                 Timestamp = new DateTimeOffset(reader.ReadInt64(), TimeSpan.Zero),
                 Level = (LogLevel) reader.ReadInt32(),
-                Message = reader.ReadString(),
-                Exception = reader.ReadString(),
-                Properties = reader.ReadDictionary(r => r.ReadString(), r => r.ReadString())
+                Message = reader.ReadNullable(r => r.ReadString()),
+                Exception = reader.ReadNullable(r => r.ReadString()),
+                Properties = reader.ReadNullable(x => x.ReadDictionary(y => y.ReadString(), y => y.ReadString()))
             };
         }
 
@@ -32,9 +33,9 @@ namespace Vostok.Logging.Airlock
             writer.Write(FormatVersion);
             writer.Write(item.Timestamp.UtcTicks);
             writer.Write((int) item.Level);
-            writer.Write(item.Message);
-            writer.Write(item.Exception);
-            writer.WriteDictionary(item.Properties, (w, s) => w.Write(s), (w, o) => w.Write(o));
+            writer.WriteNullable(item.Message, (w, s) => w.Write(s));
+            writer.WriteNullable(item.Exception, (w, s) => w.Write(s));
+            writer.WriteNullable(item.Properties, (a, b) => a.WriteDictionary(b, (c, d) => c.Write(d), (c, d) => c.Write(d)));
         }
     }
 }
