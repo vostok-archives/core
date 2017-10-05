@@ -26,7 +26,7 @@ namespace Vostok.Tracing
         {
             var isEnabled = Configuration.IsEnabled();
             var airlock = Configuration.AirlockClient;
-            var airlockRoutingKey = configuration.AirlockRoutingKey();
+            var airlockRoutingKey = configuration.AirlockRoutingKey?.Invoke();
 
             if (!isEnabled || airlock == null || airlockRoutingKey == null)
                 return new FakeSpanBuilder();
