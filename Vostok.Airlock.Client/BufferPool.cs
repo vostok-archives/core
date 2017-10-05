@@ -51,13 +51,17 @@ namespace Vostok.Airlock
             var initialCount = buffers.Count;
             var snapshot = null as List<IBuffer>;
 
-            for (var i = 0; i < initialCount; i++)
+            // Do x2 iterations to meet certain statistical requirements. This highly important constant was deduced with extensive load testing.
+            for (var i = 0; i < initialCount * 2; i++)
             {
                 if (!buffers.TryDequeue(out var buffer))
                     break;
 
                 if (!snapshotSieve.Add(buffer))
-                    break;
+                {
+                    buffers.Enqueue(buffer);
+                    continue;
+                }
 
                 buffer.CollectGarbage();
 
