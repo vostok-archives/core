@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using Vostok.Commons.Synchronization;
 using Vostok.Logging;
 using Vostok.Logging.Logs;
@@ -51,6 +52,11 @@ namespace Vostok.Airlock
             {
                 lostItemsCounter.Increment();
             }
+        }
+
+        public Task FlushAsync()
+        {
+            return dataSenderDaemon.FlushAsync();
         }
 
         public void Dispose()
