@@ -33,7 +33,7 @@ namespace Vostok.Airlock
             var dataBatchesFactory = new DataBatchesFactory(bufferPools, commonBatchBuffer, log);
             var dataSender = new DataSender(dataBatchesFactory, requestSender, log, lostItemsCounter);
 
-            dataSenderDaemon = new DataSenderDaemon(dataSender, config);
+            dataSenderDaemon = new DataSenderDaemon(dataSender, config, log);
         }
 
         public long LostItemsCount => lostItemsCounter.Value;

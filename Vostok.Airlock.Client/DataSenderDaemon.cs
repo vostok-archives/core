@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Vostok.Logging;
 
 namespace Vostok.Airlock
 {
@@ -13,15 +14,17 @@ namespace Vostok.Airlock
 
         private readonly IDataSender dataSender;
         private readonly AirlockConfig config;
+        private readonly ILog log;
 
         private int currentState;
 
         private IterationHandle currentIteration;
 
-        public DataSenderDaemon(IDataSender dataSender, AirlockConfig config)
+        public DataSenderDaemon(IDataSender dataSender, AirlockConfig config, ILog log)
         {
             this.dataSender = dataSender;
             this.config = config;
+            this.log = log;
             currentIteration = null;
         }
 
@@ -35,7 +38,7 @@ namespace Vostok.Airlock
 
         public async Task FlushAsync()
         {
-            if (Interlocked.CompareExchange(ref currentState, 1, 1) == State_Started)
+            if (Interlocked.CompareExchange(ref currentState, 0, 0) == State_Started)
             {
                 var iteration = currentIteration;
                 if (iteration == null)
@@ -70,17 +73,36 @@ namespace Vostok.Airlock
             {
                 ReportNextIteration(new IterationHandle());
 
-                var watch = Stopwatch.StartNew();
-                var result = await dataSender.SendAsync().ConfigureAwait(false);
-                var sendTime = watch.Elapsed;
-                currentIteration.ReportSendFinished();
+                var (result, sendTime) = await Send().ConfigureAwait(false);
 
                 AdjustSendPeriod(result, ref sendPeriod);
+
                 currentIteration.ScheduleWakeUp(sendPeriod - sendTime);
+
                 await currentIteration.WaitForNextIteration().ConfigureAwait(false);
             }
 
             ReportNextIteration(null);
+        }
+
+        private async Task<(DataSendResult, TimeSpan)> Send()
+        {
+            var watch = Stopwatch.StartNew();
+
+            DataSendResult result;
+            try
+            {
+                result = await dataSender.SendAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                log.Warn("Send failed with exception", ex);
+                result = DataSendResult.Ok;
+            }
+
+            var sendTime = watch.Elapsed;
+            currentIteration.ReportSendFinished();
+            return (result, sendTime);
         }
 
         private void ReportNextIteration(IterationHandle handle)
@@ -115,24 +137,24 @@ namespace Vostok.Airlock
                 iterationFinished = new TaskCompletionSource<IterationHandle>();
             }
 
-            public Task WaitForNextIteration()
-            {
-                return nextIterationWakeup.Task;
-            }
-
             public Task WaitSendFinished()
             {
                 return sendFinished.Task;
             }
 
-            public void WakeUp()
-            {
-                nextIterationWakeup.TrySetResult(1);
-            }
-
             public void ReportSendFinished()
             {
                 sendFinished.TrySetResult(1);
+            }
+
+            public Task WaitForNextIteration()
+            {
+                return nextIterationWakeup.Task;
+            }
+
+            public void WakeUp()
+            {
+                nextIterationWakeup.TrySetResult(1);
             }
 
             public async Task ScheduleWakeUp(TimeSpan wakeUpAfter)
@@ -144,17 +166,15 @@ namespace Vostok.Airlock
                 WakeUp();
             }
 
-            public void ReportIterationFinished(IterationHandle nextIteration)
-            {
-                iterationFinished.TrySetResult(nextIteration);
-            }
-
             public Task<IterationHandle> WaitIterationFinished()
             {
                 return iterationFinished.Task;
             }
+
+            public void ReportIterationFinished(IterationHandle nextIteration)
+            {
+                iterationFinished.TrySetResult(nextIteration);
+            }
         }
     }
-
-
 }
