@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Vostok.Commons.Extensions.UnitConvertions;
 using Vostok.Logging;
 
@@ -34,7 +33,7 @@ namespace Vostok.Airlock
                 yield return context.CreateBatch();
         }
 
-        private IEnumerable<ValueTuple<string, IBuffer>> EnumerateAllBuffers()
+        private IEnumerable<(string, IBuffer)> EnumerateAllBuffers()
         {
             foreach (var pair in bufferPools)
             {
