@@ -17,7 +17,9 @@ namespace Vostok.Airlock
 
         public AirlockClient(AirlockConfig config, ILog log = null)
         {
-            this.config = config ?? throw new ArgumentNullException(nameof(config));
+            AirlockConfigValidator.Validate(config);
+
+            this.config = config;
 
             log = (log ?? new SilentLog()).ForContext(this);
             memoryManager = new MemoryManager(config.MaximumMemoryConsumption.Bytes, (int) config.InitialPooledBufferSize.Bytes);
