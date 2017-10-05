@@ -6,6 +6,7 @@
         public const string Service = "service";
         public const string Component = "component";
         public const string Kind = "kind";
+        public const string Host = "host";
 
         public const string ClusterStrategy = "cluster.strategy";
         public const string ClusterStatus = "cluster.status";
