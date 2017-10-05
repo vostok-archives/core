@@ -24,6 +24,7 @@ namespace Vostok.Clusterclient.Core.Transport
             transport = Substitute.For<ITransport>();
             transportWithTracing = new TransportWithTracing(transport);
             Trace.Configuration.AirlockClient = airlockClient;
+            Trace.Configuration.AirlockRoutingKey = () => "routingKey";
         }
 
         [Fact]

@@ -21,6 +21,7 @@ namespace Vostok.Clusterclient.Core.Modules
         {
             airlockClient = Substitute.For<IAirlockClient>();
             Trace.Configuration.AirlockClient = airlockClient;
+            Trace.Configuration.AirlockRoutingKey = () => "routingKey";
             tracingModule = new TracingModule("serviceName");
         }
 
