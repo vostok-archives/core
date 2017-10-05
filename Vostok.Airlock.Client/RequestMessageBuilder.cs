@@ -19,7 +19,7 @@ namespace Vostok.Airlock
 
         public ArraySegment<byte> Message => writer.FilledSegment;
 
-        public bool TryAdd(string routingKey, IBuffer buffer)
+        public bool TryAppend(string routingKey, IBuffer buffer)
         {
             if (!Fits(routingKey, buffer))
                 return false;

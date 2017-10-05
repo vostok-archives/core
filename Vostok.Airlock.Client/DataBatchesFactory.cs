@@ -33,7 +33,7 @@ namespace Vostok.Airlock
 
                 foreach (var buffer in snapshot)
                 {
-                    if (builder.TryAdd(routingKey, buffer))
+                    if (builder.TryAppend(routingKey, buffer))
                     {
                         buffers.Add(buffer);
                         continue;
