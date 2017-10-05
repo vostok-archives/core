@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
+using Vostok.Commons.Synchronization;
 using Vostok.Logging;
 
 namespace Vostok.Airlock
@@ -15,22 +15,23 @@ namespace Vostok.Airlock
         private readonly IDataSender dataSender;
         private readonly AirlockConfig config;
         private readonly ILog log;
+        private readonly AtomicInt currentState;
 
-        private int currentState;
-
-        private IterationHandle currentIteration;
+        private volatile IterationHandle currentIteration;
 
         public DataSenderDaemon(IDataSender dataSender, AirlockConfig config, ILog log)
         {
             this.dataSender = dataSender;
             this.config = config;
             this.log = log;
+
+            currentState = new AtomicInt(State_NotStarted);
             currentIteration = null;
         }
 
         public void Start()
         {
-            if (Interlocked.CompareExchange(ref currentState, State_Started, State_NotStarted) == State_NotStarted)
+            if (currentState.TrySet(State_Started, State_NotStarted))
             {
                 Task.Run(SendingRoutine);
             }
@@ -38,7 +39,7 @@ namespace Vostok.Airlock
 
         public async Task FlushAsync()
         {
-            if (Interlocked.CompareExchange(ref currentState, 0, 0) == State_Started)
+            if (currentState.Value == State_Started)
             {
                 var iteration = currentIteration;
                 if (iteration == null)
@@ -59,21 +60,19 @@ namespace Vostok.Airlock
 
         public void Dispose()
         {
-            if (Interlocked.Exchange(ref currentState, State_Disposed) != State_Disposed)
-            {
-                currentIteration?.WakeUp();
-            }
+            currentState.Value = State_Disposed;
+            currentIteration?.WakeUp();
         }
 
         private async Task SendingRoutine()
         {
             var sendPeriod = config.SendPeriod;
 
-            while (Interlocked.CompareExchange(ref currentState, 0, 0) != State_Disposed)
+            while (currentState.Value != State_Disposed)
             {
                 ReportNextIteration(new IterationHandle());
 
-                var (result, sendTime) = await Send().ConfigureAwait(false);
+                var (result, sendTime) = await SendAsync().ConfigureAwait(false);
 
                 AdjustSendPeriod(result, ref sendPeriod);
 
@@ -85,7 +84,7 @@ namespace Vostok.Airlock
             ReportNextIteration(null);
         }
 
-        private async Task<(DataSendResult, TimeSpan)> Send()
+        private async Task<(DataSendResult, TimeSpan)> SendAsync()
         {
             var watch = Stopwatch.StartNew();
 
@@ -157,13 +156,16 @@ namespace Vostok.Airlock
                 nextIterationWakeup.TrySetResult(1);
             }
 
-            public async Task ScheduleWakeUp(TimeSpan wakeUpAfter)
+            public void ScheduleWakeUp(TimeSpan wakeUpAfter)
             {
                 if (wakeUpAfter > TimeSpan.Zero)
                 {
-                    await Task.Delay(wakeUpAfter).ConfigureAwait(false);
+                    Task.Delay(wakeUpAfter).ContinueWith(_ => WakeUp());
                 }
-                WakeUp();
+                else
+                {
+                    WakeUp();
+                }
             }
 
             public Task<IterationHandle> WaitIterationFinished()
