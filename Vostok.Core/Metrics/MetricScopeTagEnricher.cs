@@ -22,7 +22,7 @@ namespace Vostok.Metrics
 
         public IMetricEventWriter WriteMetric()
         {
-            return Enrich(parent.WriteEvent());
+            return Enrich(parent.WriteMetric());
         }
 
         private IMetricEventWriter Enrich(IMetricEventWriter writer)

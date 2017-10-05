@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
-using Vostok.Metrics;
 
 namespace Vostok.Metrics
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Vostok.Commons.Utilities;
 
 namespace Vostok.Metrics.Meters.Histograms

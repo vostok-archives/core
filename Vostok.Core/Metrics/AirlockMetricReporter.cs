@@ -4,6 +4,11 @@ namespace Vostok.Metrics
 {
     public class AirlockMetricReporter : IMetricEventReporter
     {
+        static AirlockMetricReporter()
+        {
+            AirlockSerializerRegistry.Register(new MetricEventSerializer());
+        }
+
         private readonly IAirlockClient airlockClient;
         private readonly string metricsRoutingKey;
         private readonly string appEventsRoutingKey;
