@@ -6,6 +6,5 @@ namespace Vostok.Metrics
     {
         IMetricEventReporter Reporter { get; set; }
         ISet<string> ContextFieldsWhitelist { get; }
-        string Environment { get; set; }
     }
 }

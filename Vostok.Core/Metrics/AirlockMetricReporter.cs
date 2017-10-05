@@ -5,35 +5,26 @@ namespace Vostok.Metrics
     public class AirlockMetricReporter : IMetricEventReporter
     {
         private readonly IAirlockClient airlockClient;
-        private readonly string metricRoutingKey;
-        private readonly string metricEventRoutingKey;
+        private readonly string metricsRoutingKey;
+        private readonly string appEventsRoutingKey;
 
         public AirlockMetricReporter(
             IAirlockClient airlockClient,
-            IMetricConfiguration configuration)
+            string routingKeyPrefix)
         {
             this.airlockClient = airlockClient;
-            metricEventRoutingKey = CreateRoutingKey(configuration, "metric_events");
-            metricRoutingKey = CreateRoutingKey(configuration, "metrics");
+            appEventsRoutingKey = RoutingKey.AddSuffix(routingKeyPrefix, RoutingKey.AppEventsSuffix);
+            metricsRoutingKey = RoutingKey.AddSuffix(routingKeyPrefix, RoutingKey.MetricsSuffix);
         }
 
         public void SendEvent(MetricEvent metricEvent)
         {
-            airlockClient.Push(metricEventRoutingKey, metricEvent, metricEvent.Timestamp);
+            airlockClient.Push(appEventsRoutingKey, metricEvent, metricEvent.Timestamp);
         }
 
         public void SendMetric(MetricEvent metricEvent)
         {
-            airlockClient.Push(metricRoutingKey, metricEvent, metricEvent.Timestamp);
-        }
-
-        private static string CreateRoutingKey(
-            IMetricConfiguration configuration,
-            string routingSuffix)
-        {
-            return string.IsNullOrEmpty(configuration.Environment) 
-                ? routingSuffix 
-                : $"{configuration.Environment}_{routingSuffix}";
+            airlockClient.Push(metricsRoutingKey, metricEvent, metricEvent.Timestamp);
         }
     }
 }
