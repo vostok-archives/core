@@ -37,7 +37,7 @@ namespace Vostok.Airlock
                 bufferPool.Release(buffer);
             }
 
-            return true;
+            return serializationSucceeded;
         }
     }
 }
