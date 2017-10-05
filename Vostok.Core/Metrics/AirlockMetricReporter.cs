@@ -19,12 +19,12 @@ namespace Vostok.Metrics
 
         public void SendEvent(MetricEvent metricEvent)
         {
-            airlock.Push(metricEventRoutingKey, metricEvent);
+            airlock.Push(metricEventRoutingKey, metricEvent, metricEvent.Timestamp);
         }
 
         public void SendMetric(MetricEvent metricEvent)
         {
-            airlock.Push(metricRoutingKey, metricEvent);
+            airlock.Push(metricRoutingKey, metricEvent, metricEvent.Timestamp);
         }
 
         private static string CreateRoutingKey(
