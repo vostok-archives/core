@@ -55,7 +55,7 @@ namespace Vostok.Airlock
         private static bool IsAcceptableChar(char c)
         {
             return c >= 'a' && c <= 'z'
-                   || c >= 0 && c <= '9'
+                   || c >= '0' && c <= '9'
                    || c == UnacceptableCharPlaceholder;
         }
 
