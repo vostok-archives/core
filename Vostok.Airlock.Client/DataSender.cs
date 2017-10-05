@@ -13,6 +13,7 @@ namespace Vostok.Airlock
         private readonly IRequestSender requestSender;
         private readonly ILog log;
         private readonly AtomicLong lostItemsCounter;
+        private readonly BufferSliceTracker slicesTracker;
 
         public DataSender(IDataBatchesFactory batchesFactory, IRequestSender requestSender, ILog log, AtomicLong lostItemsCounter)
         {
@@ -20,10 +21,14 @@ namespace Vostok.Airlock
             this.requestSender = requestSender;
             this.log = log;
             this.lostItemsCounter = lostItemsCounter;
+
+            slicesTracker = new BufferSliceTracker();
         }
 
         public async Task<DataSendResult> SendAsync()
         {
+            slicesTracker.Reset();
+
             foreach (var batch in batchesFactory.CreateBatches())
             {
                 var watch = Stopwatch.StartNew();
@@ -37,19 +42,19 @@ namespace Vostok.Airlock
 
                 if (result == RequestSendResult.DefinitiveFailure)
                     lostItemsCounter.Add(batch.ItemsCount);
-
-                DiscardSnapshots(batch);
+                
+                TryDiscardSnapshots(batch);
             }
 
             return DataSendResult.Ok;
         }
 
-        private static void DiscardSnapshots(IDataBatch batch)
+        private void TryDiscardSnapshots(IDataBatch batch)
         {
             foreach (var slice in batch.ParticipatingSlices)
             {
-                // TODO(iloktionov): Fix this bullshit!
-                slice.Buffer.DiscardSnapshot();
+                if (slicesTracker.TryCompleteSnapshot(slice))
+                    slice.Buffer.DiscardSnapshot();
             }
         }
 
