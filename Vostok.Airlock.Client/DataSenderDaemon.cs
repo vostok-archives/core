@@ -60,6 +60,7 @@ namespace Vostok.Airlock
 
         public void Dispose()
         {
+            FlushAsync().GetAwaiter().GetResult();
             currentState.Value = State_Disposed;
             currentIteration?.WakeUp();
         }
