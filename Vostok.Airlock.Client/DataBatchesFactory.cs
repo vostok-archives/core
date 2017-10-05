@@ -36,7 +36,6 @@ namespace Vostok.Airlock
                 {
                     LogDroppingLargeBuffer(buffer);
                     buffer.DiscardSnapshot();
-                    buffer.CollectGarbage();
                     continue;
                 }
 
