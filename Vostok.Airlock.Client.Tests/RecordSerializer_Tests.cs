@@ -3,6 +3,8 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Vostok.Commons.Binary;
+using Vostok.Commons.Extensions.UnitConvertions;
+using Vostok.Logging.Logs;
 
 namespace Vostok.Airlock
 {
@@ -10,6 +12,7 @@ namespace Vostok.Airlock
     internal class RecordSerializer_Tests
     {
         private const int BufferSize = 32;
+        private const int MaxRecordSize = 40;
 
         private Buffer buffer;
         private MemoryManager manager;
@@ -24,7 +27,7 @@ namespace Vostok.Airlock
         {
             manager = new MemoryManager(BufferSize*2, BufferSize);
             buffer = new Buffer(new BinaryBufferWriter(BufferSize), manager);
-            serializer = new RecordSerializer();
+            serializer = new RecordSerializer(MaxRecordSize.Bytes(), new ConsoleLog());
 
             timestamp = DateTimeOffset.Now;
             item = "Hello!";
@@ -50,6 +53,14 @@ namespace Vostok.Airlock
         public void TrySerialize_should_return_false_when_available_memory_is_insufficient()
         {
             item = new string('!', BufferSize*4);
+
+            serializer.TrySerialize(item, itemSerializer, timestamp, buffer).Should().BeFalse();
+        }
+
+        [Test]
+        public void TrySerialize_should_return_false_when_record_size_exceeds_configured_limit()
+        {
+            item = new string('!', MaxRecordSize + 1);
 
             serializer.TrySerialize(item, itemSerializer, timestamp, buffer).Should().BeFalse();
         }

@@ -11,6 +11,8 @@ namespace Vostok.Airlock
 
         public string ApiKey = "insert api key here";
 
+        public DataSize MaximumRecordSize { get; set; } = 1.Megabytes();
+
         public DataSize MaximumMemoryConsumption { get; set; } = 128.Megabytes();
 
         public DataSize MaximumBatchSizeToSend { get; set; } = 4.Megabytes();

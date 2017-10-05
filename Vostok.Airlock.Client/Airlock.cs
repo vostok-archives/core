@@ -21,7 +21,7 @@ namespace Vostok.Airlock
 
             log = (log ?? new SilentLog()).ForContext(this);
             memoryManager = new MemoryManager(config.MaximumMemoryConsumption.Bytes, (int) config.InitialPooledBufferSize.Bytes);
-            recordWriter = new RecordWriter(new RecordSerializer());
+            recordWriter = new RecordWriter(new RecordSerializer(config.MaximumRecordSize, log));
             bufferPools = new ConcurrentDictionary<string, IBufferPool>();
             lostItemsCount = new AtomicLong(0);
 
