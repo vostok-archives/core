@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
-using Vostok.Commons;
+using Vostok.Commons.Extensions.Uri;
 using Vostok.Tracing;
 
 namespace Vostok.Clusterclient.Modules

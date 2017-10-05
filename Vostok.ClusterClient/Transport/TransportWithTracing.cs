@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
 using Vostok.Tracing;
-using Vostok.Commons;
+using Vostok.Commons.Extensions.Uri;
 
 namespace Vostok.Clusterclient.Transport
 {

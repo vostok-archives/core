@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Vostok.Clusterclient.Criteria;
 using Vostok.Clusterclient.Misc;
-using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Modules;
 using Vostok.Clusterclient.Ordering;
 using Vostok.Clusterclient.Ordering.Storage;

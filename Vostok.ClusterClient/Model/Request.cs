@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
-using Vostok.Commons;
+using Vostok.Commons.Extensions.Uri;
 
 namespace Vostok.Clusterclient.Model
 {
