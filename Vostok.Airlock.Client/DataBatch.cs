@@ -16,6 +16,6 @@ namespace Vostok.Airlock
 
         public ICollection<BufferSlice> ParticipatingSlices { get; }
 
-        public int ItemsCount => ParticipatingSlices.Sum(buffer => buffer.Count);
+        public int ItemsCount => ParticipatingSlices.Sum(buffer => buffer.Items);
     }
 }

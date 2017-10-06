@@ -2,17 +2,17 @@
 {
     internal struct BufferSlice
     {
-        public BufferSlice(IBuffer buffer, int offset, int length, int count)
+        public BufferSlice(IBuffer buffer, int offset, int length, int items)
         {
             Buffer = buffer;
             Offset = offset;
             Length = length;
-            Count = count;
+            Items = items;
         }
 
         public readonly IBuffer Buffer;
         public readonly int Offset;
         public readonly int Length;
-        public readonly int Count;
+        public readonly int Items;
     }
 }

@@ -25,7 +25,7 @@ namespace Vostok.Airlock
             {
                 var recordLength = ReadRecordLength(reader);
                 if (recordLength > maximumSliceLength)
-                    throw new InvalidOperationException($"Bug! Encountered a record with length = {recordLength} > max slice size {maximumSliceLength}.");
+                    throw new InvalidOperationException($"Bug! Encountered a record with length = {recordLength} greater than max slice size {maximumSliceLength}.");
 
                 if (currentSize + recordLength > maximumSliceLength)
                 {

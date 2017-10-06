@@ -67,7 +67,7 @@ namespace Vostok.Airlock
         private void WriteRecordsGroup(string routingKey, BufferSlice content)
         {
             writer.Write(routingKey);
-            writer.Write(content.Count);
+            writer.Write(content.Items);
             writer.WriteWithoutLengthPrefix(content.Buffer.InternalBuffer, content.Offset, content.Length);
         }
     }
