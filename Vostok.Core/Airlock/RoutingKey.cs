@@ -5,7 +5,6 @@ using System.Text;
 
 namespace Vostok.Airlock
 {
-    // todo (spaceorc 05.10.2017) add unit tests
     public static class RoutingKey
     {
         public const string Separator = ".";
@@ -64,6 +63,12 @@ namespace Vostok.Airlock
             service = GetRoutingKeyPart(routingKeyParts, 2);
             suffix = routingKeyParts.Skip(3).ToArray();
             return project != null && environment != null && service != null;
+        }
+
+        public static bool LastSuffixMatches(string routingKey, string lastSuffix)
+        {
+            Parse(routingKey, out var _, out var _, out var _, out var suffix);
+            return suffix.Any() && suffix.Last().Equals(lastSuffix, StringComparison.OrdinalIgnoreCase);
         }
 
         private static string GetRoutingKeyPart(string[] routingKeyParts, int index)

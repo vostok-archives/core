@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace Vostok.Airlock
 {
+    // todo (avk 06.10.2017) add tests for all methods for  case insensetivity
     public class RoutingKey_Tests
     {
         [TestCase("Diadoc№1", "прод","service2", "diadoc-1.----.service2")]
@@ -57,6 +58,26 @@ namespace Vostok.Airlock
         public void ReplaceSuffixTest(string key, string[] newSuffix, string newKey)
         {
             Assert.AreEqual(newKey, RoutingKey.ReplaceSuffix(key, newSuffix)); 
+        }
+
+        [TestCase("project.env.service.last-part", "last-part")]
+        [TestCase("project.env.service.last-part", "Last-Part")]
+        [TestCase("project.env.service.Last-part", "last-part")]
+        [TestCase("project.env.service.Last-part", "last-part")]
+        [TestCase("project.env.service.whatever.last-part", "last-part")]
+        public void LastSuffixMatches_True(string routingKey, string lastSuffix)
+        {
+            RoutingKey.LastSuffixMatches(routingKey, lastSuffix).Should().BeTrue();
+        }
+
+        [TestCase("project.env.last-part", "last-part")]
+        [TestCase("project.env.service.whatever", "last-part")]
+        [TestCase("project.env.service.lastpart", "last-part")]
+        [TestCase("project.env.service.last-part.", "last-part")]
+        [TestCase("project.env.service.last-part.whatever", "last-part")]
+        public void LastSuffixMatches_False(string routingKey, string lastSuffix)
+        {
+            RoutingKey.LastSuffixMatches(routingKey, lastSuffix).Should().BeFalse();
         }
     }
 }
