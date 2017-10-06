@@ -67,8 +67,7 @@ namespace Vostok.Airlock
 
         public static bool LastSuffixMatches(string routingKey, string lastSuffix)
         {
-            Parse(routingKey, out var _, out var _, out var _, out var suffix);
-            return suffix.Any() && suffix.Last().Equals(lastSuffix, StringComparison.OrdinalIgnoreCase);
+            return TryParse(routingKey, out var _, out var _, out var _, out var suffix) && suffix.Any() && suffix.Last().Equals(lastSuffix, StringComparison.OrdinalIgnoreCase);
         }
 
         private static string GetRoutingKeyPart(string[] routingKeyParts, int index)

@@ -75,6 +75,7 @@ namespace Vostok.Airlock
         [TestCase("project.env.service.lastpart", "last-part")]
         [TestCase("project.env.service.last-part.", "last-part")]
         [TestCase("project.env.service.last-part.whatever", "last-part")]
+        [TestCase("pro_ject.env.service.last-part", "last-part")]
         public void LastSuffixMatches_False(string routingKey, string lastSuffix)
         {
             RoutingKey.LastSuffixMatches(routingKey, lastSuffix).Should().BeFalse();
