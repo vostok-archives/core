@@ -20,6 +20,10 @@ namespace Vostok.Airlock
             }
         }
 
+        public long LostItemsCount => clients.Sum(client => client.LostItemsCount);
+
+        public long SentItemsCount => clients.Sum(client => client.SentItemsCount);
+
         public void Push<T>(string routingKey, T item, DateTimeOffset? timestamp = null)
         {
             clients[ThreadSafeRandom.Next(clients.Length)].Push(routingKey, item, timestamp);
