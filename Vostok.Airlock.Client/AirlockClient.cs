@@ -24,7 +24,10 @@ namespace Vostok.Airlock
             this.config = config;
 
             log = (log ?? new SilentLog()).ForContext(this);
-            memoryManager = new MemoryManager(config.MaximumMemoryConsumption.Bytes, (int) config.InitialPooledBufferSize.Bytes);
+            memoryManager = new MemoryManager(
+                config.MaximumMemoryConsumption.Bytes,
+                (int) config.InitialPooledBufferSize.Bytes
+            );
             recordWriter = new RecordWriter(new RecordSerializer(config.MaximumRecordSize, log));
             bufferPools = new ConcurrentDictionary<string, IBufferPool>();
             lostItemsCounter = new AtomicLong(0);
@@ -33,8 +36,18 @@ namespace Vostok.Airlock
             var requestSender = new RequestSender(config, log);
             var commonBatchBuffer = new byte[config.MaximumBatchSizeToSend.Bytes];
             var bufferSliceFactory = new BufferSliceFactory();
-            var dataBatchesFactory = new DataBatchesFactory(bufferPools, bufferSliceFactory, commonBatchBuffer);
-            var dataSender = new DataSender(dataBatchesFactory, requestSender, log, lostItemsCounter, sentItemsCounter);
+            var dataBatchesFactory = new DataBatchesFactory(
+                bufferPools,
+                bufferSliceFactory,
+                commonBatchBuffer
+            );
+            var dataSender = new DataSender(
+                dataBatchesFactory,
+                requestSender,
+                log,
+                lostItemsCounter,
+                sentItemsCounter
+            );
 
             dataSenderDaemon = new DataSenderDaemon(dataSender, config, log);
         }
@@ -48,7 +61,11 @@ namespace Vostok.Airlock
             if (!AirlockSerializerRegistry.TryGet<T>(out var serializer))
                 return;
 
-            if (recordWriter.TryWrite(item, serializer, timestamp ?? DateTimeOffset.UtcNow, ObtainBufferPool(routingKey)))
+            if (recordWriter.TryWrite(
+                item,
+                serializer,
+                timestamp ?? DateTimeOffset.UtcNow,
+                ObtainBufferPool(routingKey)))
             {
                 dataSenderDaemon.Start();
             }
@@ -70,7 +87,12 @@ namespace Vostok.Airlock
 
         private IBufferPool ObtainBufferPool(string routingKey)
         {
-            return bufferPools.GetOrAdd(routingKey, _ => new BufferPool(memoryManager, config.InitialPooledBuffersCount));
+            return bufferPools.GetOrAdd(
+                routingKey,
+                _ => new BufferPool(
+                    memoryManager,
+                    config.InitialPooledBuffersCount
+                ));
         }
     }
 }
