@@ -42,7 +42,7 @@ namespace Vostok.Clusterclient.Transport
 
         private static string MakeHeaderKey(string key)
         {
-            return HeaderNames.XDistributedContextPrefix + "/" + key;
+            return HeaderNames.XDistributedContextPrefix + "-" + key;
         }
 
         private static string Encode(string str)
