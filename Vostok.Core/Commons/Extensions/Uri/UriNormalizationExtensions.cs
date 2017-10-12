@@ -44,7 +44,7 @@ namespace Vostok.Commons.Extensions.Uri
             }
 
             AppendSegment(stringBuilder, urlString, segmentBeginning, urlString.Length - segmentBeginning);
-            return stringBuilder.ToString();
+            return stringBuilder.ToString().ToLower();
         }
 
         private static void AppendSegment(StringBuilder stringBuilder, string str, int offset, int length)
@@ -66,10 +66,7 @@ namespace Vostok.Commons.Extensions.Uri
 
         private static void AppendSubstring(StringBuilder stringBuilder, string str, int offset, int segmentLength)
         {
-            for (var i = 0; i < segmentLength; i++)
-            {
-                stringBuilder.Append(str[offset + i]);
-            }
+            stringBuilder.Append(str, offset, segmentLength);
         }
 
         private static bool CheckSegment(string str, int offset, int length, out string segmentName)
