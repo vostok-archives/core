@@ -17,11 +17,19 @@ namespace Vostok.Commons.Extensions.Uri
         private static readonly int[] guidDashPositions = {8, 13, 18, 23};
         private static readonly int[] guidHexPositions = {0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 16, 17, 19, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
 
+        public static string GetOperationName(this System.Uri url)
+        {
+            return NormalizeString(url.AbsolutePath.Trim('/'));
+        }
+
         public static string Normalize(this System.Uri url)
         {
-            const char separator = '/';
+            return NormalizeString(url.GetLeftPart(UriPartial.Path));
+        }
 
-            var urlString = url.ToStringWithoutQuery();
+        private static string NormalizeString(string urlString)
+        {
+            const char separator = '/';
             var stringBuilder = new StringBuilder(urlString.Length);
             var segmentBeginning = 0;
             for (var i = 0; i < urlString.Length; i++)
