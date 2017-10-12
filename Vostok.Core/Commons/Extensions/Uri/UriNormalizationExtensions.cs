@@ -24,7 +24,7 @@ namespace Vostok.Commons.Extensions.Uri
 
         public static string Normalize(this System.Uri url)
         {
-            return NormalizeString(url.GetLeftPart(UriPartial.Path));
+            return NormalizeString(url.ToStringWithoutQuery());
         }
 
         private static string NormalizeString(string urlString)
