@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
-using Vostok.Commons.Extensions.Uri;
 
 namespace Vostok.Clusterclient.Model
 {
@@ -140,7 +139,7 @@ namespace Vostok.Clusterclient.Model
 
             var urlString = includeQuery 
                 ? Url.ToString() 
-                : Url.ToStringWithoutQuery();
+                : Url.GetLeftPart(UriPartial.Path);
 
             builder.Append(urlString);
 

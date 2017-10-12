@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
-using Vostok.Commons.Extensions.Uri;
 using Vostok.Tracing;
 
 namespace Vostok.Clusterclient.Modules
@@ -34,7 +33,7 @@ namespace Vostok.Clusterclient.Modules
                 span.SetAnnotation(TracingAnnotationNames.Kind, "cluster-client");
                 span.SetAnnotation(TracingAnnotationNames.Component, "cluster-client");
                 span.SetAnnotation(TracingAnnotationNames.ClusterStrategy, context.Strategy.ToString());
-                span.SetAnnotation(TracingAnnotationNames.HttpUrl, context.Request.Url.ToStringWithoutQuery());
+                span.SetAnnotation(TracingAnnotationNames.HttpUrl, context.Request.Url.GetLeftPart(UriPartial.Path));
                 span.SetAnnotation(TracingAnnotationNames.HttpMethod, context.Request.Method);
                 span.SetAnnotation(TracingAnnotationNames.HttpRequestContentLength, context.Request.Content?.Length ?? 0);
 

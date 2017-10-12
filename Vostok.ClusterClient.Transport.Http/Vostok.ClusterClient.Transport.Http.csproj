@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000172" />
+    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000178" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vostok.ClusterClient\Vostok.ClusterClient.csproj" />

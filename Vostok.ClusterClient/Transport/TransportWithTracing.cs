@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Vostok.Clusterclient.Model;
 using Vostok.Tracing;
-using Vostok.Commons.Extensions.Uri;
 
 namespace Vostok.Clusterclient.Transport
 {
@@ -31,7 +30,7 @@ namespace Vostok.Clusterclient.Transport
             {
                 span.SetAnnotation(TracingAnnotationNames.Kind, "http-client");
                 span.SetAnnotation(TracingAnnotationNames.Component, "cluster-client");
-                span.SetAnnotation(TracingAnnotationNames.HttpUrl, request.Url.ToStringWithoutQuery());
+                span.SetAnnotation(TracingAnnotationNames.HttpUrl, request.Url.GetLeftPart(UriPartial.Path));
                 span.SetAnnotation(TracingAnnotationNames.HttpMethod, request.Method);
                 span.SetAnnotation(TracingAnnotationNames.HttpRequestContentLength, request.Content?.Length ?? 0);
 
