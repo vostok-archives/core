@@ -83,7 +83,7 @@ namespace Vostok.Metrics
 
         private void EnrichWithHostname()
         {
-            SetTag("host", HostnameProvider.Get());
+            SetTag(MetricsTagNames.Host, HostnameProvider.Get());
         }
     }
 }

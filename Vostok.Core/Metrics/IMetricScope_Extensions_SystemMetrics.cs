@@ -59,7 +59,7 @@ namespace Vostok.Metrics
 
         public static void SystemMetrics(this IMetricScope scope, TimeSpan period)
         {
-            var systemScope = scope.WithTag("type", "system");
+            var systemScope = scope.WithTag(MetricsTagNames.Type, "system");
             systemScope.CpuLoad(period);
             systemScope.MemoryUsage(period);
             systemScope.DiskUsage(period);
