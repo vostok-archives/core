@@ -1,10 +1,20 @@
 ﻿using System;
 using System.Threading;
+using Vostok.Logging.Airlock;
+using Vostok.Metrics;
+using Vostok.Tracing;
 
 namespace Vostok.Airlock
 {
     public static class AirlockSerializerRegistry
     {
+        static AirlockSerializerRegistry()
+        {
+            Register(new LogEventDataSerializer());
+            Register(new MetricEventSerializer());
+            Register(new SpanAirlockSerializer());
+        }
+
         public static void Register<T>(IAirlockSerializer<T> serializer)
         {
             if (serializer == null)

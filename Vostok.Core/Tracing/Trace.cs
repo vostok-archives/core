@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Vostok.Airlock;
 using Vostok.Commons.Collections;
 
 namespace Vostok.Tracing
@@ -18,8 +17,6 @@ namespace Vostok.Tracing
                 {
                     Annotations = new Dictionary<string, string>()
                 });
-
-            AirlockSerializerRegistry.Register(new SpanAirlockSerializer());
         }
 
         public static ISpanBuilder BeginSpan()
