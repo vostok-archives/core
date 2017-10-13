@@ -11,8 +11,4 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Metrics\Histograms\" />
-  </ItemGroup>
-
 </Project>
