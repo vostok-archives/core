@@ -58,7 +58,7 @@ namespace Vostok.Commons.Utilities
             if (long.TryParse(input, out bytes))
                 return DataSize.FromBytes(bytes);
 
-            throw new FormatException(string.Format("DataSizeParser. Failed to parse DataSize from string '{0}'.", input));
+            throw new FormatException($"DataSizeParser. Failed to parse DataSize from string '{input}'.");
         }
 
         private static string PrepareInput(string input, string unit)

@@ -11,7 +11,7 @@ namespace Vostok.Commons.Utilities
                 return result;
             if (double.TryParse(input, NumberStyles.Float, new NumberFormatInfo { NumberDecimalSeparator = "." }, out result))
                 return result;
-            throw new FormatException(string.Format("Error in parsing string {0} to Double.", input));
+            throw new FormatException($"Error in parsing string {input} to Double.");
         }
     }
 }
