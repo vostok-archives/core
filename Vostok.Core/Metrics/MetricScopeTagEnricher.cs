@@ -7,9 +7,7 @@ namespace Vostok.Metrics
         private readonly IMetricScope parent;
         private readonly IReadOnlyDictionary<string, string> tags;
 
-        public MetricScopeTagEnricher(
-            IMetricScope parent,
-            IReadOnlyDictionary<string, string> tags)
+        public MetricScopeTagEnricher(IMetricScope parent, IReadOnlyDictionary<string, string> tags)
         {
             this.parent = parent;
             this.tags = tags;
@@ -28,9 +26,7 @@ namespace Vostok.Metrics
         private IMetricEventWriter Enrich(IMetricEventWriter writer)
         {
             foreach (var kvp in tags)
-            {
                 writer.SetTag(kvp.Key, kvp.Value);
-            }
             return writer;
         }
     }

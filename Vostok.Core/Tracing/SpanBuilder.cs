@@ -8,13 +8,13 @@ namespace Vostok.Tracing
 {
     internal class SpanBuilder : ISpanBuilder
     {
-        private const string SpanContextKey = "Vostok.Tracing.CurrentSpan";
+        private const string spanContextKey = "Vostok.Tracing.CurrentSpan";
 
         private readonly string airlockRoutingKey;
         private readonly IAirlockClient airlockClient;
         private readonly PoolHandle<Span> spanHandle;
         private readonly TraceContextScope contextScope;
-        private readonly TraceConfiguration configuration;
+        private readonly ITraceConfiguration configuration;
         private readonly Stopwatch stopwatch;
         private readonly Span parentSpan;
         private readonly IDisposable spanContextScope;
@@ -24,7 +24,7 @@ namespace Vostok.Tracing
             IAirlockClient airlockClient,
             PoolHandle<Span> spanHandle,
             TraceContextScope contextScope,
-            TraceConfiguration configuration)
+            ITraceConfiguration configuration)
         {
             this.airlockRoutingKey = airlockRoutingKey;
             this.airlockClient = airlockClient;
@@ -33,8 +33,8 @@ namespace Vostok.Tracing
             this.configuration = configuration;
 
             stopwatch = Stopwatch.StartNew();
-            parentSpan = Context.Properties.Get<Span>(SpanContextKey);
-            spanContextScope = Context.Properties.Use(SpanContextKey, Span);
+            parentSpan = Context.Properties.Get<Span>(spanContextKey);
+            spanContextScope = Context.Properties.Use(spanContextKey, Span);
 
             InitializeSpan();
             EnrichSpanWithInheritedFields();
