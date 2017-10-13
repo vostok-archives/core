@@ -12,7 +12,7 @@ namespace Vostok.Metrics
         public CpuUsageMeter()
         {
             sw = Stopwatch.StartNew();
-            prevCpuTime = 0;
+            prevCpuTime = Process.GetCurrentProcess().TotalProcessorTime.Ticks;
         }
 
         public CpuUsageStats Reset()
