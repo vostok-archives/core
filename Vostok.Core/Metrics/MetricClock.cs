@@ -6,9 +6,7 @@ namespace Vostok.Metrics
 {
     public class MetricClock
     {
-        public TimeSpan Period { get; }
         private readonly ConcurrentBag<Action<DateTimeOffset>> actions;
-        
         private int isRunning;
         private DateTimeOffset aggregationTimestamp;
         private Thread aggregationThread;
@@ -21,9 +19,36 @@ namespace Vostok.Metrics
             actions = new ConcurrentBag<Action<DateTimeOffset>>();
         }
 
+        public TimeSpan Period { get; }
+
         public void Register(Action<DateTimeOffset> action)
         {
             actions.Add(action);
+        }
+
+        public void Start()
+        {
+            if (Interlocked.CompareExchange(ref isRunning, 1, 0) != 0)
+            {
+                return;
+            }
+
+            var now = DateTimeOffset.UtcNow;
+            aggregationTimestamp = new DateTimeOffset(now.Ticks - now.Ticks%Period.Ticks, TimeSpan.Zero);
+            cts = new CancellationTokenSource();
+            aggregationThread = new Thread(CollectMetricsLoop) {IsBackground = true};
+            aggregationThread.Start();
+        }
+
+        public void Stop()
+        {
+            if (Interlocked.CompareExchange(ref isRunning, 0, 1) != 1)
+            {
+                return;
+            }
+
+            cts.Cancel();
+            aggregationThread.Join();
         }
 
         private void CollectMetricsLoop()
@@ -75,31 +100,6 @@ namespace Vostok.Metrics
         private TimeSpan Min(TimeSpan x, TimeSpan y)
         {
             return x < y ? x : y;
-        }
-
-        public void Start()
-        {
-            if (Interlocked.CompareExchange(ref isRunning, 1, 0) != 0)
-            {
-                return;
-            }
-
-            var now = DateTimeOffset.UtcNow;
-            aggregationTimestamp = new DateTimeOffset(now.Ticks - (now.Ticks % Period.Ticks), TimeSpan.Zero);
-            cts = new CancellationTokenSource();
-            aggregationThread = new Thread(CollectMetricsLoop) {IsBackground = true};
-            aggregationThread.Start();
-        }
-
-        public void Stop()
-        {
-            if (Interlocked.CompareExchange(ref isRunning, 0, 1) != 1)
-            {
-                return;
-            }
-
-            cts.Cancel();
-            aggregationThread.Join();
         }
     }
 }
