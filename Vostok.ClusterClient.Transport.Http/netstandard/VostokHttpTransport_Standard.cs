@@ -96,7 +96,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 UseDefaultCredentials = false,
                 UseCookies = false,
                 UseProxy = false,
-                ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true
+                ServerCertificateCustomValidationCallback = null
             };
 
             return handler;
