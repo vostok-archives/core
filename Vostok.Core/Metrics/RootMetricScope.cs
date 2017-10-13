@@ -4,19 +4,17 @@ namespace Vostok.Metrics
 {
     public class RootMetricScope : IMetricScope
     {
-        private readonly IMetricConfiguration configuration;
         private readonly UnlimitedLazyPool<MetricEventWriter> eventWriterPool;
         private readonly UnlimitedLazyPool<MetricEventWriter> metricWriterPool;
 
         public RootMetricScope(IMetricConfiguration configuration)
         {
-            this.configuration = configuration;
-            this.eventWriterPool = new UnlimitedLazyPool<MetricEventWriter>(
+            eventWriterPool = new UnlimitedLazyPool<MetricEventWriter>(
                 () => new MetricEventWriter(
                     eventWriterPool,
                     configuration,
                     metricEvent => configuration.Reporter?.SendEvent(metricEvent)));
-            this.metricWriterPool = new UnlimitedLazyPool<MetricEventWriter>(
+            metricWriterPool = new UnlimitedLazyPool<MetricEventWriter>(
                 () => new MetricEventWriter(
                     metricWriterPool,
                     configuration,

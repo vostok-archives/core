@@ -16,9 +16,9 @@ namespace Vostok.Metrics
 
         public MetricClock(TimeSpan period)
         {
-            this.Period = period;
-            this.isRunning = 0;
-            this.actions = new ConcurrentBag<Action<DateTimeOffset>>();
+            Period = period;
+            isRunning = 0;
+            actions = new ConcurrentBag<Action<DateTimeOffset>>();
         }
 
         public void Register(Action<DateTimeOffset> action)
