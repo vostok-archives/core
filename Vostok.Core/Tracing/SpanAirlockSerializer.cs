@@ -7,13 +7,13 @@ namespace Vostok.Tracing
 {
     public class SpanAirlockSerializer : IAirlockSerializer<Span>, IAirlockDeserializer<Span>
     {
-        private const byte FormatVersion = 1;
+        private const byte formatVersion = 1;
 
         public void Serialize(Span span, IAirlockSink sink)
         {
             var writer = sink.Writer;
 
-            writer.Write(FormatVersion);
+            writer.Write(formatVersion);
             writer.Write(span.TraceId);
             writer.Write(span.SpanId);
             writer.WriteNullable(span.ParentSpanId, (w, id) => w.Write(id));
@@ -26,7 +26,7 @@ namespace Vostok.Tracing
         {
             var reader = source.Reader;
             var version = reader.ReadByte();
-            if (version != FormatVersion)
+            if (version != formatVersion)
                 throw new InvalidDataException("invalid format version: " + version);
 
             return new Span

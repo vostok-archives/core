@@ -5,15 +5,13 @@ using Vostok.Commons.Binary;
 
 namespace Vostok.Metrics
 {
-    public class MetricEventSerializer :
-        IAirlockSerializer<MetricEvent>,
-        IAirlockDeserializer<MetricEvent>
+    public class MetricEventSerializer : IAirlockSerializer<MetricEvent>, IAirlockDeserializer<MetricEvent>
     {
-        private const byte FormatVersion = 1;
+        private const byte formatVersion = 1;
 
         public void Serialize(MetricEvent item, IAirlockSink sink)
         {
-            sink.Writer.Write(FormatVersion);
+            sink.Writer.Write(formatVersion);
             sink.Writer.Write(item.Timestamp.Ticks);
 
             sink.Writer.WriteDictionary(
@@ -30,7 +28,7 @@ namespace Vostok.Metrics
         public MetricEvent Deserialize(IAirlockSource source)
         {
             var version = source.Reader.ReadByte();
-            if (version != FormatVersion)
+            if (version != formatVersion)
                 throw new InvalidDataException("invalid format version: " + version);
 
             var timestamp = new DateTimeOffset(source.Reader.ReadInt64(), TimeSpan.Zero);

@@ -7,13 +7,13 @@ namespace Vostok.Logging.Airlock
 {
     public class LogEventDataSerializer : IAirlockSerializer<LogEventData>, IAirlockDeserializer<LogEventData>
     {
-        private const byte FormatVersion = 1;
+        private const byte formatVersion = 1;
 
         public LogEventData Deserialize(IAirlockSource source)
         {
             var reader = source.Reader;
             var version = reader.ReadByte();
-            if (version != FormatVersion)
+            if (version != formatVersion)
                 throw new InvalidDataException("invalid format version: " + version);
 
             return new LogEventData
@@ -30,7 +30,7 @@ namespace Vostok.Logging.Airlock
         {
             var writer = sink.Writer;
 
-            writer.Write(FormatVersion);
+            writer.Write(formatVersion);
             writer.Write(item.Timestamp.UtcTicks);
             writer.Write((int) item.Level);
             writer.WriteNullable(item.Message, (w, s) => w.Write(s));
