@@ -6,12 +6,11 @@ namespace Vostok.Tracing
     public static class Trace
     {
         private static readonly IPool<Span> spanPool;
-        private static readonly TraceConfiguration configuration;
+        private static readonly ITraceConfiguration configuration;
 
         static Trace()
         {
-            configuration = new TraceConfiguration();
-
+            configuration = new DefaultTraceConfiguration();
             spanPool = new UnlimitedLazyPool<Span>(
                 () => new Span
                 {
@@ -21,8 +20,8 @@ namespace Vostok.Tracing
 
         public static ISpanBuilder BeginSpan()
         {
-            var isEnabled = Configuration.IsEnabled();
-            var airlock = Configuration.AirlockClient;
+            var isEnabled = configuration.IsEnabled();
+            var airlock = configuration.AirlockClient;
             var airlockRoutingKey = configuration.AirlockRoutingKey?.Invoke();
 
             if (!isEnabled || airlock == null || airlockRoutingKey == null)
@@ -33,7 +32,5 @@ namespace Vostok.Tracing
 
             return new SpanBuilder(airlockRoutingKey, airlock, pooledSpan, contextScope, configuration);
         }
-
-        public static ITraceConfiguration Configuration => configuration;
     }
 }

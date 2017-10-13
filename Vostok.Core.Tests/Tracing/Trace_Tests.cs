@@ -2,6 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 using Vostok.Airlock;
+using Vostok.Configuration;
 
 namespace Vostok.Tracing
 {
@@ -13,9 +14,11 @@ namespace Vostok.Tracing
         public void SetUp()
         {
             airlockClient = Substitute.For<IAirlockClient>();
-            Trace.Configuration.AirlockRoutingKey = () => RoutingKey.Create("proj", "env", "serv", RoutingKey.TracesSuffix);
-            Trace.Configuration.AirlockClient = airlockClient;
-            Trace.Configuration.InheritedFieldsWhitelist.Clear();
+            VostokConfiguration.Project = () => "proj";
+            VostokConfiguration.Environment = () => "env";
+            VostokConfiguration.Service = () => "serv";
+            VostokConfiguration.AirlockClient = airlockClient;
+            VostokConfiguration.Tracing.InheritedFieldsWhitelist.Clear();
         }
 
         [Test]
@@ -24,7 +27,7 @@ namespace Vostok.Tracing
             const string customKey = "customKey";
             const string customValue = "customValue";
 
-            Trace.Configuration.InheritedFieldsWhitelist.Add(customKey);
+            VostokConfiguration.Tracing.InheritedFieldsWhitelist.Add(customKey);
 
             airlockClient.Push(
                 Arg.Any<string>(),
