@@ -99,6 +99,14 @@ namespace Vostok.Clusterclient.Transport.Http
                 ServerCertificateCustomValidationCallback = null
             };
 
+            // (alexkir, 13.10.2017) we can safely pass callbacks only on Windows; see https://github.com/dotnet/corefx/pull/19908
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                Environment.OSVersion.Platform == PlatformID.Win32S ||
+                Environment.OSVersion.Platform == PlatformID.Win32Windows ||
+                Environment.OSVersion.Platform == PlatformID.WinCE)
+                // TODO(alexkir, 13.10.2017): decide if this is a good optimization practice to always ignore SSL cert validity
+                handler.ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true;
+
             return handler;
         }
 
