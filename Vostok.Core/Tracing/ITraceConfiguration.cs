@@ -10,11 +10,11 @@ namespace Vostok.Tracing
 
         ISet<string> InheritedFieldsWhitelist { get; }
 
-        Func<bool> IsEnabled { get; set; }
+        Func<bool> IsEnabled { get; }
 
-        Func<string> AirlockRoutingKey { get; set; }
+        Func<string> AirlockRoutingKey { get; }
 
         // TODO(iloktionov): Invent a way to automatically fill this with an out-of-the-box implementation in apps.
-        IAirlockClient AirlockClient { get; set; }
+        IAirlockClient AirlockClient { get; }
     }
 }
