@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Vostok.ClusterClient" Version="1.0.0-pre000081" />
+    <PackageReference Include="Vostok.ClusterClient.Transport.Http" Version="1.0.0-pre000081" />
+    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000179" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vostok.Airlock.Client\Vostok.Airlock.Client.csproj" />
+  </ItemGroup>
+
+</Project>
