@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vostok.Airlock;
 using Vostok.Commons.Collections;
 
 namespace Vostok.Tracing
@@ -13,8 +12,6 @@ namespace Vostok.Tracing
 
         public Func<bool> IsEnabled { get; set; } = () => true;
 
-        public Func<string> AirlockRoutingKey { get; set; }
-
-        public IAirlockClient AirlockClient { get; set; }
+        public ITraceReporter Reporter { get; set; }
     }
 }

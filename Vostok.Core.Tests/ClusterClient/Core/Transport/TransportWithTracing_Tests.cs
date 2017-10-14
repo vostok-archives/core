@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
-using Vostok.Airlock;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Transport;
 using Vostok.Tracing;
@@ -14,18 +13,17 @@ namespace Vostok.Clusterclient.Core.Transport
 {
     public class TransportWithTracing_Tests
     {
-        private IAirlockClient airlockClient;
+        private ITraceReporter traceReporter;
         private ITransport transport;
         private TransportWithTracing transportWithTracing;
 
         [SetUp]
         public void SetUp()
         {
-            airlockClient = Substitute.For<IAirlockClient>();
+            traceReporter = Substitute.For<ITraceReporter>();
             transport = Substitute.For<ITransport>();
             transportWithTracing = new TransportWithTracing(transport);
-            Trace.Configuration.AirlockClient = airlockClient;
-            Trace.Configuration.AirlockRoutingKey = () => "routingKey";
+            Trace.Configuration.Reporter = traceReporter;
         }
 
         [Test]
@@ -46,7 +44,7 @@ namespace Vostok.Clusterclient.Core.Transport
                 [TracingAnnotationNames.HttpResponseContentLength] = "0",
                 [TracingAnnotationNames.HttpCode] = "400"
             };
-            airlockClient.Push(Arg.Any<string>(), Arg.Do<Span>(span =>
+            traceReporter.SendSpan(Arg.Do<Span>(span =>
             {
                 span.Annotations.ShouldBeEquivalentTo(expectedAnnotations);
             }));
@@ -54,7 +52,7 @@ namespace Vostok.Clusterclient.Core.Transport
             var actual = await transportWithTracing.SendAsync(request, timeout, cancellationToken).ConfigureAwait(false);
 
             actual.Should().Be(response);
-            airlockClient.Received().Push(Arg.Any<string>(), Arg.Any<Span>());
+            traceReporter.Received().SendSpan(Arg.Any<Span>());
         }
     }
 }
