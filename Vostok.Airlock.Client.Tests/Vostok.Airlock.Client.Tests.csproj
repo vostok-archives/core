@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <RootNamespace>Vostok.Airlock</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
+    <PackageReference Include="NSubstitute" Version="2.0.3" />
+    <PackageReference Include="NUnit" Version="3.8.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
+    <PackageReference Include="Vostok.ClusterClient" Version="1.0.0-pre000081" />
+    <PackageReference Include="Vostok.ClusterClient.Transport.Http" Version="1.0.0-pre000081" />
+    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000179" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vostok.Airlock.Client\Vostok.Airlock.Client.csproj" />
+  </ItemGroup>
+
+</Project>
