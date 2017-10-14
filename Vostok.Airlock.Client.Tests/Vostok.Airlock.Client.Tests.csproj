@@ -14,13 +14,11 @@
     <PackageReference Include="NSubstitute" Version="2.0.3" />
     <PackageReference Include="NUnit" Version="3.8.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
-    <PackageReference Include="Vostok.ClusterClient" Version="1.0.0-pre000081" />
-    <PackageReference Include="Vostok.ClusterClient.Transport.Http" Version="1.0.0-pre000081" />
-    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000179" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Vostok.Airlock.Client\Vostok.Airlock.Client.csproj" />
+    <ProjectReference Include="..\Vostok.Core\Vostok.Core.csproj" />
   </ItemGroup>
 
 </Project>

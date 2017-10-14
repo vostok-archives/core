@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.ClusterClient", "Vos
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.ClusterClient.Transport.Http", "Vostok.ClusterClient.Transport.Http\Vostok.ClusterClient.Transport.Http.csproj", "{E5D6EC8B-594C-4425-AD6A-1BB0821ADE5C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Airlock.Client", "Vostok.Airlock.Client\Vostok.Airlock.Client.csproj", "{38113DA7-4A2C-4EFB-BCBE-515D5A787556}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Airlock.Client.Tests", "Vostok.Airlock.Client.Tests\Vostok.Airlock.Client.Tests.csproj", "{60DA18B9-9345-4BEE-98FC-3071DDEE4BA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{E5D6EC8B-594C-4425-AD6A-1BB0821ADE5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5D6EC8B-594C-4425-AD6A-1BB0821ADE5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5D6EC8B-594C-4425-AD6A-1BB0821ADE5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38113DA7-4A2C-4EFB-BCBE-515D5A787556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38113DA7-4A2C-4EFB-BCBE-515D5A787556}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38113DA7-4A2C-4EFB-BCBE-515D5A787556}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38113DA7-4A2C-4EFB-BCBE-515D5A787556}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60DA18B9-9345-4BEE-98FC-3071DDEE4BA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60DA18B9-9345-4BEE-98FC-3071DDEE4BA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60DA18B9-9345-4BEE-98FC-3071DDEE4BA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60DA18B9-9345-4BEE-98FC-3071DDEE4BA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
