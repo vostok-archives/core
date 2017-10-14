@@ -13,7 +13,7 @@ namespace Vostok.Hosting
             VostokConfiguration.Environment = () => GetSetting<string>("env"); // live
             VostokConfiguration.Service = () => GetSetting<string>("serv"); // live
 
-            VostokConfiguration.Airlock.Paralellizm = GetSetting<int>("airlockParalellizm"); // stale
+            VostokConfiguration.Airlock.Parallelism = GetSetting<int>("airlockParalellizm"); // stale
             VostokConfiguration.Airlock.ApiKey = GetSetting<string>("airlockApiKey"); // stale
             VostokConfiguration.Airlock.ClusterProvider = new AdHocClusterProvider(() => GetTopology("airlock")); // live
             VostokConfiguration.Airlock.SendPeriod = GetSetting<TimeSpan>("airlockSendPeriod"); // stale

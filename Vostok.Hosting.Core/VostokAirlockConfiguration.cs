@@ -14,16 +14,16 @@ namespace Vostok.Hosting
             lazyClient = new Lazy<IAirlockClient>(CreateAirlockClient);
         }
 
-        public int Paralellizm { get; set; }
+        public int Parallelism { get; set; }
 
         public IAirlockClient Client => lazyClient.Value;
 
         private IAirlockClient CreateAirlockClient()
         {
             var log = VostokConfiguration.Logging.GetLog("airlock");
-            if (Paralellizm <= 1)
+            if (Parallelism <= 1)
                 return new AirlockClient(this, log);
-            return new ParallelAirlockClient(this, Paralellizm, log);
+            return new ParallelAirlockClient(this, Parallelism, log);
         }
     }
 }
