@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vostok.Airlock.Client\Vostok.Airlock.Client.csproj" />
     <ProjectReference Include="..\Vostok.ClusterClient.Transport.Http\Vostok.ClusterClient.Transport.Http.csproj" />
     <ProjectReference Include="..\Vostok.ClusterClient\Vostok.ClusterClient.csproj" />
     <ProjectReference Include="..\Vostok.Core\Vostok.Core.csproj" />
