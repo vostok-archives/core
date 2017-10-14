@@ -16,14 +16,35 @@ namespace Vostok.Airlock
 
         private const char UnacceptableCharPlaceholder = '-';
 
+        public static string TryCreate(string project, string environment, string service, params string[] suffix)
+        {
+            if (string.IsNullOrEmpty(project) || string.IsNullOrEmpty(environment) || string.IsNullOrEmpty(service) || suffix.Any(string.IsNullOrEmpty))
+                return null;
+            return Create(project, environment, service, suffix);
+        }
+
         public static string Create(string project, string environment, string service, params string[] suffix)
         {
             return AddSuffix(CreatePrefix(project, environment, service), suffix);
         }
 
+        public static string TryCreatePrefix(string project, string environment, string service)
+        {
+            if (string.IsNullOrEmpty(project) || string.IsNullOrEmpty(environment) || string.IsNullOrEmpty(service))
+                return null;
+            return CreatePrefix(project, environment, service);
+        }
+
         public static string CreatePrefix(string project, string environment, string service)
         {
             return Create(new[] {project, environment, service});
+        }
+
+        public static string TryAddSuffix(string prefix, params string[] suffix)
+        {
+            if (string.IsNullOrEmpty(prefix) || suffix.Any(string.IsNullOrEmpty))
+                return null;
+            return AddSuffix(prefix, suffix);
         }
 
         public static string AddSuffix(string prefix, params string[] suffix)
