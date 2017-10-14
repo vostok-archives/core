@@ -53,9 +53,7 @@ after_build:
   - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.Airlock.Client\bin\Release\Vostok.Airlock.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
 test_script:
   - ps: dotnet test "$env:appveyor_build_folder\Vostok.Core.Tests\Vostok.Core.Tests.csproj" --logger "trx;LogFileName=core-tests.trx"
-  - ps: dotnet test "$env:appveyor_build_folder\Vostok.Airlock.Client.Tests\Vostok.Airlock.Client.Tests.csproj" --logger "trx;LogFileName=airlock-client-tests.trx"
 after_test:
   - ps: |
       $wc = New-Object 'System.Net.WebClient'
       $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.Core.Tests\TestResults\core-tests.trx")
-      $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.Airlock.Client.Tests\TestResults\airlock-client-tests.trx")
