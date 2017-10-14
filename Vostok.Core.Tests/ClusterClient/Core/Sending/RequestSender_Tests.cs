@@ -19,22 +19,23 @@ namespace Vostok.Clusterclient.Core.Sending
 {
     public class RequestSender_Tests
     {
-        private readonly Uri replica;
-        private readonly Request relativeRequest;
-        private readonly Response response;
-        private readonly TimeSpan timeout;
+        private Uri replica;
+        private Request relativeRequest;
+        private Response response;
+        private TimeSpan timeout;
 
-        private readonly IClusterClientConfiguration configuration;
-        private readonly IReplicaStorageProvider storageProvider;
-        private readonly IResponseClassifier responseClassifier;
-        private readonly IRequestConverter requestConverter;
-        private readonly ITransport transport;
-        private readonly ILog log;
+        private IClusterClientConfiguration configuration;
+        private IReplicaStorageProvider storageProvider;
+        private IResponseClassifier responseClassifier;
+        private IRequestConverter requestConverter;
+        private ITransport transport;
+        private ILog log;
 
-        private readonly RequestSender sender;
+        private RequestSender sender;
         private Request absoluteRequest;
 
-        public RequestSender_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica = new Uri("http://replica/");
             relativeRequest = Request.Get("foo/bar");

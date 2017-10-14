@@ -13,20 +13,21 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Leadership
 {
     public class LeadershipWeightModifier_Tests
     {
-        private readonly Uri replica;
-        private readonly IList<Uri> replicas;
-        private readonly Request request;
-        private readonly Response response;
-        private readonly ReplicaResult result;
-
+        private Uri replica;
+        private IList<Uri> replicas;
+        private Request request;
+        private Response response;
+        private ReplicaResult result;
+                         
         private double weight;
 
-        private readonly ILeaderResultDetector resultDetector;
-        private readonly IReplicaStorageProvider storageProvider;
-        private readonly ConcurrentDictionary<Uri, bool> storage;
-        private readonly LeadershipWeightModifier modifier;
+        private ILeaderResultDetector resultDetector;
+        private IReplicaStorageProvider storageProvider;
+        private ConcurrentDictionary<Uri, bool> storage;
+        private LeadershipWeightModifier modifier;
 
-        public LeadershipWeightModifier_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica = new Uri("http://replica");
             replicas = new List<Uri> {replica};

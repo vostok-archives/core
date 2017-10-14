@@ -6,9 +6,10 @@ namespace Vostok.Clusterclient.Core.Retry
 {
     public class ConstantDelayRetryStrategy_Tests
     {
-        private readonly ConstantDelayRetryStrategy strategy;
+        private ConstantDelayRetryStrategy strategy;
 
-        public ConstantDelayRetryStrategy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             strategy = new ConstantDelayRetryStrategy(3, 1.Seconds());
         }

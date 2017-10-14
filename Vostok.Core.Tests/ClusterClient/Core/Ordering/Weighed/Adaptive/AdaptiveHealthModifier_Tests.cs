@@ -14,19 +14,20 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Adaptive
 {
     public class AdaptiveHealthModifier_Tests
     {
-        private readonly Uri replica1;
-        private readonly Uri replica2;
-        private readonly IList<Uri> replicas;
-        private readonly Request request;
-        private readonly ConcurrentDictionary<Uri, int> storage;
+        private Uri replica1;
+        private Uri replica2;
+        private IList<Uri> replicas;
+        private Request request;
+        private ConcurrentDictionary<Uri, int> storage;
 
-        private readonly IReplicaStorageProvider storageProvider;
-        private readonly IAdaptiveHealthImplementation<int> implementation;
-        private readonly IAdaptiveHealthTuningPolicy tuningPolicy;
-        private readonly AdaptiveHealthModifier<int> modifier;
-        private readonly ILog log;
+        private IReplicaStorageProvider storageProvider;
+        private IAdaptiveHealthImplementation<int> implementation;
+        private IAdaptiveHealthTuningPolicy tuningPolicy;
+        private AdaptiveHealthModifier<int> modifier;
+        private ILog log;
 
-        public AdaptiveHealthModifier_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica1 = new Uri("http://replica1");
             replica2 = new Uri("http://replica2");

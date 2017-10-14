@@ -9,7 +9,8 @@ namespace Vostok.Clusterclient.Core.Transforms
     {
         private Request request;
 
-        public DefaultHeadersTransform_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("foo/bar");
         }

@@ -9,9 +9,10 @@ namespace Vostok.Clusterclient.Core.Criteria
 {
     public class RejectNetworkErrorsCriterion_Tests
     {
-        private readonly RejectNetworkErrorsCriterion criterion;
+        private RejectNetworkErrorsCriterion criterion;
 
-        public RejectNetworkErrorsCriterion_Tests()
+        [SetUp]
+        public void SetUp()
         {
             criterion = new RejectNetworkErrorsCriterion();
         }

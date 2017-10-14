@@ -15,17 +15,18 @@ namespace Vostok.Clusterclient.Core.Sending
 {
     public class ContextualRequestSender_Tests
     {
-        private readonly Uri replica;
-        private readonly Request request;
-        private readonly ReplicaResult result;
-        private readonly TimeSpan timeout;
+        private Uri replica;
+        private Request request;
+        private ReplicaResult result;
+        private TimeSpan timeout;
 
-        private readonly TaskCompletionSource<ReplicaResult> resultSource;
-        private readonly IRequestSender baseSender;
-        private readonly RequestContext context;
-        private readonly ContextualRequestSender contextualSender;
+        private TaskCompletionSource<ReplicaResult> resultSource;
+        private IRequestSender baseSender;
+        private RequestContext context;
+        private ContextualRequestSender contextualSender;
 
-        public ContextualRequestSender_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica = new Uri("http://replica");
             request = Request.Get("foo/bar");

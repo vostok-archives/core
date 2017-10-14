@@ -13,19 +13,20 @@ namespace Vostok.Clusterclient.Core.Strategies
 {
     public class SequentialRequestStrategy_Tests
     {
-        private readonly Uri replica1;
-        private readonly Uri replica2;
-        private readonly Uri replica3;
-        private readonly Uri[] replicas;
-        private readonly Request request;
+        private Uri replica1;
+        private Uri replica2;
+        private Uri replica3;
+        private Uri[] replicas;
+        private Request request;
 
-        private readonly ISequentialTimeoutsProvider timeoutsProvider;
-        private readonly IRequestSender sender;
-        private readonly CancellationToken token;
+        private ISequentialTimeoutsProvider timeoutsProvider;
+        private IRequestSender sender;
+        private CancellationToken token;
 
-        private readonly SequentialRequestStrategy strategy;
+        private SequentialRequestStrategy strategy;
 
-        public SequentialRequestStrategy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica1 = new Uri("http://replica1/");
             replica2 = new Uri("http://replica2/");

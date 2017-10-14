@@ -9,9 +9,10 @@ namespace Vostok.Clusterclient.Core.Criteria
 {
     public class RejectUnknownErrorsCriterion_Tests
     {
-        private readonly RejectUnknownErrorsCriterion criterion;
+        private RejectUnknownErrorsCriterion criterion;
 
-        public RejectUnknownErrorsCriterion_Tests()
+        [SetUp]
+        public void SetUp()
         {
             criterion = new RejectUnknownErrorsCriterion();
         }

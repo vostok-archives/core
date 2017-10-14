@@ -6,9 +6,10 @@ namespace Vostok.Clusterclient.Core.Ordering.Storage
 {
     public class ReplicaStorageContainer_Tests
     {
-        private readonly ReplicaStorageContainer<int> container;
+        private ReplicaStorageContainer<int> container;
 
-        public ReplicaStorageContainer_Tests()
+        [SetUp]
+        public void SetUp()
         {
             container = new ReplicaStorageContainer<int>();
         }

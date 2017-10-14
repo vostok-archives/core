@@ -9,11 +9,12 @@ namespace Vostok.Clusterclient.Core.Criteria
 {
     public class ResponseClassifier_Tests
     {
-        private readonly List<IResponseCriterion> criteria;
-        private readonly ResponseClassifier classifier;
-        private readonly Response response;
+        private List<IResponseCriterion> criteria;
+        private ResponseClassifier classifier;
+        private Response response;
 
-        public ResponseClassifier_Tests()
+        [SetUp]
+        public void SetUp()
         {
             criteria = new List<IResponseCriterion>();
             classifier = new ResponseClassifier();

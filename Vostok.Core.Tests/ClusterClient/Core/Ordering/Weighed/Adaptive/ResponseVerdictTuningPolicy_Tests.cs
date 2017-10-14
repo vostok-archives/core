@@ -8,9 +8,10 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Adaptive
 {
     public class ResponseVerdictTuningPolicy_Tests
     {
-        private readonly ResponseVerdictTuningPolicy policy;
+        private ResponseVerdictTuningPolicy policy;
 
-        public ResponseVerdictTuningPolicy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             policy = new ResponseVerdictTuningPolicy();
         }

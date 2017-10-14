@@ -7,9 +7,10 @@ namespace Vostok.Clusterclient.Core.Retry
 {
     public class ImmediateRetryStrategy_Tests
     {
-        private readonly ImmediateRetryStrategy strategy;
+        private ImmediateRetryStrategy strategy;
 
-        public ImmediateRetryStrategy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             strategy = new ImmediateRetryStrategy(5);
         }

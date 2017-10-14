@@ -10,7 +10,8 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Adaptive
     {
         private AdaptiveHealthWithoutDecay implementation;
 
-        public AdaptiveHealthWithoutDecay_Tests()
+        [SetUp]
+        public void SetUp()
         {
             implementation = new AdaptiveHealthWithoutDecay(2, 0.25, 0.002);
         }

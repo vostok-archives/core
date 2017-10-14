@@ -10,9 +10,10 @@ namespace Vostok.Clusterclient.Core.Misc
 {
     public class ClusterResultStatusSelector_Tests
     {
-        private readonly ClusterResultStatusSelector selector;
+        private ClusterResultStatusSelector selector;
 
-        public ClusterResultStatusSelector_Tests()
+        [SetUp]
+        public void SetUp()
         {
             selector = new ClusterResultStatusSelector();
         }

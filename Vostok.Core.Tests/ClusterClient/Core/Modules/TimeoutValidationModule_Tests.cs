@@ -12,11 +12,12 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class TimeoutValidationModule_Tests
     {
-        private readonly IRequestContext context;
-        private readonly ILog log;
-        private readonly TimeoutValidationModule module;
+        private IRequestContext context;
+        private ILog log;
+        private TimeoutValidationModule module;
 
-        public TimeoutValidationModule_Tests()
+        [SetUp]
+        public void SetUp()
         {
             log = Substitute.For<ILog>();
             log

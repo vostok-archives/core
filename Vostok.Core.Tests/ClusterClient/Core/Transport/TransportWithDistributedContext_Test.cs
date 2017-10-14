@@ -14,12 +14,14 @@ namespace Vostok.Clusterclient.Core.Transport
     public class TransportWithDistributedContext_Test
     {
         private const string XDistributedContextSeparator = "-";
-        private readonly ITransport transport;
-        private readonly TransportWithDistributedContext transportWithDistributedContext;
+        private ITransport transport;
+        private TransportWithDistributedContext transportWithDistributedContext;
         private string existedkey;
 
-        public TransportWithDistributedContext_Test()
+        [SetUp]
+        public void SetUp()
         {
+            Context.Configuration.DistributedProperties.Clear();
             transport = Substitute.For<ITransport>();
             transportWithDistributedContext = new TransportWithDistributedContext(transport);
         }

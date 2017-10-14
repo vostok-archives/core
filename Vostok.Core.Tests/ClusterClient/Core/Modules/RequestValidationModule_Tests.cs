@@ -12,12 +12,13 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class RequestValidationModule_Tests
     {
-        private readonly IRequestContext context;
-        private readonly ILog log;
+        private IRequestContext context;
+        private ILog log;
 
-        private readonly RequestValidationModule module;
+        private RequestValidationModule module;
 
-        public RequestValidationModule_Tests()
+        [SetUp]
+        public void SetUp()
         {
             log = Substitute.For<ILog>();
             log

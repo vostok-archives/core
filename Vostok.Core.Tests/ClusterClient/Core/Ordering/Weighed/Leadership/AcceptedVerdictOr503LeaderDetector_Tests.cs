@@ -8,10 +8,11 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Leadership
 {
     public class AcceptedVerdictOr503LeaderDetector_Tests
     {
-        private readonly Uri replica;
-        private readonly AcceptedVerdictOr503LeaderDetector detector;
+        private Uri replica;
+        private AcceptedVerdictOr503LeaderDetector detector;
 
-        public AcceptedVerdictOr503LeaderDetector_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica = new Uri("http://replica");
             detector = new AcceptedVerdictOr503LeaderDetector();

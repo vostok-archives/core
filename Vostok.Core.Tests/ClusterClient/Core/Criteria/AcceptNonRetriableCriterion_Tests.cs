@@ -7,9 +7,10 @@ namespace Vostok.Clusterclient.Core.Criteria
 {
     public class AcceptNonRetriableCriterion_Tests
     {
-        private readonly AcceptNonRetriableCriterion criterion;
+        private AcceptNonRetriableCriterion criterion;
 
-        public AcceptNonRetriableCriterion_Tests()
+        [SetUp]
+        public void SetUp()
         {
             criterion = new AcceptNonRetriableCriterion();
         }

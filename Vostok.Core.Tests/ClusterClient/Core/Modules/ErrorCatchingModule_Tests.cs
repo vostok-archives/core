@@ -12,11 +12,12 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class ErrorCatchingModule_Tests
     {
-        private readonly IRequestContext context;
-        private readonly ILog log;
-        private readonly ErrorCatchingModule module;
+        private IRequestContext context;
+        private ILog log;
+        private ErrorCatchingModule module;
 
-        public ErrorCatchingModule_Tests()
+        [SetUp]
+        public void SetUp()
         {
             log = Substitute.For<ILog>();
             log

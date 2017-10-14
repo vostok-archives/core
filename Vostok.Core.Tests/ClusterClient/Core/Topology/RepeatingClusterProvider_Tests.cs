@@ -9,13 +9,14 @@ namespace Vostok.Clusterclient.Core.Topology
 {
     public class RepeatingClusterProvider_Tests
     {
-        private readonly Uri replica1;
-        private readonly Uri replica2;
+        private Uri replica1;
+        private Uri replica2;
 
-        private readonly IClusterProvider baseProvider;
-        private readonly RepeatingClusterProvider provider;
+        private IClusterProvider baseProvider;
+        private RepeatingClusterProvider provider;
 
-        public RepeatingClusterProvider_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica1 = new Uri("http://replica1");
             replica2 = new Uri("http://replica2");

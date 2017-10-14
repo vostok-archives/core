@@ -9,9 +9,10 @@ namespace Vostok.Clusterclient.Core.Criteria
 {
     public class RejectThrottlingErrorsCriterion_Tests
     {
-        private readonly RejectThrottlingErrorsCriterion criterion;
+        private RejectThrottlingErrorsCriterion criterion;
 
-        public RejectThrottlingErrorsCriterion_Tests()
+        [SetUp]
+        public void SetUp()
         {
             criterion = new RejectThrottlingErrorsCriterion();
         }

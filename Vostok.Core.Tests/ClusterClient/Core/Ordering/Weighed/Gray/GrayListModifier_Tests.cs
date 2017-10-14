@@ -15,20 +15,21 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Gray
     public class GrayListModifier_Tests
     {
         private double weight;
-        private readonly Uri replica1;
-        private readonly Uri replica2;
-        private readonly IList<Uri> replicas;
-        private readonly Request request;
+        private Uri replica1;
+        private Uri replica2;
+        private IList<Uri> replicas;
+        private Request request;
         private DateTime currentTime;
-        private readonly ConcurrentDictionary<Uri, DateTime> storage;
+        private ConcurrentDictionary<Uri, DateTime> storage;
 
-        private readonly IReplicaStorageProvider storageProvider;
-        private readonly IGrayPeriodProvider periodProvider;
-        private readonly ITimeProvider timeProvider;
+        private IReplicaStorageProvider storageProvider;
+        private IGrayPeriodProvider periodProvider;
+        private ITimeProvider timeProvider;
 
-        private readonly GrayListModifier modifier;
+        private GrayListModifier modifier;
 
-        public GrayListModifier_Tests()
+        [SetUp]
+        public void SetUp()
         {
             weight = 1.0;
             request = Request.Get("foo/bar");

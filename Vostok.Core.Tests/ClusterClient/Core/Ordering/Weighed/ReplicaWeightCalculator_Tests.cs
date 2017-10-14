@@ -16,14 +16,15 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
         private const double MaxWeight = 10.0;
         private const double InitialWeight = 1.0;
 
-        private readonly Uri replica;
-        private readonly IList<Uri> replicas;
-        private readonly Request request;
-        private readonly IReplicaStorageProvider storageProvider;
-        private readonly List<IReplicaWeightModifier> modifiers;
-        private readonly ReplicaWeightCalculator calculator;
+        private Uri replica;
+        private IList<Uri> replicas;
+        private Request request;
+        private IReplicaStorageProvider storageProvider;
+        private List<IReplicaWeightModifier> modifiers;
+        private ReplicaWeightCalculator calculator;
 
-        public ReplicaWeightCalculator_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica = new Uri("http://replica");
             replicas = new List<Uri> {replica};

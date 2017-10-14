@@ -9,9 +9,10 @@ namespace Vostok.Clusterclient.Core.Sending
 {
     public class RequestConverter_Tests
     {
-        private readonly RequestConverter converter;
+        private RequestConverter converter;
 
-        public RequestConverter_Tests()
+        [SetUp]
+        public void SetUp()
         {
             converter = new RequestConverter(new ConsoleLog());
         }

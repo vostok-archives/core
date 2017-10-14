@@ -12,20 +12,21 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
 {
     public class WeighedReplicaOrdering_Tests
     {
-        private readonly Uri replica1;
-        private readonly Uri replica2;
-        private readonly Uri replica3;
-        private readonly Uri replica4;
-        private readonly Uri replica5;
+        private Uri replica1;
+        private Uri replica2;
+        private Uri replica3;
+        private Uri replica4;
+        private Uri replica5;
         private Uri[] replicas;
 
-        private readonly Request request;
-        private readonly List<IReplicaWeightModifier> modifiers;
-        private readonly IReplicaWeightCalculator weightCalculator;
-        private readonly IReplicaStorageProvider storageProvider;
-        private readonly WeighedReplicaOrdering ordering;
+        private Request request;
+        private List<IReplicaWeightModifier> modifiers;
+        private IReplicaWeightCalculator weightCalculator;
+        private IReplicaStorageProvider storageProvider;
+        private WeighedReplicaOrdering ordering;
 
-        public WeighedReplicaOrdering_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("foo/bar");
 

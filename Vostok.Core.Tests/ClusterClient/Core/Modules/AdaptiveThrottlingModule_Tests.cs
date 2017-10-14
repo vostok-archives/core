@@ -16,16 +16,17 @@ namespace Vostok.Clusterclient.Core.Modules
         private const double CriticalRatio = 2.0;
         private const double ProbabilityCap = 0.8;
 
-        private readonly Uri replica;
-        private readonly Request request;
-        private readonly ClusterResult acceptedResult;
-        private readonly ClusterResult rejectedResult;
-        private readonly IRequestContext context;
+        private Uri replica;
+        private Request request;
+        private ClusterResult acceptedResult;
+        private ClusterResult rejectedResult;
+        private IRequestContext context;
 
         private AdaptiveThrottlingOptions options;
         private AdaptiveThrottlingModule module;
 
-        public AdaptiveThrottlingModule_Tests()
+        [SetUp]
+        public void Setup()
         {
             replica = new Uri("http://replica");
             request = Request.Get("foo/bar");

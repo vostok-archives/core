@@ -16,18 +16,19 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class AbsoluteUrlSenderModule_Tests
     {
-        private readonly ITransport transport;
-        private readonly IResponseClassifier responseClassifier;
-        private readonly IList<IResponseCriterion> responseCriteria;
-        private readonly IClusterResultStatusSelector resultStatusSelector;
+        private ITransport transport;
+        private IResponseClassifier responseClassifier;
+        private IList<IResponseCriterion> responseCriteria;
+        private IClusterResultStatusSelector resultStatusSelector;
 
-        private readonly IRequestContext context;
+        private IRequestContext context;
 
-        private readonly AbsoluteUrlSenderModule module;
+        private AbsoluteUrlSenderModule module;
         private Request request;
         private Response response;
 
-        public AbsoluteUrlSenderModule_Tests()
+        [SetUp]
+        public void Setup()
         {
             request = Request.Get("http://foo/bar");
             response = new Response(ResponseCode.Ok);

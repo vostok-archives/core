@@ -10,9 +10,10 @@ namespace Vostok.Clusterclient.Core
 {
     public class ClusterClientConfigurationExtensions_Tests
     {
-        private readonly ClusterClientConfiguration configuration;
+        private ClusterClientConfiguration configuration;
 
-        public ClusterClientConfigurationExtensions_Tests()
+        [SetUp]
+        public void SetUp()
         {
             configuration = new ClusterClientConfiguration(new ConsoleLog());
         }

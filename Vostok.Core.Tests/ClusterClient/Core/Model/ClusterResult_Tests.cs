@@ -8,9 +8,10 @@ namespace Vostok.Clusterclient.Core.Model
 {
     public class ClusterResult_Tests
     {
-        private readonly Request request;
+        private Request request;
 
-        public ClusterResult_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("foo/bar");
         }

@@ -14,10 +14,11 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class TracingModule_Test
     {
-        private readonly TracingModule tracingModule;
-        private readonly IAirlockClient airlockClient;
+        private TracingModule tracingModule;
+        private IAirlockClient airlockClient;
 
-        public TracingModule_Test()
+        [SetUp]
+        public void SetUp()
         {
             airlockClient = Substitute.For<IAirlockClient>();
             Trace.Configuration.AirlockClient = airlockClient;

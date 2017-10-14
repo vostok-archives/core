@@ -12,14 +12,15 @@ namespace Vostok.Clusterclient.Core.Strategies
 {
     public class SingleReplicaRequestStrategy_Tests
     {
-        private readonly IRequestTimeBudget budget;
-        private readonly IRequestSender sender;
-        private readonly SingleReplicaRequestStrategy strategy;
-        private readonly Uri[] replicas;
-        private readonly Request request;
+        private IRequestTimeBudget budget;
+        private IRequestSender sender;
+        private SingleReplicaRequestStrategy strategy;
+        private Uri[] replicas;
+        private Request request;
         private ReplicaResult result;
 
-        public SingleReplicaRequestStrategy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replicas = new[]
             {

@@ -14,11 +14,12 @@ namespace Vostok.Clusterclient.Core.Transport
 {
     public class TransportWithTracing_Tests
     {
-        private readonly IAirlockClient airlockClient;
-        private readonly ITransport transport;
-        private readonly TransportWithTracing transportWithTracing;
+        private IAirlockClient airlockClient;
+        private ITransport transport;
+        private TransportWithTracing transportWithTracing;
 
-        public TransportWithTracing_Tests()
+        [SetUp]
+        public void SetUp()
         {
             airlockClient = Substitute.For<IAirlockClient>();
             transport = Substitute.For<ITransport>();

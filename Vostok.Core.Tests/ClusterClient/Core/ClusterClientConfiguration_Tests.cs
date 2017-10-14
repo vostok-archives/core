@@ -18,10 +18,11 @@ namespace Vostok.Clusterclient.Core
 {
     public class ClusterClientConfiguration_Tests
     {
-        private readonly ILog log;
+        private ILog log;
         private ClusterClientConfiguration configuration;
 
-        public ClusterClientConfiguration_Tests()
+        [SetUp]
+        public void SetUp()
         {
             log = new ConsoleLog();
 

@@ -12,9 +12,10 @@ namespace Vostok.Clusterclient.Core.Sending
 {
     public class RequestContext_Tests
     {
-        private readonly RequestContext context;
+        private RequestContext context;
 
-        public RequestContext_Tests()
+        [SetUp]
+        public void SetUp()
         {
             var log = new ConsoleLog();
 

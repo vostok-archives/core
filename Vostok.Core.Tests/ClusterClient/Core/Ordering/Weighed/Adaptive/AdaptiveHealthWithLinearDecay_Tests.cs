@@ -9,11 +9,12 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed.Adaptive
 {
     public class AdaptiveHealthWithLinearDecay_Tests
     {
-        private readonly DateTime currentTime;
-        private readonly ITimeProvider timeProvider;
+        private DateTime currentTime;
+        private ITimeProvider timeProvider;
         private AdaptiveHealthWithLinearDecay implementation;
 
-        public AdaptiveHealthWithLinearDecay_Tests()
+        [SetUp]
+        public void SetUp()
         {
             timeProvider = Substitute.For<ITimeProvider>();
             timeProvider.GetCurrentTime().Returns(currentTime = DateTime.UtcNow);

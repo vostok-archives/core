@@ -14,17 +14,18 @@ namespace Vostok.Clusterclient.Core.Modules
         private const int MinimumRequests = 50;
         private const double CriticalRatio = 1.2;
 
-        private readonly Uri replica1;
-        private readonly Uri replica2;
-        private readonly Request request;
-        private readonly ClusterResult oneReplicaResult;
-        private readonly ClusterResult twoReplicasResult;
-        private readonly IRequestContext context;
+        private Uri replica1;
+        private Uri replica2;
+        private Request request;
+        private ClusterResult oneReplicaResult;
+        private ClusterResult twoReplicasResult;
+        private IRequestContext context;
 
-        private readonly ReplicaBudgetingOptions options;
-        private readonly ReplicaBudgetingModule module;
+        private ReplicaBudgetingOptions options;
+        private ReplicaBudgetingModule module;
 
-        public ReplicaBudgetingModule_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica1 = new Uri("http://replica");
             replica2 = new Uri("http://replica");

@@ -20,24 +20,25 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class RequestExecutionModule_Tests
     {
-        private readonly Uri replica1;
-        private readonly Uri replica2;
-        private readonly Response response1;
-        private readonly Response response2;
-        private readonly Response selectedResponse;
-        private readonly ReplicaResult result1;
-        private readonly ReplicaResult result2;
+        private Uri replica1;
+        private Uri replica2;
+        private Response response1;
+        private Response response2;
+        private Response selectedResponse;
+        private ReplicaResult result1;
+        private ReplicaResult result2;
 
-        private readonly IClusterProvider clusterProvider;
-        private readonly IReplicaOrdering replicaOrdering;
-        private readonly IResponseSelector responseSelector;
-        private readonly IReplicaStorageProvider storageProvider;
-        private readonly IRequestSender requestSender;
-        private readonly IClusterResultStatusSelector resultStatusSelector;
+        private IClusterProvider clusterProvider;
+        private IReplicaOrdering replicaOrdering;
+        private IResponseSelector responseSelector;
+        private IReplicaStorageProvider storageProvider;
+        private IRequestSender requestSender;
+        private IClusterResultStatusSelector resultStatusSelector;
         private RequestContext context;
-        private readonly RequestExecutionModule module;
+        private RequestExecutionModule module;
 
-        public RequestExecutionModule_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica1 = new Uri("http://replica1");
             replica2 = new Uri("http://replica2");

@@ -9,9 +9,10 @@ namespace Vostok.Clusterclient.Core.Strategies.TimeoutProviders
 {
     public class EqualTimeoutsProvider_Tests
     {
-        private readonly Request request;
+        private Request request;
 
-        public EqualTimeoutsProvider_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("/foo");
         }

@@ -15,18 +15,19 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class RequestTransformationModule_Tests
     {
-        private readonly Request request1;
-        private readonly Request request2;
-        private readonly Request request3;
-        private readonly RequestContext context;
+        private Request request1;
+        private Request request2;
+        private Request request3;
+        private RequestContext context;
         private RequestTransformationModule module;
 
-        private readonly IRequestTransform transform1;
-        private readonly IRequestTransform transform2;
+        private IRequestTransform transform1;
+        private IRequestTransform transform2;
 
-        private readonly List<IRequestTransform> transforms;
+        private List<IRequestTransform> transforms;
 
-        public RequestTransformationModule_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request1 = Request.Get("/1");
             request2 = Request.Get("/2");

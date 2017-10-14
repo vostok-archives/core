@@ -9,9 +9,10 @@ namespace Vostok.Clusterclient.Core.Criteria
 {
     public class RejectRedirectionsCriterion_Tests
     {
-        private readonly RejectRedirectionsCriterion criterion;
+        private RejectRedirectionsCriterion criterion;
 
-        public RejectRedirectionsCriterion_Tests()
+        [SetUp]
+        public void SetUp()
         {
             criterion = new RejectRedirectionsCriterion();
         }

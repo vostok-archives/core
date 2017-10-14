@@ -12,19 +12,20 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class ResponseTransformationModule_Tests
     {
-        private readonly IRequestContext context;
-        private readonly Response response1;
-        private readonly Response response2;
-        private readonly Response response3;
-        private readonly ClusterResult initialResult;
-        private readonly Func<IRequestContext, Task<ClusterResult>> nextModule;
+        private IRequestContext context;
+        private Response response1;
+        private Response response2;
+        private Response response3;
+        private ClusterResult initialResult;
+        private Func<IRequestContext, Task<ClusterResult>> nextModule;
 
-        private readonly IResponseTransform transform1;
-        private readonly IResponseTransform transform2;
-        private readonly List<IResponseTransform> transforms;
+        private IResponseTransform transform1;
+        private IResponseTransform transform2;
+        private List<IResponseTransform> transforms;
         private ResponseTransformationModule module;
 
-        public ResponseTransformationModule_Tests()
+        [SetUp]
+        public void SetUp()
         {
             context = Substitute.For<IRequestContext>();
             context.Request.Returns(Request.Get("foo/bar"));

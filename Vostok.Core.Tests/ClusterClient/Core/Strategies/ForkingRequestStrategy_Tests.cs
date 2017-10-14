@@ -16,19 +16,20 @@ namespace Vostok.Clusterclient.Core.Strategies
 {
     public class ForkingRequestStrategy_Tests
     {
-        private readonly Uri[] replicas;
-        private readonly Request request;
-        private readonly IRequestSender sender;
-        private readonly IForkingDelaysProvider delaysProvider;
-        private readonly IForkingDelaysPlanner delaysPlanner;
-        private readonly Dictionary<Uri, TaskCompletionSource<ReplicaResult>> resultSources;
-        private readonly List<TaskCompletionSource<bool>> delaySources;
-        private readonly IEnumerator<TaskCompletionSource<bool>> delaySourcesEnumerator;
-        private readonly CancellationToken token;
+        private Uri[] replicas;
+        private Request request;
+        private IRequestSender sender;
+        private IForkingDelaysProvider delaysProvider;
+        private IForkingDelaysPlanner delaysPlanner;
+        private Dictionary<Uri, TaskCompletionSource<ReplicaResult>> resultSources;
+        private List<TaskCompletionSource<bool>> delaySources;
+        private IEnumerator<TaskCompletionSource<bool>> delaySourcesEnumerator;
+        private CancellationToken token;
 
         private ForkingRequestStrategy strategy;
 
-        public ForkingRequestStrategy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("foo/bar");
             replicas = Enumerable.Range(0, 10).Select(i => new Uri($"http://replica-{i}/")).ToArray();

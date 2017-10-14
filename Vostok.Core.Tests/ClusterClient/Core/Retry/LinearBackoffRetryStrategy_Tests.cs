@@ -6,9 +6,10 @@ namespace Vostok.Clusterclient.Core.Retry
 {
     public class LinearBackoffRetryStrategy_Tests
     {
-        private readonly LinearBackoffRetryStrategy strategy;
+        private LinearBackoffRetryStrategy strategy;
 
-        public LinearBackoffRetryStrategy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             strategy = new LinearBackoffRetryStrategy(5, 1.Seconds(), 4.Seconds(), 1.Seconds(), 0.0);
         }

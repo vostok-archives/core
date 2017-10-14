@@ -12,7 +12,8 @@ namespace Vostok.Clusterclient.Core.Model
     {
         private Request request;
 
-        public Request_Tests()
+        [SetUp]
+        public void Setup()
         {
             request = new Request(RequestMethods.Post, new Uri("http://foo/bar?a=b"), Content.Empty, Headers.Empty);
         }

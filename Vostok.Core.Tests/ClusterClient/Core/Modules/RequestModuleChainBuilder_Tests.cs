@@ -13,14 +13,15 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class RequestModuleChainBuilder_Tests
     {
-        private readonly IRequestModule module1;
-        private readonly IRequestModule module2;
-        private readonly IRequestModule module3;
-        private readonly IRequestModule module4;
-        private readonly IRequestContext context;
-        private readonly List<IRequestModule> calledModules;
+        private IRequestModule module1;
+        private IRequestModule module2;
+        private IRequestModule module3;
+        private IRequestModule module4;
+        private IRequestContext context;
+        private List<IRequestModule> calledModules;
 
-        public RequestModuleChainBuilder_Tests()
+        [SetUp]
+        public void SetUp()
         {
             module1 = Substitute.For<IRequestModule>();
             module2 = Substitute.For<IRequestModule>();

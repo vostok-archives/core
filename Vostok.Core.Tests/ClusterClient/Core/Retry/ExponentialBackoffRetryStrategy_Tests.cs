@@ -6,9 +6,10 @@ namespace Vostok.Clusterclient.Core.Retry
 {
     public class ExponentialBackoffRetryStrategy_Tests
     {
-        private readonly ExponentialBackoffRetryStrategy strategy;
+        private ExponentialBackoffRetryStrategy strategy;
 
-        public ExponentialBackoffRetryStrategy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             strategy = new ExponentialBackoffRetryStrategy(5, 1.Seconds(), 10.Seconds(), jitter: 0.0);
         }

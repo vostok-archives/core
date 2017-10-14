@@ -8,9 +8,10 @@ namespace Vostok.Clusterclient.Core.Retry
 {
     public class NeverRetryPolicy_Tests
     {
-        private readonly NeverRetryPolicy policy;
+        private NeverRetryPolicy policy;
 
-        public NeverRetryPolicy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             policy = new NeverRetryPolicy();
         }

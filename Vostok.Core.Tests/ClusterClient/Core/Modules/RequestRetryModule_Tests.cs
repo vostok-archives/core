@@ -20,12 +20,13 @@ namespace Vostok.Clusterclient.Core.Modules
         private int nextModuleCalls;
         private ClusterResult result;
         private IRequestContext context;
-        private readonly IRetryPolicy retryPolicy;
-        private readonly IRetryStrategy retryStrategy;
-        private readonly RequestRetryModule module;
-        private readonly Request request;
+        private IRetryPolicy retryPolicy;
+        private IRetryStrategy retryStrategy;
+        private RequestRetryModule module;
+        private Request request;
 
-        public RequestRetryModule_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("foo/bar");
             result = new ClusterResult(ClusterResultStatus.ReplicasExhausted, new List<ReplicaResult>(), null, request);

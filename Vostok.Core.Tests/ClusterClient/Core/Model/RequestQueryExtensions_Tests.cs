@@ -6,9 +6,10 @@ namespace Vostok.Clusterclient.Core.Model
 {
     public class RequestQueryExtensions_Tests
     {
-        private readonly Request request;
+        private Request request;
 
-        public RequestQueryExtensions_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("foo/bar?a=1");
         }

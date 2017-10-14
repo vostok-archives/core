@@ -9,9 +9,10 @@ namespace Vostok.Clusterclient.Core.Strategies.DelayProviders
 {
     public class EqualDelaysProvider_Tests
     {
-        private readonly Request request;
+        private Request request;
 
-        public EqualDelaysProvider_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("/foo");
         }

@@ -14,7 +14,8 @@ namespace Vostok.Clusterclient.Core.Model
     {
         private Request request;
 
-        public RequestHeadersExtensions_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("foo/bar");
         }

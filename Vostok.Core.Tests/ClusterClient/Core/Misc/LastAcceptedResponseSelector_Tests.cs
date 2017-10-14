@@ -10,10 +10,11 @@ namespace Vostok.Clusterclient.Core.Misc
 {
     public class LastAcceptedResponseSelector_Tests
     {
-        private readonly LastAcceptedResponseSelector selector;
-        private readonly List<ReplicaResult> results;
+        private LastAcceptedResponseSelector selector;
+        private List<ReplicaResult> results;
 
-        public LastAcceptedResponseSelector_Tests()
+        [SetUp]
+        public void Setup()
         {
             selector = new LastAcceptedResponseSelector();
             results = new List<ReplicaResult>();

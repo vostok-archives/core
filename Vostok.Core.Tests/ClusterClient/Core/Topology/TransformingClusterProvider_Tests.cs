@@ -10,18 +10,19 @@ namespace Vostok.Clusterclient.Core.Topology
 {
     public class TransformingClusterProvider_Tests
     {
-        private readonly Uri replica1;
-        private readonly Uri replica2;
-        private readonly Uri replica3;
-        private readonly Uri replica4;
-        private readonly Uri replica5;
-        private readonly Uri replica6;
+        private Uri replica1;
+        private Uri replica2;
+        private Uri replica3;
+        private Uri replica4;
+        private Uri replica5;
+        private Uri replica6;
 
-        private readonly IClusterProvider baseProvider;
-        private readonly IReplicaTransform transform;
-        private readonly TransformingClusterProvider provider;
+        private IClusterProvider baseProvider;
+        private IReplicaTransform transform;
+        private TransformingClusterProvider provider;
 
-        public TransformingClusterProvider_Tests()
+        [SetUp]
+        public void SetUp()
         {
             replica1 = new Uri("http://replica1");
             replica2 = new Uri("http://replica2");

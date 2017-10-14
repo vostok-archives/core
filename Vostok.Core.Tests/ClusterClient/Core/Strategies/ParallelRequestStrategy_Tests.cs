@@ -15,15 +15,16 @@ namespace Vostok.Clusterclient.Core.Strategies
 {
     public class ParallelRequestStrategy_Tests
     {
-        private readonly Uri[] replicas;
-        private readonly Request request;
-        private readonly IRequestSender sender;
-        private readonly Dictionary<Uri, TaskCompletionSource<ReplicaResult>> resultSources;
-        private readonly CancellationToken token;
+        private Uri[] replicas;
+        private Request request;
+        private IRequestSender sender;
+        private Dictionary<Uri, TaskCompletionSource<ReplicaResult>> resultSources;
+        private CancellationToken token;
 
         private ParallelRequestStrategy strategy;
 
-        public ParallelRequestStrategy_Tests()
+        [SetUp]
+        public void SetUp()
         {
             request = Request.Get("foo/bar");
             replicas = Enumerable.Range(0, 10).Select(i => new Uri($"http://replica-{i}/")).ToArray();

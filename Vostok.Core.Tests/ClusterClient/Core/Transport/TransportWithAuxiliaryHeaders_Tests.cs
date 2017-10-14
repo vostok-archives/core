@@ -10,12 +10,13 @@ namespace Vostok.Clusterclient.Core.Transport
 {
     public class TransportWithAuxiliaryHeaders_Tests
     {
-        private readonly IClusterClientConfiguration configuration;
-        private readonly ITransport underlyingTransport;
-        private readonly TransportWithAuxiliaryHeaders transport;
-        private readonly Request request;
+        private IClusterClientConfiguration configuration;
+        private ITransport underlyingTransport;
+        private TransportWithAuxiliaryHeaders transport;
+        private Request request;
 
-        public TransportWithAuxiliaryHeaders_Tests()
+        [SetUp]
+        public void SetUp()
         {
             configuration = Substitute.For<IClusterClientConfiguration>();
             underlyingTransport = Substitute.For<ITransport>();
