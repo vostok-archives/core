@@ -7,9 +7,9 @@ namespace Vostok.Airlock
 {
     public class AirlockConfig
     {
-        public IClusterProvider ClusterProvider { get; set; } = new FixedClusterProvider(new Uri("http://devops-bots1.dev.kontur.ru:6306/"));
+        public IClusterProvider ClusterProvider { get; set; }
 
-        public string ApiKey = "insert api key here";
+        public string ApiKey { get; set; }
 
         public DataSize MaximumRecordSize { get; set; } = 1.Megabytes();
 

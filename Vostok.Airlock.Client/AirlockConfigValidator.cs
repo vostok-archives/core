@@ -12,7 +12,7 @@ namespace Vostok.Airlock
             if (config.ClusterProvider == null)
                 throw new ArgumentNullException(nameof(config.ClusterProvider));
 
-            if (config.ApiKey == null)
+            if (string.IsNullOrEmpty(config.ApiKey))
                 throw new ArgumentNullException(nameof(config.ApiKey));
 
             if (config.MaximumRecordSize > config.MaximumBatchSizeToSend)
