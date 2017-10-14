@@ -11,7 +11,6 @@ namespace Vostok.Tracing
 
         Func<bool> IsEnabled { get; set; }
 
-        // TODO(iloktionov): Invent a way to automatically fill this with an out-of-the-box implementation in apps.
         ITraceReporter Reporter { get; set; }
     }
 }
