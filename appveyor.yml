@@ -42,9 +42,7 @@ after_build:
   - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient.Transport.Http\bin\Release\Vostok.ClusterClient.Transport.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
 test_script:
   - ps: dotnet test "$env:appveyor_build_folder\Vostok.Core.Tests\Vostok.Core.Tests.csproj" --logger "trx;LogFileName=core-tests.trx"
-  - ps: dotnet test "$env:appveyor_build_folder\Vostok.ClusterClient.Tests\Vostok.ClusterClient.Tests.csproj" --logger "trx;LogFileName=clusterclient-tests.trx"
 after_test:
   - ps: |
       $wc = New-Object 'System.Net.WebClient'
       $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.Core.Tests\TestResults\core-tests.trx")
-      $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.ClusterClient.Tests\TestResults\clusterclient-tests.trx")

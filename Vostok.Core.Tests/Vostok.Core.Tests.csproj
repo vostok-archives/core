@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp2.0;net462</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
     <RootNamespace>Vostok</RootNamespace>
@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vostok.ClusterClient.Transport.Http\Vostok.ClusterClient.Transport.Http.csproj" />
+    <ProjectReference Include="..\Vostok.ClusterClient\Vostok.ClusterClient.csproj" />
     <ProjectReference Include="..\Vostok.Core\Vostok.Core.csproj" />
   </ItemGroup>
 
