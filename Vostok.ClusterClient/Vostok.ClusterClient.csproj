@@ -14,7 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000179" />
+    <ProjectReference Include="..\Vostok.Core\Vostok.Core.csproj" />
   </ItemGroup>
-
 </Project>

@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000179" />
     <PackageReference Include="FluentAssertions" Version="4.19.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0-preview-20170810-02" />
     <PackageReference Include="NSubstitute" Version="2.0.3" />
@@ -21,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Vostok.ClusterClient.Transport.Http\Vostok.ClusterClient.Transport.Http.csproj" />
     <ProjectReference Include="..\Vostok.ClusterClient\Vostok.ClusterClient.csproj" />
+    <ProjectReference Include="..\Vostok.Core\Vostok.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,10 +5,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Vostok.Core" Version="1.0.0-pre000179" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Vostok.ClusterClient\Vostok.ClusterClient.csproj" />
+    <ProjectReference Include="..\Vostok.Core\Vostok.Core.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
      <Compile Remove="net46\**" />
