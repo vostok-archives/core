@@ -25,7 +25,15 @@ namespace Vostok.Hosting
             VostokConfiguration.Tracing.InheritedFieldsWhitelist.Add("myInheritedField"); // stale
             VostokConfiguration.Tracing.IsEnabled = () => GetSetting<bool>("enableTracing"); // live
 
-            VostokConfiguration.Logging.GetLog = loggerName => CreateLogFor(loggerName); // live
+            VostokConfiguration.Logging.LogManager = new SerilogLogManager();
+        }
+
+        public class SerilogLogManager : ILogManager
+        {
+            public ILog GetLog(string loggerName)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private IList<Uri> GetTopology(string airlock)

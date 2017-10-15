@@ -20,7 +20,7 @@ namespace Vostok.Hosting
 
         private IAirlockClient CreateAirlockClient()
         {
-            var log = VostokConfiguration.Logging.GetLog("airlock");
+            var log = VostokConfiguration.Logging.LogManager.GetLog("airlock");
             if (Parallelism <= 1)
                 return new AirlockClient(this, log);
             return new ParallelAirlockClient(this, Parallelism, log);
