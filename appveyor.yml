@@ -5,52 +5,58 @@ nuget:
   disable_publish_on_pr: true
 install:
   - ps: |
+      $branch = "$env:appveyor_repo_branch"
+      $prbranch = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"
+      echo "Branch: $branch; Pull request branch: $prbranch"
+      $branchstr = ""
+      if ($prbranch -ne "")
+      {
+        $branchstr = "-pr-$prbranch"
+      }
+      else
+      {
+        if ($branch -ne "master")
+        {
+          $branchstr = "-$branch"
+        }
+      }
       $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
-      Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber"
-      $xmlPath = "$env:appveyor_build_folder\Vostok.Core\Vostok.Core.csproj"
-      $xml = [xml](get-content $xmlPath)
-      $version = $xml.CreateElement("Version")
-      $versionText = $xml.CreateTextNode($env:appveyor_build_version)
-      $version.AppendChild($versionText)
-      $xml.Project.PropertyGroup.AppendChild($version)
-      $xml.Save($xmlPath)
-  - ps: |
-      $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
-      Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber"
-      $xmlPath = "$env:appveyor_build_folder\Vostok.ClusterClient\Vostok.ClusterClient.csproj"
-      $xml = [xml](get-content $xmlPath)
-      $version = $xml.CreateElement("Version")
-      $versionText = $xml.CreateTextNode($env:appveyor_build_version)
-      $version.AppendChild($versionText)
-      $xml.Project.PropertyGroup.AppendChild($version)
-      $xml.Save($xmlPath)
-  - ps: |
-      $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
-      Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber"
-      $xmlPath = "$env:appveyor_build_folder\Vostok.ClusterClient.Transport.Http\Vostok.ClusterClient.Transport.Http.csproj"
-      $xml = [xml](get-content $xmlPath)
-      $version = $xml.CreateElement("Version")
-      $versionText = $xml.CreateTextNode($env:appveyor_build_version)
-      $version.AppendChild($versionText)
-      $xml.Project.PropertyGroup.AppendChild($version)
-      $xml.Save($xmlPath)
-  - ps: |
-      $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
-      Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber"
-      $xmlPath = "$env:appveyor_build_folder\Vostok.Airlock.Client\Vostok.Airlock.Client.csproj"
-      $xml = [xml](get-content $xmlPath)
-      $version = $xml.CreateElement("Version")
-      $versionText = $xml.CreateTextNode($env:appveyor_build_version)
-      $version.AppendChild($versionText)
-      $xml.Project.PropertyGroup.AppendChild($version)
-      $xml.Save($xmlPath)
+      Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber$branchstr"
+      $csprojs = $env:appveyor_build_folder | Get-ChildItem -Recurse -Filter "*.csproj"
+      foreach($csproj in $csprojs)
+      {
+        $name = $csproj.BaseName
+        $xmlPath = "$env:appveyor_build_folder\$name\$name.csproj"
+        $xml = [xml](Get-Content $xmlPath)
+        $gen = $xml.SelectSingleNode("//GeneratePackageOnBuild")
+        if ($gen -and $gen.InnerText -eq "True")
+        {
+          echo "Generating version $env:appveyor_build_version for $name"
+          $version = $xml.CreateElement("Version")
+          $versionText = $xml.CreateTextNode($env:appveyor_build_version)
+          $version.AppendChild($versionText)
+          $xml.Project.PropertyGroup.AppendChild($version)
+          $xml.Save($xmlPath)
+        }
+      }
   - dotnet restore
 configuration: Release
 after_build:
-  - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.Core\bin\Release\Vostok.Core.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
-  - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient\bin\Release\Vostok.ClusterClient.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
-  - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.ClusterClient.Transport.Http\bin\Release\Vostok.ClusterClient.Transport.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
-  - ps: if ($env:appveyor_repo_branch -eq "master") { Get-ChildItem $env:appveyor_build_folder\Vostok.Airlock.Client\bin\Release\Vostok.Airlock.*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name } }
+  - ps: |
+      $prbranch = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"
+      if ($prbranch -eq "")
+      {
+        $csprojs = $env:appveyor_build_folder | Get-ChildItem -Recurse -Filter "*.csproj"
+        foreach($csproj in $csprojs)
+        {
+          $name = $csproj.BaseName
+          $nupkgs = Get-ChildItem $env:appveyor_build_folder\$name\bin\Release\$name.*.nupkg
+          if ($nupkgs)
+          {
+            $nupkgs | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+          }          
+        }
+      }
 test_script:
   - ps: dotnet test "$env:appveyor_build_folder\Vostok.Core.Tests\Vostok.Core.Tests.csproj" --logger "trx;LogFileName=core-tests.trx"
 after_test:
