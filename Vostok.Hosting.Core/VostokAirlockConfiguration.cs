@@ -1,6 +1,7 @@
 ﻿using System;
 using Vostok.Airlock;
 using Vostok.Clusterclient.Topology;
+using Vostok.Logging;
 
 namespace Vostok.Hosting
 {
@@ -16,14 +17,15 @@ namespace Vostok.Hosting
 
         public int Parallelism { get; set; }
 
+        public ILog Log { get; set; }
+
         public IAirlockClient Client => lazyClient.Value;
 
         private IAirlockClient CreateAirlockClient()
         {
-            var log = VostokConfiguration.Logging.LogManager.GetLog("airlock");
             if (Parallelism <= 1)
-                return new AirlockClient(this, log);
-            return new ParallelAirlockClient(this, Parallelism, log);
+                return new AirlockClient(this, Log);
+            return new ParallelAirlockClient(this, Parallelism, Log);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Vostok.Clusterclient.Topology;
 using Vostok.Logging;
+using Vostok.Logging.Logs;
 
 namespace Vostok.Hosting
 {
@@ -13,6 +14,7 @@ namespace Vostok.Hosting
             VostokConfiguration.Environment = () => GetSetting<string>("env"); // live
             VostokConfiguration.Service = () => GetSetting<string>("serv"); // live
 
+            VostokConfiguration.Airlock.Log = new SilentLog(); // stale
             VostokConfiguration.Airlock.Parallelism = GetSetting<int>("airlockParalellizm"); // stale
             VostokConfiguration.Airlock.ApiKey = GetSetting<string>("airlockApiKey"); // stale
             VostokConfiguration.Airlock.ClusterProvider = new AdHocClusterProvider(() => GetTopology("airlock")); // live
@@ -25,15 +27,7 @@ namespace Vostok.Hosting
             VostokConfiguration.Tracing.InheritedFieldsWhitelist.Add("myInheritedField"); // stale
             VostokConfiguration.Tracing.IsEnabled = () => GetSetting<bool>("enableTracing"); // live
 
-            VostokConfiguration.Logging.LogManager = new SerilogLogManager();
-        }
-
-        public class SerilogLogManager : ILogManager
-        {
-            public ILog GetLog(string loggerName)
-            {
-                throw new NotImplementedException();
-            }
+            var x = VostokConfiguration.Logging.RoutingKey; // it's not a configuration - use it just to obtain a routingKey valid for logging
         }
 
         private IList<Uri> GetTopology(string airlock)
