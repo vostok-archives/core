@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
-using Vostok.Logging.Airlock;
+using Vostok.Airlock.Logging;
+using Vostok.Airlock.Metrics;
+using Vostok.Airlock.Tracing;
 using Vostok.Metrics;
 using Vostok.Tracing;
 

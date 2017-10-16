@@ -4,7 +4,11 @@ namespace Vostok.Metrics
 {
     public interface IMetricConfiguration
     {
-        IMetricEventReporter Reporter { get; set; }
+        /// <summary>
+        /// TODO create xmldoc for this
+        /// </summary>
         ISet<string> ContextFieldsWhitelist { get; }
+
+        IMetricEventReporter Reporter { get; set; }
     }
 }
