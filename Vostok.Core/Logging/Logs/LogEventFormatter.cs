@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Vostok.Logging.Logs
 {
-    internal static class LogEventFormatter
+    public static class LogEventFormatter
     {
         private static readonly Regex Pattern = new Regex(@"(?<!{){@?(?<arg>[^ :{}]+)(?<format>:[^}]+)?}", RegexOptions.Compiled);
 
@@ -17,7 +17,7 @@ namespace Vostok.Logging.Logs
             return $"{DateTime.Now:HH:mm:ss.fff} {logEvent.Level} {message} {logEvent.Exception}{Environment.NewLine}{parameters}{Environment.NewLine}";
         }
 
-        internal static string FormatMessage(string template, object[] parameters)
+        public static string FormatMessage(string template, object[] parameters)
         {
             if (parameters.Length == 0)
                 return template;
@@ -44,7 +44,7 @@ namespace Vostok.Logging.Logs
             return string.Format(CultureInfo.InvariantCulture, template, parameters);
         }
 
-        internal static string FormatProperties(IReadOnlyDictionary<string, object> properties)
+        public static string FormatProperties(IReadOnlyDictionary<string, object> properties)
         {
             return "{" + string.Join(", ", properties.Select(x => $"{x.Key}: {x.Value}")) + "}";
         }
