@@ -7,7 +7,7 @@ namespace Vostok.Airlock
 {
     public class AirlockConfig
     {
-        public IClusterProvider ClusterProvider { get; set; } = new FixedClusterProvider(new Uri("http://devops-bots1.dev.kontur.ru:8888/"));
+        public IClusterProvider ClusterProvider { get; set; } = new FixedClusterProvider(new Uri("http://devops-bots1.dev.kontur.ru:6306/"));
 
         public string ApiKey = "insert api key here";
 

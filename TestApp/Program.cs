@@ -19,8 +19,8 @@ namespace TestApp
             var config = new AirlockConfig
             {
                 ClusterProvider = new FixedClusterProvider(
-                    new Uri("http://vostok04:8888/"), 
-                    new Uri("http://vostok06:8888/")),
+                    new Uri("http://vostok04:6306/"), 
+                    new Uri("http://vostok06:6306/")),
                 ApiKey = "UniversalApiKey",
                 SendPeriod = 1.Seconds(),
                 SendPeriodCap = 30.Seconds(),
