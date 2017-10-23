@@ -1,20 +1,18 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-using Vostok.Airlock;
 
 namespace Vostok.Tracing
 {
     public class Trace_Tests
     {
-        private IAirlockClient airlockClient;
+        private ITraceReporter traceReporter;
 
         [SetUp]
         public void SetUp()
         {
-            airlockClient = Substitute.For<IAirlockClient>();
-            Trace.Configuration.AirlockRoutingKey = () => RoutingKey.Create("proj", "env", "serv", RoutingKey.TracesSuffix);
-            Trace.Configuration.AirlockClient = airlockClient;
+            traceReporter = Substitute.For<ITraceReporter>();
+            Trace.Configuration.Reporter = traceReporter;
             Trace.Configuration.InheritedFieldsWhitelist.Clear();
         }
 
@@ -26,8 +24,7 @@ namespace Vostok.Tracing
 
             Trace.Configuration.InheritedFieldsWhitelist.Add(customKey);
 
-            airlockClient.Push(
-                Arg.Any<string>(),
+            traceReporter.SendSpan(
                 Arg.Do<Span>(
                     x =>
                     {
@@ -43,7 +40,7 @@ namespace Vostok.Tracing
                 }
             }
 
-            airlockClient.Received(2).Push(Arg.Any<string>(), Arg.Any<Span>());
+            traceReporter.Received(2).SendSpan(Arg.Any<Span>());
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Vostok.Airlock;
 using Vostok.Commons.Collections;
 using Vostok.Flow;
 
@@ -10,8 +9,7 @@ namespace Vostok.Tracing
     {
         private const string spanContextKey = "Vostok.Tracing.CurrentSpan";
 
-        private readonly string airlockRoutingKey;
-        private readonly IAirlockClient airlockClient;
+        private readonly ITraceReporter traceReporter;
         private readonly PoolHandle<Span> spanHandle;
         private readonly TraceContextScope contextScope;
         private readonly ITraceConfiguration configuration;
@@ -20,14 +18,12 @@ namespace Vostok.Tracing
         private readonly IDisposable spanContextScope;
 
         public SpanBuilder(
-            string airlockRoutingKey,
-            IAirlockClient airlockClient,
+            ITraceReporter traceReporter,
             PoolHandle<Span> spanHandle,
             TraceContextScope contextScope,
             ITraceConfiguration configuration)
         {
-            this.airlockRoutingKey = airlockRoutingKey;
-            this.airlockClient = airlockClient;
+            this.traceReporter = traceReporter;
             this.spanHandle = spanHandle;
             this.contextScope = contextScope;
             this.configuration = configuration;
@@ -71,7 +67,7 @@ namespace Vostok.Tracing
                 if (!IsCanceled)
                 {
                     FinalizeSpan();
-                    airlockClient.Push(airlockRoutingKey, Span);
+                    traceReporter.SendSpan(Span);
                 }
             }
             finally
