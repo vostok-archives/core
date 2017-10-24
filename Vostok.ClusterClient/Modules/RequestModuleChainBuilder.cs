@@ -18,10 +18,11 @@ namespace Vostok.Clusterclient.Modules
             var requestSender = new RequestSender(config, storageProvider, responseClassifier, requestConverter, config.Transport);
             var resultStatusSelector = new ClusterResultStatusSelector();
 
-            var modules = new List<IRequestModule>(14 + config.Modules?.Count ?? 0)
+            var modules = new List<IRequestModule>(15 + config.Modules?.Count ?? 0)
             {
                 new ErrorCatchingModule(),
                 new RequestTransformationModule(config.RequestTransforms),
+                new OperationNameFallbackModule(),
                 new RequestPriorityApplicationModule()
             };
 
@@ -53,7 +54,7 @@ namespace Vostok.Clusterclient.Modules
 
         public static Func<IRequestContext, Task<ClusterResult>> BuildChainDelegate(IList<IRequestModule> modules)
         {
-            Func<IRequestContext, Task<ClusterResult>> result = ctx => { throw new NotSupportedException(); };
+            Func<IRequestContext, Task<ClusterResult>> result = ctx => throw new NotSupportedException();
 
             for (var i = modules.Count - 1; i >= 0; i--)
             {
