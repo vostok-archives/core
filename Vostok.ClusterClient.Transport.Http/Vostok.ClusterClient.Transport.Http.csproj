@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;netstandard2.0;net462</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;netstandard2.0;net461</TargetFrameworks>
     <RootNamespace>Vostok.Clusterclient.Transport.Http</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
@@ -16,7 +16,7 @@
      <Compile Remove="net46\**" />
      <None Include="net46\**" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <Compile Remove="netstandard\**" />
   </ItemGroup>
 </Project>
