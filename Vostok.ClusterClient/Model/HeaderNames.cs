@@ -62,6 +62,7 @@
         public const string WWWAuthenticate = "WWW-Authenticate";
         public const string Via = "Via";
 
+        // todo (spaceorc, 21.10.2017) what to do with this kontur-specific headers
         public const string XKonturRequestTimeout = "X-Kontur-Request-Timeout";
         public const string XKonturRequestPriority = "X-Kontur-Request-Priority";
         public const string XKonturClientIdentity = "X-Kontur-Client-Identity";
