@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Threading;
 
 namespace Vostok.Metrics
 {
     public class MetricClock
     {
-        private readonly ConcurrentBag<Action<DateTimeOffset>> actions;
+        private event Action<DateTimeOffset> actions;
         private int isRunning;
         private DateTimeOffset aggregationTimestamp;
         private Thread aggregationThread;
@@ -16,14 +15,18 @@ namespace Vostok.Metrics
         {
             Period = period;
             isRunning = 0;
-            actions = new ConcurrentBag<Action<DateTimeOffset>>();
         }
 
         public TimeSpan Period { get; }
 
         public void Register(Action<DateTimeOffset> action)
         {
-            actions.Add(action);
+            actions += action;
+        }
+
+        public void Unregister(Action<DateTimeOffset> action)
+        {
+            actions -= action;
         }
 
         public void Start()
@@ -57,17 +60,18 @@ namespace Vostok.Metrics
             {
                 WaitForNextAggregation();
 
-                foreach (var action in actions)
-                {
-                    try
+                if (actions != null)
+                    foreach (var action in actions.GetInvocationList())
                     {
-                        action(aggregationTimestamp);
+                        try
+                        {
+                            ((Action<DateTimeOffset>)action).Invoke(aggregationTimestamp);
+                        }
+                        catch (Exception)
+                        {
+                            //TODO (@ezsilmar) Log here
+                        }
                     }
-                    catch (Exception)
-                    {
-                        //TODO (@ezsilmar) Log here
-                    }
-                }
 
                 aggregationTimestamp += Period;
             }
