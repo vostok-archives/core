@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Vostok.Logging
 {
-    public static class ILogExtensions
+    public static class ILogExtensions_Context
     {
         public static ILog ForContext<T>(this ILog log)
         {
@@ -17,7 +17,12 @@ namespace Vostok.Logging
 
         public static ILog ForContext(this ILog log, Type source)
         {
-            return log.ForContext("SourceContext", source.FullName);
+            return log.ForContext(source.FullName);
+        }
+
+        public static ILog ForContext(this ILog log, string source)
+        {
+            return log.ForContext("SourceContext", source);
         }
 
         public static ILog ForContext(this ILog log, string name, object value)
