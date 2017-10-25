@@ -18,13 +18,43 @@ namespace Vostok.Metrics
             Func<double> getValue)
         {
             var clock = MetricClocks.Get(period);
-            Action<DateTimeOffset> action = timestamp =>
-            {
-                var value = getValue();
-                SendMetricToScope(scope, name, timestamp, value);
-            };
-            clock.Register(action);
-            return new DisposableMetric(clock, action);
+            return new DisposableMetric(
+                clock,
+                timestamp =>
+                {
+                    var value = getValue();
+                    SendMetricToScope(scope, name, timestamp, value);
+                });
+        }
+
+        public static ICounter Counter(
+            this IMetricScope scope,
+            TimeSpan period,
+            string name)
+        {
+            var counter = new Counter();
+            var clock = MetricClocks.Get(period);
+            return new DisposableCounter(
+                counter,
+                clock,
+                timestamp =>
+                {
+                    var value = counter.Reset();
+                    SendMetricToScope(scope, name, timestamp, value);
+                });
+        }
+
+        private static void SendMetricToScope(
+            IMetricScope scope,
+            string name,
+            DateTimeOffset timestamp,
+            double value)
+        {
+            scope
+                .WriteMetric()
+                .SetTimestamp(timestamp)
+                .SetValue(name, value)
+                .Commit();
         }
 
         private class DisposableMetric : IDisposable
@@ -34,6 +64,7 @@ namespace Vostok.Metrics
 
             public DisposableMetric(MetricClock clock, Action<DateTimeOffset> action)
             {
+                clock.Register(action);
                 this.clock = clock;
                 this.action = action;
             }
@@ -48,7 +79,7 @@ namespace Vostok.Metrics
         {
             private readonly ICounter counter;
 
-            public DisposableCounter(MetricClock clock, Action<DateTimeOffset> action, ICounter counter)
+            public DisposableCounter(ICounter counter, MetricClock clock, Action<DateTimeOffset> action)
                 : base(clock, action)
             {
                 this.counter = counter;
@@ -58,36 +89,6 @@ namespace Vostok.Metrics
             {
                 counter.Add(value);
             }
-        }
-
-        public static ICounter Counter(
-            this IMetricScope scope,
-            TimeSpan period,
-            string name)
-        {
-            var counter = new Counter();
-            var clock = MetricClocks.Get(period);
-            Action<DateTimeOffset> action = timestamp =>
-            {
-                var value = counter.Reset();
-                SendMetricToScope(scope, name, timestamp, value);
-            };
-            clock.Register(
-                action);
-            return new DisposableCounter(clock, action, counter);
-        }
-
-        private static void SendMetricToScope(
-            IMetricScope scope,
-            string name,
-            DateTimeOffset timestamp,
-            double value)
-        {
-            scope
-                .WriteMetric()
-                .SetTimestamp(timestamp)
-                .SetValue(name, value)
-                .Commit();
         }
     }
 }
