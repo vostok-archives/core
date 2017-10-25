@@ -103,21 +103,22 @@ namespace Vostok.Clusterclient.Core.Modules
 
             var modules = RequestModuleChainBuilder.BuildChain(configuration, storageProvider);
 
-            modules.Should().HaveCount(13);
+            modules.Should().HaveCount(14);
 
             modules[0].Should().BeOfType<ErrorCatchingModule>();
             modules[1].Should().BeOfType<RequestTransformationModule>();
-            modules[2].Should().BeOfType<RequestPriorityApplicationModule>();
-            modules[3].Should().BeSameAs(module1);
-            modules[4].Should().BeSameAs(module2);
-            modules[5].Should().BeOfType<LoggingModule>();
-            modules[6].Should().BeOfType<ResponseTransformationModule>();
-            modules[7].Should().BeOfType<ErrorCatchingModule>();
-            modules[8].Should().BeOfType<RequestValidationModule>();
-            modules[9].Should().BeOfType<TimeoutValidationModule>();
-            modules[10].Should().BeOfType<RequestRetryModule>();
-            modules[11].Should().BeOfType<AbsoluteUrlSenderModule>();
-            modules[12].Should().BeOfType<RequestExecutionModule>();
+            modules[2].Should().BeOfType<OperationNameFallbackModule>();
+            modules[3].Should().BeOfType<RequestPriorityApplicationModule>();
+            modules[4].Should().BeSameAs(module1);
+            modules[5].Should().BeSameAs(module2);
+            modules[6].Should().BeOfType<LoggingModule>();
+            modules[7].Should().BeOfType<ResponseTransformationModule>();
+            modules[8].Should().BeOfType<ErrorCatchingModule>();
+            modules[9].Should().BeOfType<RequestValidationModule>();
+            modules[10].Should().BeOfType<TimeoutValidationModule>();
+            modules[11].Should().BeOfType<RequestRetryModule>();
+            modules[12].Should().BeOfType<AbsoluteUrlSenderModule>();
+            modules[13].Should().BeOfType<RequestExecutionModule>();
         }
 
         [Test]
@@ -133,21 +134,22 @@ namespace Vostok.Clusterclient.Core.Modules
 
             var modules = RequestModuleChainBuilder.BuildChain(configuration, storageProvider);
 
-            modules.Should().HaveCount(13);
+            modules.Should().HaveCount(14);
 
             modules[0].Should().BeOfType<ErrorCatchingModule>();
             modules[1].Should().BeOfType<RequestTransformationModule>();
-            modules[2].Should().BeOfType<RequestPriorityApplicationModule>();
-            modules[3].Should().BeOfType<LoggingModule>();
-            modules[4].Should().BeOfType<ResponseTransformationModule>();
-            modules[5].Should().BeOfType<ErrorCatchingModule>();
-            modules[6].Should().BeOfType<RequestValidationModule>();
-            modules[7].Should().BeOfType<TimeoutValidationModule>();
-            modules[8].Should().BeOfType<RequestRetryModule>();
-            modules[9].Should().BeOfType<AdaptiveThrottlingModule>();
-            modules[10].Should().BeOfType<ReplicaBudgetingModule>();
-            modules[11].Should().BeOfType<AbsoluteUrlSenderModule>();
-            modules[12].Should().BeOfType<RequestExecutionModule>();
+            modules[2].Should().BeOfType<OperationNameFallbackModule>();
+            modules[3].Should().BeOfType<RequestPriorityApplicationModule>();
+            modules[4].Should().BeOfType<LoggingModule>();
+            modules[5].Should().BeOfType<ResponseTransformationModule>();
+            modules[6].Should().BeOfType<ErrorCatchingModule>();
+            modules[7].Should().BeOfType<RequestValidationModule>();
+            modules[8].Should().BeOfType<TimeoutValidationModule>();
+            modules[9].Should().BeOfType<RequestRetryModule>();
+            modules[10].Should().BeOfType<AdaptiveThrottlingModule>();
+            modules[11].Should().BeOfType<ReplicaBudgetingModule>();
+            modules[12].Should().BeOfType<AbsoluteUrlSenderModule>();
+            modules[13].Should().BeOfType<RequestExecutionModule>();
         }
     }
 }
