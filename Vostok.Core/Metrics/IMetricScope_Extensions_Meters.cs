@@ -11,14 +11,15 @@ namespace Vostok.Metrics
             return new EventStopwatch(scope);
         }
 
-        public static void Gauge(
+        public static IDisposable Gauge(
             this IMetricScope scope,
             TimeSpan period,
             string name,
             Func<double> getValue)
         {
             var clock = MetricClocks.Get(period);
-            clock.Register(
+            return new DisposableMetric(
+                clock,
                 timestamp =>
                 {
                     var value = getValue();
@@ -33,13 +34,14 @@ namespace Vostok.Metrics
         {
             var counter = new Counter();
             var clock = MetricClocks.Get(period);
-            clock.Register(
+            return new DisposableCounter(
+                counter,
+                clock,
                 timestamp =>
                 {
                     var value = counter.Reset();
                     SendMetricToScope(scope, name, timestamp, value);
                 });
-            return counter;
         }
 
         private static void SendMetricToScope(
@@ -53,6 +55,40 @@ namespace Vostok.Metrics
                 .SetTimestamp(timestamp)
                 .SetValue(name, value)
                 .Commit();
+        }
+
+        private class DisposableMetric : IDisposable
+        {
+            private readonly MetricClock clock;
+            private readonly Action<DateTimeOffset> action;
+
+            public DisposableMetric(MetricClock clock, Action<DateTimeOffset> action)
+            {
+                clock.Register(action);
+                this.clock = clock;
+                this.action = action;
+            }
+
+            public void Dispose()
+            {
+                clock.Unregister(action);
+            }
+        }
+
+        private class DisposableCounter : DisposableMetric, ICounter
+        {
+            private readonly ICounter counter;
+
+            public DisposableCounter(ICounter counter, MetricClock clock, Action<DateTimeOffset> action)
+                : base(clock, action)
+            {
+                this.counter = counter;
+            }
+
+            public void Add(long value = 1)
+            {
+                counter.Add(value);
+            }
         }
     }
 }
