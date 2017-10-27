@@ -7,7 +7,6 @@ namespace Vostok.Metrics
     public class MetricConfiguration : IMetricConfiguration
     {
         public IMetricEventReporter Reporter { get; set; }
-        public string Environment { get; set; }
         public ISet<string> ContextFieldsWhitelist { get; } = new ConcurrentSet<string>(StringComparer.Ordinal);
     }
 }
