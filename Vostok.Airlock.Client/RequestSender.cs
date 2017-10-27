@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
 using Vostok.Clusterclient;
 using Vostok.Clusterclient.Model;
@@ -28,6 +27,7 @@ namespace Vostok.Airlock
                 configuration.ClusterProvider = config.ClusterProvider;
                 configuration.DefaultTimeout = config.RequestTimeout;
                 configuration.DefaultRequestStrategy = Strategy.Forking2;
+                configuration.EnableTracing = config.EnableTracing;
 
                 configuration.SetupVostokHttpTransport();
                 configuration.SetupWeighedReplicaOrdering(builder => builder.AddAdaptiveHealthModifierWithLinearDecay(10.Minutes()));
