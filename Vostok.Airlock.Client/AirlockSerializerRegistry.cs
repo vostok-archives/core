@@ -3,8 +3,6 @@ using System.Threading;
 using Vostok.Airlock.Logging;
 using Vostok.Airlock.Metrics;
 using Vostok.Airlock.Tracing;
-using Vostok.Metrics;
-using Vostok.Tracing;
 
 namespace Vostok.Airlock
 {
