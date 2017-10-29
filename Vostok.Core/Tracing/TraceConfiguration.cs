@@ -10,8 +10,6 @@ namespace Vostok.Tracing
 
         public ISet<string> InheritedFieldsWhitelist { get; } = new ConcurrentSet<string>(StringComparer.Ordinal);
 
-        public Func<bool> IsEnabled { get; set; } = () => true;
-
         public ITraceReporter Reporter { get; set; }
     }
 }

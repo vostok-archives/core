@@ -21,10 +21,9 @@ namespace Vostok.Tracing
 
         public static ISpanBuilder BeginSpan()
         {
-            var isEnabled = Configuration.IsEnabled();
             var traceReporter = Configuration.Reporter;
             
-            if (!isEnabled || traceReporter == null)
+            if (traceReporter == null)
                 return new FakeSpanBuilder();
 
             var pooledSpan = spanPool.AcquireHandle();
