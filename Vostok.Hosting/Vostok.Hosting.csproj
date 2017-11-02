@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Vostok.Airlock.Client\Vostok.Airlock.Client.csproj" />
     <ProjectReference Include="..\Vostok.Core\Vostok.Core.csproj" />
+    <ProjectReference Include="..\Vostok.Hosting.Core\Vostok.Hosting.Core.csproj" />
   </ItemGroup>
 
 </Project>
