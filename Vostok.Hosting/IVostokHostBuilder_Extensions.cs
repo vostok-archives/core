@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Vostok.Hosting.Configuration;
 
@@ -34,6 +36,20 @@ namespace Vostok.Hosting
         public static IVostokHostBuilder ConfigureApplication(this IVostokHostBuilder hostBuilder, Action<IApplicationConfigurator> configureDelegate)
         {
             return hostBuilder.ConfigureApplication((_, applicationConfigurator) => configureDelegate(applicationConfigurator));
+        }
+
+        public static IVostokHostBuilder OnStart(this IVostokHostBuilder hostBuilder, StartServiceDelegate onStartAsync)
+        {
+            return hostBuilder.ConfigureApplication(app => app.OnStart(onStartAsync));
+        }
+
+        public static IVostokHostBuilder OnStart(this IVostokHostBuilder hostBuilder, Func<IVostokHostingEnvironment, Task> onStartAsync)
+        {
+            return hostBuilder.ConfigureApplication(app => app.OnStart(async environment =>
+            {
+                await onStartAsync(environment);
+                return Task.Delay(Timeout.Infinite, environment.ShutdownCancellationToken);
+            }));
         }
     }
 }
