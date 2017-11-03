@@ -8,14 +8,14 @@ namespace Vostok.Hosting
 {
     public interface IVostokHostingEnvironment
     {
-        string Project { get; set; }
-        string Environment { get; set; }
-        string Service { get; set; }
-        IAirlockClient AirlockClient { get; set; }
-        IMetricScope MetricScope { get; set; }
-        ILog HostLog { get; set; }
+        string Project { get; }
+        string Environment { get; }
+        string Service { get; }
+        IConfiguration Configuration { get; }
+        IAirlockClient AirlockClient { get; }
+        IMetricScope MetricScope { get; }
+        ILog HostLog { get; }
         CancellationToken ShutdownCancellationToken { get; }
-        IConfiguration Configuration { get; set; }
         void RequestShutdown();
     }
 }
