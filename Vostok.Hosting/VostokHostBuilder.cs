@@ -16,7 +16,7 @@ namespace Vostok.Hosting
 {
     public class VostokHostBuilder : IVostokHostBuilder
     {
-        private readonly IVostokHostingEnvironment hostingEnvironment;
+        private readonly VostokHostingEnvironment hostingEnvironment;
         private readonly VostokHostBuilderContext context;
         private readonly IConfiguration config;
 
@@ -90,7 +90,7 @@ namespace Vostok.Hosting
                 foreach (var configurationDelegate in configureAirlockDelegates)
                     configurationDelegate(context, airlockConfigurator);
                 var airlockConfig = airlockConfigurator.AirlockConfig ?? ReadAirlockConfig();
-                var parallelizm = airlockConfigurator.Parallelizm ?? ReadAirlockParallelizm() ?? VostokConfigurationDefaults.DefaultAirlockParallelizm;
+                var parallelizm = airlockConfigurator.Parallelism ?? ReadAirlockParallelism() ?? VostokConfigurationDefaults.DefaultAirlockParallelism;
                 hostingEnvironment.AirlockClient = CreateAirlockClient(airlockConfig, parallelizm, airlockConfigurator.Log);
 
                 DefaultConfigureTracing(configurationRoot);
@@ -188,14 +188,14 @@ namespace Vostok.Hosting
             return new ParallelAirlockClient(airlockConfig, parallelism, log);
         }
 
-        private int? ReadAirlockParallelizm()
+        private int? ReadAirlockParallelism()
         {
             var airlockSection = context.Configuration.GetSection(VostokConfigurationDefaults.AirlockSection);
-            var value = airlockSection[VostokConfigurationDefaults.AirlockParallelizmKey];
+            var value = airlockSection[VostokConfigurationDefaults.AirlockParallelismKey];
             if (string.IsNullOrEmpty(value))
                 return null;
             if (!int.TryParse(value, out var result))
-                throw new InvalidOperationException($"Invalid value '{value}' for vostok.airlock.parallelizm");
+                throw new InvalidOperationException($"Invalid value '{value}' for {VostokConfigurationDefaults.AirlockSection}{ConfigurationPath.KeyDelimiter}{VostokConfigurationDefaults.AirlockParallelismKey}");
             return result;
         }
 
@@ -286,7 +286,7 @@ namespace Vostok.Hosting
         private class AirlockConfigurator : IAirlockConfigurator
         {
             public AirlockConfig AirlockConfig { get; private set; }
-            public int? Parallelizm { get; private set; }
+            public int? Parallelism { get; private set; }
             public ILog Log { get; private set; }
 
             public void SetConfig(AirlockConfig airlockConfig)
@@ -294,9 +294,9 @@ namespace Vostok.Hosting
                 AirlockConfig = airlockConfig;
             }
 
-            public void SetParallelizm(int parallelizm)
+            public void SetParallelism(int parallelism)
             {
-                Parallelizm = parallelizm;
+                Parallelism = parallelism;
             }
 
             public void SetLog(ILog log)
@@ -307,9 +307,9 @@ namespace Vostok.Hosting
 
         private class HostConfigurator : IHostConfigurator
         {
-            private readonly IVostokHostingEnvironment hostingEnvironment;
+            private readonly VostokHostingEnvironment hostingEnvironment;
 
-            public HostConfigurator(IVostokHostingEnvironment hostingEnvironment)
+            public HostConfigurator(VostokHostingEnvironment hostingEnvironment)
             {
                 this.hostingEnvironment = hostingEnvironment;
             }

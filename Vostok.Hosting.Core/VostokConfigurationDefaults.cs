@@ -7,7 +7,7 @@ namespace Vostok.Hosting
         public const string MetricsSection = "metrics";
         public const string EnvironmentKey = "environment";
         public const string HostKey = "host";
-        public const string AirlockParallelizmKey = "parallelizm";
-        public const int DefaultAirlockParallelizm = 1;
+        public const string AirlockParallelismKey = "parallelism";
+        public const int DefaultAirlockParallelism = 1;
     }
 }

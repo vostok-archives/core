@@ -6,7 +6,7 @@ namespace Vostok.Hosting.Configuration
     public interface IAirlockConfigurator
     {
         void SetConfig(AirlockConfig airlockConfig);
-        void SetParallelizm(int parallelizm);
+        void SetParallelism(int parallelism);
         void SetLog(ILog log);
     }
 }
