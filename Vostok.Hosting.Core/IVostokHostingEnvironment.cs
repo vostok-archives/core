@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Microsoft.Extensions.Configuration;
 using Vostok.Airlock;
 using Vostok.Logging;
 using Vostok.Metrics;
@@ -14,6 +15,7 @@ namespace Vostok.Hosting
         IMetricScope MetricScope { get; set; }
         ILog HostLog { get; set; }
         CancellationToken ShutdownCancellationToken { get; }
+        IConfiguration Configuration { get; set; }
         void RequestShutdown();
     }
 }

@@ -78,7 +78,8 @@ namespace Vostok.Hosting
                 var configurationRoot = configurationBuilder.Build();
                 context.Configuration = configurationRoot;
 
-                hostingEnvironment.Environment = configurationRoot.GetSection("vostok")["environment"];
+                hostingEnvironment.Configuration = configurationRoot;
+                hostingEnvironment.Environment = configurationRoot[VostokConfigurationDefaults.EnvironmentKey];
                 var hostConfigurator = new HostConfigurator(hostingEnvironment);
                 foreach (var configurationDelegate in configureHostDelegates)
                     configurationDelegate(context, hostConfigurator);
@@ -89,7 +90,7 @@ namespace Vostok.Hosting
                 foreach (var configurationDelegate in configureAirlockDelegates)
                     configurationDelegate(context, airlockConfigurator);
                 var airlockConfig = airlockConfigurator.AirlockConfig ?? ReadAirlockConfig();
-                var parallelizm = airlockConfigurator.Parallelizm ?? ReadAirlockParallelizm() ?? VostokHostDefaults.Airlock.Parallelizm;
+                var parallelizm = airlockConfigurator.Parallelizm ?? ReadAirlockParallelizm() ?? VostokConfigurationDefaults.DefaultAirlockParallelizm;
                 hostingEnvironment.AirlockClient = CreateAirlockClient(airlockConfig, parallelizm, airlockConfigurator.Log);
 
                 DefaultConfigureTracing(configurationRoot);
@@ -167,14 +168,14 @@ namespace Vostok.Hosting
 
         private static void DefaultConfigureTracing(IConfiguration configuration)
         {
-            var tracingSection = configuration.GetSection("vostok").GetSection("tracing");
+            var tracingSection = configuration.GetSection(VostokConfigurationDefaults.TracingSection);
             Trace.Configuration.ContextFieldsWhitelist.UnionWith((tracingSection[nameof(Trace.Configuration.ContextFieldsWhitelist)] ?? "").Split(new[] {' ', ';', ','}, StringSplitOptions.RemoveEmptyEntries));
             Trace.Configuration.InheritedFieldsWhitelist.UnionWith((tracingSection[nameof(Trace.Configuration.InheritedFieldsWhitelist)] ?? "").Split(new[] {' ', ';', ','}, StringSplitOptions.RemoveEmptyEntries));
         }
 
         private static void DefaultConfigureMetrics(IConfiguration configuration, IMetricConfiguration metricConfiguration)
         {
-            var metricsSection = configuration.GetSection("vostok").GetSection("metrics");
+            var metricsSection = configuration.GetSection(VostokConfigurationDefaults.MetricsSection);
             metricConfiguration.ContextFieldsWhitelist.UnionWith((metricsSection[nameof(metricConfiguration.ContextFieldsWhitelist)] ?? "").Split(new[] {' ', ';', ','}, StringSplitOptions.RemoveEmptyEntries));
         }
 
@@ -189,8 +190,8 @@ namespace Vostok.Hosting
 
         private int? ReadAirlockParallelizm()
         {
-            var airlockSection = context.Configuration.GetSection("vostok").GetSection("airlock");
-            var value = airlockSection["parallelizm"];
+            var airlockSection = context.Configuration.GetSection(VostokConfigurationDefaults.AirlockSection);
+            var value = airlockSection[VostokConfigurationDefaults.AirlockParallelizmKey];
             if (string.IsNullOrEmpty(value))
                 return null;
             if (!int.TryParse(value, out var result))
@@ -200,8 +201,8 @@ namespace Vostok.Hosting
 
         private AirlockConfig ReadAirlockConfig()
         {
-            var airlockSection = context.Configuration.GetSection("vostok").GetSection("airlock");
-            var host = airlockSection["host"];
+            var airlockSection = context.Configuration.GetSection(VostokConfigurationDefaults.AirlockSection);
+            var host = airlockSection[VostokConfigurationDefaults.HostKey];
             if (string.IsNullOrEmpty(host))
                 return null;
             var airlockConfig = new AirlockConfig
