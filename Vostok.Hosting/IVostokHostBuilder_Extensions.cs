@@ -47,8 +47,19 @@ namespace Vostok.Hosting
         {
             return hostBuilder.ConfigureApplication(app => app.OnStart(async environment =>
             {
-                await onStartAsync(environment);
+                await onStartAsync(environment).ConfigureAwait(false);
                 return Task.Delay(Timeout.Infinite, environment.ShutdownCancellationToken);
+            }));
+        }
+
+        public static IVostokHostBuilder OnRun(this IVostokHostBuilder hostBuilder, Func<IVostokHostingEnvironment, Action, Task> onRunAsync)
+        {
+            return hostBuilder.ConfigureApplication(app => app.OnStart(async environment =>
+            {
+                var tcs = new TaskCompletionSource<int>();
+                var workTask = onRunAsync(environment, () => tcs.TrySetResult(0));
+                await Task.WhenAny(tcs.Task, workTask).ConfigureAwait(false);
+                return workTask;
             }));
         }
     }
