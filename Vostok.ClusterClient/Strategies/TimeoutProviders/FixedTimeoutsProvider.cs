@@ -3,6 +3,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
+using Vostok.Commons.Utilities;
 
 namespace Vostok.Clusterclient.Strategies.TimeoutProviders
 {

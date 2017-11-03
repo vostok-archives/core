@@ -8,6 +8,7 @@ using Vostok.Clusterclient.Criteria;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Ordering.Storage;
 using Vostok.Clusterclient.Transport;
+using Vostok.Commons.Utilities;
 using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Sending

@@ -1,5 +1,6 @@
 ﻿using System;
 using Vostok.Clusterclient.Helpers;
+using Vostok.Commons.Utilities;
 using Vostok.Logging;
 
 namespace Vostok.Clusterclient.Ordering.Weighed.Adaptive
