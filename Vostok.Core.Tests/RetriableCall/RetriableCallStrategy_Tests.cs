@@ -35,7 +35,7 @@ namespace Vostok.RetriableCall
             if (async)
                 callStrategy.CallAsync(() => Task.CompletedTask, ex => true, log).GetAwaiter().GetResult();
             else
-                callStrategy.Call(() => 0, ex => true, log);
+                callStrategy.Call(() => {}, ex => true, log);
             Assert.Less(stopwatch.ElapsedMilliseconds, 50, "ElapsedMilliseconds");
             log.Info("elapsed = " + stopwatch.Elapsed);
             stopwatch.Restart();

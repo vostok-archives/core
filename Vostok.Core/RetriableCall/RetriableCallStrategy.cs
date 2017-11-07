@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Vostok.Commons.Utilities;
 using Vostok.Logging;
@@ -52,8 +53,7 @@ namespace Vostok.RetriableCall
             var exceptions = new SortedSet<Exception>(new ExceptionComparer());
 
             var delay = minDelay;
-            var message = "";
-            for (var failedTries = 0; failedTries < retriesBeforeStop; failedTries++)
+            for (var tryNumber = 0; tryNumber < retriesBeforeStop; tryNumber++)
             {
                 try
                 {
@@ -63,19 +63,12 @@ namespace Vostok.RetriableCall
                 {
                     if (ExceptionFinder.FindException(ex, isExceptionRetriable) == null)
                         throw;
-                    message = ex.Message;
-                    if (failedTries < retriesBeforeStop - 1)
-                    {
-                        if (failedTries > 0)
-                            delay = IncreaseDelay(delay);
-                        log.Warn($"Try #{failedTries + 1} failed, retry after {delay.Milliseconds}ms", ex);
+                    delay = ProcessExceptionAndGetDelay(ex, exceptions, tryNumber, delay, log);
+                    if (delay != TimeSpan.Zero)
                         await Task.Delay(delay).ConfigureAwait(false);
-                    }
-                    if (!exceptions.Contains(ex))
-                        exceptions.Add(ex);
                 }
             }
-            throw new AggregateException(message, exceptions);
+            throw new AggregateException(exceptions.LastOrDefault()?.Message, exceptions);
         }
 
         public T Call<T>(Func<T> action, Func<Exception, bool> isExceptionRetriable, ILog log)
@@ -83,8 +76,7 @@ namespace Vostok.RetriableCall
             var exceptions = new SortedSet<Exception>(new ExceptionComparer());
 
             var delay = minDelay;
-            var message = "";
-            for (var failedTries = 0; failedTries < retriesBeforeStop; failedTries++)
+            for (var tryNumber = 0; tryNumber < retriesBeforeStop; tryNumber++)
             {
                 try
                 {
@@ -94,19 +86,27 @@ namespace Vostok.RetriableCall
                 {
                     if (ExceptionFinder.FindException(ex, isExceptionRetriable) == null)
                         throw;
-                    message = ex.Message;
-                    if (failedTries < retriesBeforeStop - 1)
-                    {
-                        if (failedTries > 0)
-                            delay = IncreaseDelay(delay);
-                        log.Warn($"Try #{failedTries + 1} failed, retry after {delay.Milliseconds}ms", ex);
+                    delay = ProcessExceptionAndGetDelay(ex, exceptions, tryNumber, delay, log);
+                    if (delay!=TimeSpan.Zero)
                         System.Threading.Thread.Sleep(delay);
-                    }
-                    if (!exceptions.Contains(ex))
-                        exceptions.Add(ex);
                 }
             }
-            throw new AggregateException(message, exceptions);
+            throw new AggregateException(exceptions.LastOrDefault()?.Message, exceptions);
+        }
+
+        private TimeSpan ProcessExceptionAndGetDelay(Exception ex, ISet<Exception> exceptions, int tryNumber, TimeSpan delay, ILog log)
+        {
+            if (tryNumber >= retriesBeforeStop - 1)
+                delay = TimeSpan.Zero;
+            else
+            {
+                if (tryNumber > 0)
+                    delay = IncreaseDelay(delay);
+                log.Warn($"Try #{tryNumber + 1} failed, retry after {delay.Milliseconds}ms", ex);
+            }
+            if (!exceptions.Contains(ex))
+                exceptions.Add(ex);
+            return delay;
         }
 
         private TimeSpan IncreaseDelay(TimeSpan delay)
