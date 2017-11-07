@@ -6,22 +6,7 @@ using Vostok.Logging;
 
 namespace Vostok.RetriableCall
 {
-    public interface IRetriableCallStrategy
-    {
-        Task CallAsync(Func<Task> action, Func<Exception, bool> isExceptionRetriable, ILog log);
-        Task<T> CallAsync<T>(Func<Task<T>> action, Func<Exception, bool> isExceptionRetriable, ILog log);
-    }
-
-    internal class ExceptionComparer : IComparer<Exception>
-    {
-        public int Compare(Exception e1, Exception e2)
-        {
-            var cmp = string.CompareOrdinal(e1.Message, e2.Message);
-            return cmp != 0 ? cmp : string.Compare(e1.StackTrace, e2.StackTrace, StringComparison.Ordinal);
-        }
-    }
-
-    public class RetriableCallStrategy : IRetriableCallStrategy
+    public class RetriableCallStrategy
     {
         private readonly int retriesBeforeStop;
         private const double minDelayMultiplier = 1.7;
@@ -44,27 +29,25 @@ namespace Vostok.RetriableCall
             maxDelay = TimeSpan.FromMilliseconds(maxDelayMs);
         }
 
-        public async Task<T> CallAsync<T>(Func<Task<T>> action, Func<Exception, bool> isExceptionRetriable, ILog log)
+        public async Task CallAsync(Func<Task> action, Func<Exception, bool> isExceptionRetriable, ILog log)
         {
-            var res = default(T);
             await CallAsync(async () =>
             {
-                res = await action();
-            }, isExceptionRetriable, log);
-            return res;
+                await action().ConfigureAwait(false);
+                return 0;
+            }, isExceptionRetriable, log).ConfigureAwait(false);
         }
 
-        public T Call<T>(Func<T> action, Func<Exception, bool> isExceptionRetriable, ILog log)
+        public void Call(Action action, Func<Exception, bool> isExceptionRetriable, ILog log)
         {
-            var res = default(T);
             Call(() =>
             {
-                res = action();
+                action();
+                return 0;
             }, isExceptionRetriable, log);
-            return res;
         }
 
-        public async Task CallAsync(Func<Task> action, Func<Exception, bool> isExceptionRetriable, ILog log)
+        public async Task<T> CallAsync<T>(Func<Task<T>> action, Func<Exception, bool> isExceptionRetriable, ILog log)
         {
             var exceptions = new SortedSet<Exception>(new ExceptionComparer());
 
@@ -74,8 +57,7 @@ namespace Vostok.RetriableCall
             {
                 try
                 {
-                    await action();
-                    return;
+                    return await action().ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -86,8 +68,8 @@ namespace Vostok.RetriableCall
                     {
                         if (failedTries > 0)
                             delay = IncreaseDelay(delay);
-                        log.Warn($"Try #{failedTries + 1} failed, retry after {delay.Milliseconds}ms: {ex}");
-                        await Task.Delay(delay);
+                        log.Warn($"Try #{failedTries + 1} failed, retry after {delay.Milliseconds}ms", ex);
+                        await Task.Delay(delay).ConfigureAwait(false);
                     }
                     if (!exceptions.Contains(ex))
                         exceptions.Add(ex);
@@ -96,7 +78,7 @@ namespace Vostok.RetriableCall
             throw new AggregateException(message, exceptions);
         }
 
-        public void Call(Action action, Func<Exception, bool> isExceptionRetriable, ILog log)
+        public T Call<T>(Func<T> action, Func<Exception, bool> isExceptionRetriable, ILog log)
         {
             var exceptions = new SortedSet<Exception>(new ExceptionComparer());
 
@@ -106,8 +88,7 @@ namespace Vostok.RetriableCall
             {
                 try
                 {
-                    action();
-                    return;
+                    return action();
                 }
                 catch (Exception ex)
                 {
@@ -118,7 +99,7 @@ namespace Vostok.RetriableCall
                     {
                         if (failedTries > 0)
                             delay = IncreaseDelay(delay);
-                        log.Warn($"Try #{failedTries + 1} failed, retry after {delay.Milliseconds}ms: {ex}");
+                        log.Warn($"Try #{failedTries + 1} failed, retry after {delay.Milliseconds}ms", ex);
                         System.Threading.Thread.Sleep(delay);
                     }
                     if (!exceptions.Contains(ex))

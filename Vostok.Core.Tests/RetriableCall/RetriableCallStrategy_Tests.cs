@@ -29,68 +29,56 @@ namespace Vostok.RetriableCall
             log.Info("elapsed = " + stopwatch.Elapsed);
         }
 
-        [Test]
-        public void CallAsyncWithoutErrors_ReturnsWithowtDelays()
+        [Test, TestCase(true), TestCase(false)]
+        public void CallWithoutErrors_ReturnsWithowtDelays(bool async)
         {
-            callStrategy.CallAsync(() => Task.CompletedTask, ex => true, log).GetAwaiter().GetResult();
-            Assert.Less(stopwatch.ElapsedMilliseconds, 50, "ElapsedMilliseconds");
-            stopwatch.Restart();
-            var actualResult = CallAsync(() => Task.FromResult(expectedResult), ex => true);
-            Assert.Less(stopwatch.ElapsedMilliseconds, 50, "ElapsedMilliseconds");
-            Assert.AreEqual(expectedResult, actualResult);
-        }
-
-        [Test]
-        public void CallWithoutErrors_ReturnsWithowtDelays()
-        {
-            callStrategy.Call(() => 0, ex => true, log);
+            if (async)
+                callStrategy.CallAsync(() => Task.CompletedTask, ex => true, log).GetAwaiter().GetResult();
+            else
+                callStrategy.Call(() => 0, ex => true, log);
             Assert.Less(stopwatch.ElapsedMilliseconds, 50, "ElapsedMilliseconds");
             log.Info("elapsed = " + stopwatch.Elapsed);
             stopwatch.Restart();
-            var actualResult = Call(() => expectedResult, ex => true);
+            var actualResult = async ? CallAsync(() => Task.FromResult(expectedResult), ex => true) : Call(() => expectedResult, ex => true);
             Assert.Less(stopwatch.ElapsedMilliseconds, 50, "ElapsedMilliseconds");
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test]
-        public void CallAsyncWithErrors_ReturnsErrorOrSuccess()
+        [Test, TestCase(true), TestCase(false)]
+        public void CallWithErrorsAndSuccessAtTheEnd_ReturnsSuccess(bool async)
         {
             var counter = new AtomicInt(0);
-            var actualResult = CallAsync(() => TestFuncAsync(counter), ex => true);
+            int actualResult;
+            actualResult = async ? CallAsync(() => TestFuncAsync(counter), ex => true) : Call(() => TestFunc(counter), ex => true);
             stopwatch.Stop();
             Assert.AreEqual(expectedResult, actualResult);
-            Assert.AreEqual(3, counter.Value,"counter");
-            Assert.Greater(stopwatch.ElapsedMilliseconds, 500*(1+1.7)-100, "ElapsedMilliseconds");
-            Assert.Less(stopwatch.ElapsedMilliseconds, 500*(1+2.5)+100, "ElapsedMilliseconds");
+            Assert.AreEqual(3, counter.Value, "counter");
+            Assert.Greater(stopwatch.ElapsedMilliseconds, 500*(1 + 1.7) - 100, "ElapsedMilliseconds");
+            Assert.Less(stopwatch.ElapsedMilliseconds, 500*(1 + 2.5) + 100, "ElapsedMilliseconds");
         }
 
-        [Test]
-        public void CallWithErrors_ReturnsErrorOrSuccess()
+        [Test, TestCase(true), TestCase(false)]
+        public void CallWithRetriableErrors_ReturnsAggregateException(bool async)
         {
             var counter = new AtomicInt(0);
-            var actualResult = Call(() => TestFunc(counter), ex => true);
+            if (async)
+                Assert.Throws<AggregateException>(() => CallAsync(() => TestFuncAsync(counter, 10), ex => true));
+            else
+                Assert.Throws<AggregateException>(() => Call(() => TestFunc(counter, 10), ex => true));
             stopwatch.Stop();
-            Assert.AreEqual(expectedResult, actualResult);
-            Assert.AreEqual(3, counter.Value,"counter");
-            Assert.Greater(stopwatch.ElapsedMilliseconds, 500*(1+1.7)-100, "ElapsedMilliseconds");
-            Assert.Less(stopwatch.ElapsedMilliseconds, 500*(1+2.5)+100, "ElapsedMilliseconds");
+            Assert.AreEqual(5, counter.Value, "counter");
+            Assert.Greater(stopwatch.ElapsedMilliseconds, 500*(1 + 1.7 + 1.7*1.7 + 1.7*1.7*1.7) - 100, "ElapsedMilliseconds");
+            Assert.Less(stopwatch.ElapsedMilliseconds, 500*(1 + 2.5 + 2.5*2.5 + 2.5*2.5*2.5) + 100, "ElapsedMilliseconds");
         }
 
-        [Test]
-        public void CallAsyncWithNonRetriableException_ReturnsWithowtDelays()
+        [Test, TestCase(true), TestCase(false)]
+        public void CallWithNonRetriableException_ReturnsWithowtDelays(bool async)
         {
             var counter = new AtomicInt(0);
-            Assert.Throws<InvalidDataException>(() => CallAsync(() => TestFuncAsync(counter), ExceptionFinder.HasException<IndexOutOfRangeException>));
-            stopwatch.Stop();
-            Assert.Less(stopwatch.ElapsedMilliseconds, 50, "ElapsedMilliseconds");
-            log.Info("elapsed = " + stopwatch.Elapsed);
-        }
-
-        [Test]
-        public void CallWithNonRetriableException_ReturnsWithowtDelays()
-        {
-            var counter = new AtomicInt(0);
-            Assert.Throws<InvalidDataException>(() => Call(() => TestFunc(counter), ExceptionFinder.HasException<IndexOutOfRangeException>));
+            if (async)
+                Assert.Throws<InvalidDataException>(() => CallAsync(() => TestFuncAsync(counter), ExceptionFinder.HasException<IndexOutOfRangeException>));
+            else
+                Assert.Throws<InvalidDataException>(() => Call(() => TestFunc(counter), ExceptionFinder.HasException<IndexOutOfRangeException>));
             stopwatch.Stop();
             Assert.Less(stopwatch.ElapsedMilliseconds, 50, "ElapsedMilliseconds");
             log.Info("elapsed = " + stopwatch.Elapsed);
@@ -98,25 +86,27 @@ namespace Vostok.RetriableCall
 
         private T CallAsync<T>(Func<Task<T>> action, Func<Exception, bool> isExceptionRetriable)
         {
-            return callStrategy.CallAsync<T>(action, isExceptionRetriable, log).GetAwaiter().GetResult();
+            return callStrategy.CallAsync(action, isExceptionRetriable, log).GetAwaiter().GetResult();
         }
+
         private T Call<T>(Func<T> action, Func<Exception, bool> isExceptionRetriable)
         {
             return callStrategy.Call(action, isExceptionRetriable, log);
         }
 
-        private async Task<int> TestFuncAsync(AtomicInt counter)
+        private async Task<int> TestFuncAsync(AtomicInt counter, int maxCounterWithException = 2)
         {
             counter.Add(1);
-            if (counter.Value < 3)
+            if (counter.Value <= maxCounterWithException)
                 throw new InvalidDataException("something bad");
             await Task.Delay(1);
             return expectedResult;
         }
-        private int TestFunc(AtomicInt counter)
+
+        private int TestFunc(AtomicInt counter, int maxCounterWithException = 2)
         {
             counter.Add(1);
-            if (counter.Value < 3)
+            if (counter.Value <= maxCounterWithException)
                 throw new InvalidDataException("something bad");
             return expectedResult;
         }

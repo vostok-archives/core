@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Vostok.RetriableCall
@@ -28,15 +29,20 @@ namespace Vostok.RetriableCall
         {
             var ex = rootEx;
             while (ex != null && !condition(ex))
-                ex = GetChildEx(ex);
+            {
+                if (!(rootEx is AggregateException aggregateEx))
+                    ex = ex.InnerException;
+                else
+                {
+                    foreach (var innerException in aggregateEx.InnerExceptions)
+                    {
+                        var exInner = FindException(innerException, condition);
+                        if (exInner != null)
+                            return exInner;
+                    }
+                }
+            }
             return ex;
-        }
-
-        private static Exception GetChildEx(Exception ex)
-        {
-            return ex is AggregateException aggregateEx
-                ? aggregateEx.InnerExceptions.LastOrDefault()
-                : ex.InnerException;
         }
     }
 }
