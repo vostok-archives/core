@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Vostok.Clusterclient.Helpers
+namespace Vostok.Commons.Utilities
 {
-    internal static class TimeSpanExtensions
+    public static class TimeSpanExtensions
     {
         public static TimeSpan Multiply(this TimeSpan ts, double multiplier)
         {

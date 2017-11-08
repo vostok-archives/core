@@ -7,6 +7,7 @@ using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Sending;
 using Vostok.Clusterclient.Strategies.TimeoutProviders;
+using Vostok.Commons.Utilities;
 
 namespace Vostok.Clusterclient.Strategies
 {
