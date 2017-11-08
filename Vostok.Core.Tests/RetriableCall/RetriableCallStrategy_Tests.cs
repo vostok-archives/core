@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Vostok.Commons.Extensions.UnitConvertions;
 using Vostok.Commons.Synchronization;
 using Vostok.Logging;
 using Vostok.Logging.Logs;
@@ -14,7 +15,7 @@ namespace Vostok.RetriableCall
     {
         private const int expectedResult = 10;
         private readonly ConsoleLog log = new ConsoleLog();
-        private readonly RetriableCallStrategy callStrategy = new RetriableCallStrategy();
+        private readonly RetriableCallStrategy callStrategy = new RetriableCallStrategy(5, 500.Milliseconds(), 10.Seconds());
         private readonly Stopwatch stopwatch = new Stopwatch();
 
         [SetUp]
