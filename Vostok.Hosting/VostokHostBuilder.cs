@@ -32,7 +32,7 @@ namespace Vostok.Hosting
         {
             hostingEnvironment = new VostokHostingEnvironment
             {
-                HostLog = new ConsoleLog()
+                Log = new ConsoleLog()
             };
             config = new ConfigurationBuilder().AddEnvironmentVariables("VOSTOK_").Build();
             context = new VostokHostBuilderContext
@@ -299,7 +299,7 @@ namespace Vostok.Hosting
 
             public void SetHostLog(ILog log)
             {
-                hostingEnvironment.HostLog = log;
+                hostingEnvironment.Log = log;
             }
         }
 
@@ -312,9 +312,9 @@ namespace Vostok.Hosting
                 this.e = e;
             }
 
-            public async Task StartAsync(IVostokHostingEnvironment hostingEnvironment)
+            public Task StartAsync(IVostokHostingEnvironment hostingEnvironment)
             {
-                throw new AggregateException("Failed to build host", e);
+                return Task.FromException(new AggregateException("Failed to build host", e));
             }
 
             public Task WaitForTerminationAsync()

@@ -26,8 +26,8 @@ namespace Vostok.Hosting
                 async () =>
                 {
                     VostokHostingEnvironment.Current = HostingEnvironment;
-                    HostingEnvironment.HostLog.Info($"Starting service: {HostingEnvironment.Project}/{HostingEnvironment.Service}");
-                    HostingEnvironment.HostLog.Info($"Environment: {HostingEnvironment.Environment}");
+                    HostingEnvironment.Log.Info($"Starting service: {HostingEnvironment.Project}/{HostingEnvironment.Service}");
+                    HostingEnvironment.Log.Info($"Environment: {HostingEnvironment.Environment}");
                     
                     try
                     {
@@ -36,16 +36,16 @@ namespace Vostok.Hosting
                     }
                     catch (OperationCanceledException)
                     {
-                        HostingEnvironment.HostLog.Info("Service stopped");
+                        HostingEnvironment.Log.Info("Service stopped");
                         return;
                     }
                     catch (Exception e)
                     {
-                        HostingEnvironment.HostLog.Fatal(e, "Failed to start service");
+                        HostingEnvironment.Log.Fatal(e, "Failed to start service");
                         startTcs.SetException(e);
                         return;
                     }
-                    HostingEnvironment.HostLog.Info(shutdownMessage ?? "Service started");
+                    HostingEnvironment.Log.Info(shutdownMessage ?? "Service started");
                     startTcs.SetResult(0);
                     try
                     {
@@ -56,10 +56,10 @@ namespace Vostok.Hosting
                     }
                     catch (Exception e)
                     {
-                        HostingEnvironment.HostLog.Fatal(e, "Service failed");
+                        HostingEnvironment.Log.Fatal(e, "Service failed");
                         throw;
                     }
-                    HostingEnvironment.HostLog.Info("Service stopped");
+                    HostingEnvironment.Log.Info("Service stopped");
                 });
             await startTcs.Task.ConfigureAwait(false);
         }

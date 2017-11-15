@@ -40,7 +40,7 @@ namespace Vostok.Hosting
         {
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
-                host.HostingEnvironment.HostLog.Fatal((Exception) args.ExceptionObject, "Unexpected exception was occured");
+                host.HostingEnvironment.Log.Fatal((Exception) args.ExceptionObject, "Unexpected exception was occured");
             };
         }
 
@@ -50,7 +50,7 @@ namespace Vostok.Hosting
             {
                 if (!cts.IsCancellationRequested)
                 {
-                    host.HostingEnvironment.HostLog.Info(shutdownMessage);
+                    host.HostingEnvironment.Log.Info(shutdownMessage);
                     try
                     {
                         cts.Cancel();

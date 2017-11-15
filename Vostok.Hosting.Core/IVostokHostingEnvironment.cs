@@ -14,7 +14,7 @@ namespace Vostok.Hosting
         IConfiguration Configuration { get; }
         IAirlockClient AirlockClient { get; }
         IMetricScope MetricScope { get; }
-        ILog HostLog { get; }
+        ILog Log { get; }
         CancellationToken ShutdownCancellationToken { get; }
         void RequestShutdown();
     }

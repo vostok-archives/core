@@ -10,7 +10,7 @@ namespace Vostok.Hosting
 {
     public class VostokHostingEnvironment : IVostokHostingEnvironment
     {
-        private static IVostokHostingContext context = new StaticVostokHostingContext();
+        private static IVostokHostingContext hostingContext = new StaticVostokHostingContext();
 
         static VostokHostingEnvironment()
         {
@@ -19,7 +19,7 @@ namespace Vostok.Hosting
 
         public static void SetHostingContext(IVostokHostingContext hostingContext)
         {
-            context = hostingContext;
+            VostokHostingEnvironment.hostingContext = hostingContext;
         }
 
         private readonly CancellationTokenSource shutdownCtc = new CancellationTokenSource();
@@ -29,14 +29,14 @@ namespace Vostok.Hosting
         public string Service { get; set; }
         public IAirlockClient AirlockClient { get; set; }
         public IMetricScope MetricScope { get; set; }
-        public ILog HostLog { get; set; }
+        public ILog Log { get; set; }
         public CancellationToken ShutdownCancellationToken => shutdownCtc.Token;
         public IConfiguration Configuration { get; set; }
 
         public static IVostokHostingEnvironment Current
         {
-            get => context.Current;
-            set => context.Current = value;
+            get => hostingContext.Current;
+            set => hostingContext.Current = value;
         }
 
         public void RequestShutdown()
