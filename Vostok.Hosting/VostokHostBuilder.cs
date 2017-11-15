@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Vostok.Airlock;
 using Vostok.Airlock.Metrics;
@@ -14,7 +15,7 @@ using Vostok.Tracing;
 
 namespace Vostok.Hosting
 {
-    public class VostokHostBuilder : IVostokHostBuilder
+    public class VostokHostBuilder<TApp> : IVostokHostBuilder where TApp : IVostokApplication, new()
     {
         private readonly VostokHostingEnvironment hostingEnvironment;
         private readonly VostokHostBuilderContext context;
@@ -25,7 +26,6 @@ namespace Vostok.Hosting
         private readonly List<Action<VostokHostBuilderContext, IAirlockConfigurator>> configureAirlockDelegates = new List<Action<VostokHostBuilderContext, IAirlockConfigurator>>();
         private readonly List<Action<VostokHostBuilderContext, ITracingConfigurator>> configureTracingDelegates = new List<Action<VostokHostBuilderContext, ITracingConfigurator>>();
         private readonly List<Action<VostokHostBuilderContext, IMetricsConfigurator>> configureMetricsDelegates = new List<Action<VostokHostBuilderContext, IMetricsConfigurator>>();
-        private readonly List<Action<VostokHostBuilderContext, IApplicationConfigurator>> configureApplicationDelegates = new List<Action<VostokHostBuilderContext, IApplicationConfigurator>>();
         private bool hostBuilt;
 
         public VostokHostBuilder()
@@ -106,15 +106,11 @@ namespace Vostok.Hosting
                 metricConfiguration.Reporter = new AirlockMetricReporter(hostingEnvironment.AirlockClient, RoutingKey.CreatePrefix(hostingEnvironment.Project, hostingEnvironment.Environment, hostingEnvironment.Service));
                 hostingEnvironment.MetricScope = new RootMetricScope(metricConfiguration);
 
-                var applicationDelegateBuilder = new ApplicationDelegateBuilder();
-                foreach (var configureDelegate in configureApplicationDelegates)
-                    configureDelegate(context, applicationDelegateBuilder);
-
-                return new VostokHost(hostingEnvironment, applicationDelegateBuilder.OnStartAsync);
+                return new VostokHost(hostingEnvironment, new TApp());
             }
             catch (Exception e)
             {
-                return new VostokHost(hostingEnvironment, async _ => throw new AggregateException("Failed to build host", e));
+                return new VostokHost(hostingEnvironment, new FailedApplication(e));
             }
         }
 
@@ -155,14 +151,6 @@ namespace Vostok.Hosting
             if (configureDelegate == null)
                 throw new ArgumentNullException(nameof(configureDelegate));
             configureMetricsDelegates.Add(configureDelegate);
-            return this;
-        }
-
-        public IVostokHostBuilder ConfigureApplication(Action<VostokHostBuilderContext, IApplicationConfigurator> configureDelegate)
-        {
-            if (configureDelegate == null)
-                throw new ArgumentNullException(nameof(configureDelegate));
-            configureApplicationDelegates.Add(configureDelegate);
             return this;
         }
 
@@ -245,16 +233,6 @@ namespace Vostok.Hosting
             return airlockConfig;
         }
 
-        private class ApplicationDelegateBuilder : IApplicationConfigurator
-        {
-            public StartServiceDelegate OnStartAsync { get; private set; }
-
-            public void OnStart(StartServiceDelegate onStartAsync)
-            {
-                OnStartAsync = onStartAsync;
-            }
-        }
-
         private class TracingConfigurator : ITracingConfigurator
         {
             public void AddContextFieldswhitelist(params string[] fields)
@@ -322,6 +300,26 @@ namespace Vostok.Hosting
             public void SetHostLog(ILog log)
             {
                 hostingEnvironment.HostLog = log;
+            }
+        }
+
+        private class FailedApplication : IVostokApplication
+        {
+            private readonly Exception e;
+
+            public FailedApplication(Exception e)
+            {
+                this.e = e;
+            }
+
+            public async Task StartAsync(IVostokHostingEnvironment hostingEnvironment)
+            {
+                throw new AggregateException("Failed to build host", e);
+            }
+
+            public Task WaitForTerminationAsync()
+            {
+                return Task.CompletedTask;
             }
         }
     }

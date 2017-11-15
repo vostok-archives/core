@@ -6,13 +6,13 @@ namespace Vostok.Hosting
 {
     internal class VostokHost : IVostokHost
     {
-        private readonly StartServiceDelegate onStartAsync;
+        private readonly IVostokApplication vostokApplication;
         private Task workTask;
 
-        public VostokHost(IVostokHostingEnvironment hostingEnvironment, StartServiceDelegate onStartAsync)
+        public VostokHost(IVostokHostingEnvironment hostingEnvironment, IVostokApplication vostokApplication)
         {
+            this.vostokApplication = vostokApplication;
             HostingEnvironment = hostingEnvironment;
-            this.onStartAsync = onStartAsync;
         }
 
         public IVostokHostingEnvironment HostingEnvironment { get; }
@@ -28,10 +28,10 @@ namespace Vostok.Hosting
                     VostokHostingEnvironment.Current = HostingEnvironment;
                     HostingEnvironment.HostLog.Info($"Starting service: {HostingEnvironment.Project}/{HostingEnvironment.Service}");
                     HostingEnvironment.HostLog.Info($"Environment: {HostingEnvironment.Environment}");
-                    Task workerTask;
+                    
                     try
                     {
-                        workerTask = await onStartAsync(HostingEnvironment).ConfigureAwait(false);
+                        await vostokApplication.StartAsync(HostingEnvironment).ConfigureAwait(false);
                         HostingEnvironment.ShutdownCancellationToken.ThrowIfCancellationRequested();
                     }
                     catch (OperationCanceledException)
@@ -49,7 +49,7 @@ namespace Vostok.Hosting
                     startTcs.SetResult(0);
                     try
                     {
-                        await workerTask.ConfigureAwait(false);
+                        await vostokApplication.WaitForTerminationAsync().ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {

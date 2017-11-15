@@ -15,6 +15,5 @@ namespace Vostok.Hosting
         IVostokHostBuilder ConfigureAirlock(Action<VostokHostBuilderContext, IAirlockConfigurator> configureDelegate);
         IVostokHostBuilder ConfigureTracing(Action<VostokHostBuilderContext, ITracingConfigurator> configureDelegate);
         IVostokHostBuilder ConfigureMetrics(Action<VostokHostBuilderContext, IMetricsConfigurator> configureDelegate);
-        IVostokHostBuilder ConfigureApplication(Action<VostokHostBuilderContext, IApplicationConfigurator> configureDelegate);
     }
 }

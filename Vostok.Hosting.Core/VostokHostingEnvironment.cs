@@ -10,11 +10,16 @@ namespace Vostok.Hosting
 {
     public class VostokHostingEnvironment : IVostokHostingEnvironment
     {
-        private static readonly AsyncLocal<IVostokHostingEnvironment> hostingEnvironmentContainer = new AsyncLocal<IVostokHostingEnvironment>();
+        private static IVostokHostingContext context = new StaticVostokHostingContext();
 
         static VostokHostingEnvironment()
         {
             Trace.Configuration.Reporter = new AirlockTraceReporter(() => Current?.AirlockClient, () => RoutingKey.TryCreate(Current?.Project, Current?.Environment, Current?.Service, RoutingKey.TracesSuffix));
+        }
+
+        public static void SetHostingContext(IVostokHostingContext hostingContext)
+        {
+            context = hostingContext;
         }
 
         private readonly CancellationTokenSource shutdownCtc = new CancellationTokenSource();
@@ -30,8 +35,8 @@ namespace Vostok.Hosting
 
         public static IVostokHostingEnvironment Current
         {
-            get => hostingEnvironmentContainer.Value;
-            set => hostingEnvironmentContainer.Value = value;
+            get => context.Current;
+            set => context.Current = value;
         }
 
         public void RequestShutdown()
