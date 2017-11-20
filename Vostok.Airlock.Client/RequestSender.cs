@@ -10,7 +10,7 @@ using Vostok.Logging;
 
 namespace Vostok.Airlock
 {
-    internal class RequestSender : IRequestSender
+    public class RequestSender : IRequestSender
     {
         private readonly AirlockConfig config;
         private readonly ClusterClient client;

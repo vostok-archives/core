@@ -1,6 +1,6 @@
 ﻿namespace Vostok.Airlock
 {
-    internal enum RequestSendResult
+    public enum RequestSendResult
     {
         Success,
         DefinitiveFailure,
