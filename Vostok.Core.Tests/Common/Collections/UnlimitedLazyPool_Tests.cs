@@ -91,7 +91,7 @@ namespace Vostok.Common.Collections
 
         private class DisposableObject : IDisposable
         {
-            public bool IsDisposed { get; private set; } = false;
+            public bool IsDisposed { get; private set; }
 
             public void Dispose()
             {

@@ -344,6 +344,7 @@ namespace Vostok.Clusterclient.Core.Model
             var property = typeof (Headers).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
 
             property.Should().NotBeNull();
+            // ReSharper disable once PossibleNullReferenceException
             property.GetValue(headersWith).Should().Be("value");
             property.GetValue(headersWithout).Should().BeNull();
         }

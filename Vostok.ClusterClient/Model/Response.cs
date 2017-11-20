@@ -64,7 +64,7 @@ namespace Vostok.Clusterclient.Model
             builder.Append(" ");
             builder.Append(Code);
 
-            if (includeHeaders && (headers != null) && (headers.Count > 0))
+            if (includeHeaders && headers != null && headers.Count > 0)
             {
                 builder.AppendLine();
                 builder.Append(headers);

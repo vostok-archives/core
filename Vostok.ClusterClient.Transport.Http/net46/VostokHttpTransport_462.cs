@@ -15,11 +15,11 @@ namespace Vostok.Clusterclient.Transport.Http
 
     public partial class VostokHttpTransport
     {
-        private const int PreferredReadSize = 16 * 1024;
-        private const int LOHObjectSizeThreshold = 85 * 1000;
+        private const int preferredReadSize = 16 * 1024;
+        private const int lohObjectSizeThreshold = 85 * 1000;
 
-        private static readonly TimeSpan RequestAbortTimeout = TimeSpan.FromMilliseconds(250);
-        private static readonly IPool<byte[]> ReadBuffersPool = new UnlimitedLazyPool<byte[]>(() => new byte[PreferredReadSize]);
+        private static readonly TimeSpan requestAbortTimeout = TimeSpan.FromMilliseconds(250);
+        private static readonly IPool<byte[]> readBuffersPool = new UnlimitedLazyPool<byte[]>(() => new byte[preferredReadSize]);
 
         private readonly ILog log;
         private readonly ConnectTimeLimiter connectTimeLimiter;
@@ -64,7 +64,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 threadPoolMonitor.ReportAndFixIfNeeded(log);
 
                 // (iloktionov): Попытаемся дождаться завершения задания по отправке запроса перед тем, как возвращать результат:
-                await Task.WhenAny(senderTask.ContinueWith(_ => { }), Task.Delay(RequestAbortTimeout)).ConfigureAwait(false);
+                await Task.WhenAny(senderTask.ContinueWith(_ => { }), Task.Delay(requestAbortTimeout)).ConfigureAwait(false);
 
                 if (!senderTask.IsCompleted)
                     LogFailedToWaitForRequestAbort();
@@ -218,11 +218,11 @@ namespace Vostok.Clusterclient.Transport.Http
 
                     // (iloktionov): Если буфер размером contentLength не попадет в LOH, можно передать его напрямую для работы с сокетом.
                     // В противном случае лучше использовать небольшой промежуточный буфер из пула, т.к. ссылка на переданный сохранится надолго из-за Keep-Alive.
-                    if (contentLength < LOHObjectSizeThreshold)
+                    if (contentLength < lohObjectSizeThreshold)
                     {
                         while (totalBytesRead < contentLength)
                         {
-                            var bytesToRead = Math.Min(contentLength - totalBytesRead, PreferredReadSize);
+                            var bytesToRead = Math.Min(contentLength - totalBytesRead, preferredReadSize);
                             var bytesRead = await state.ResponseStream.ReadAsync(state.BodyBuffer, totalBytesRead, bytesToRead).ConfigureAwait(false);
                             if (bytesRead == 0)
                                 break;
@@ -232,7 +232,7 @@ namespace Vostok.Clusterclient.Transport.Http
                     }
                     else
                     {
-                        using (var bufferHandle = ReadBuffersPool.AcquireHandle())
+                        using (var bufferHandle = readBuffersPool.AcquireHandle())
                         {
                             var buffer = bufferHandle.Resource;
 
@@ -251,13 +251,13 @@ namespace Vostok.Clusterclient.Transport.Http
                     }
 
                     if (totalBytesRead < contentLength)
-                        throw new EndOfStreamException(String.Format("Response stream ended prematurely. Read only {0} byte(s), but Content-Length specified {1}.", totalBytesRead, contentLength));
+                        throw new EndOfStreamException($"Response stream ended prematurely. Read only {totalBytesRead} byte(s), but Content-Length specified {contentLength}.");
                 }
                 else
                 {
                     state.BodyStream = new MemoryStream();
 
-                    using (var bufferHandle = ReadBuffersPool.AcquireHandle())
+                    using (var bufferHandle = readBuffersPool.AcquireHandle())
                     {
                         var buffer = bufferHandle.Resource;
 
@@ -351,7 +351,7 @@ namespace Vostok.Clusterclient.Transport.Http
 
         private void LogFailedToWaitForRequestAbort()
         {
-            log.Warn($"Timed out request was aborted but did not complete in {RequestAbortTimeout}.");
+            log.Warn($"Timed out request was aborted but did not complete in {requestAbortTimeout}.");
         }
 
         #endregion

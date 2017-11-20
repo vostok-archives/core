@@ -10,7 +10,7 @@ namespace Vostok.Clusterclient.Transport.Http.Helpers
     {
         private readonly HttpListener listener;
         private readonly int port;
-        private volatile ReceivedRequest lastRequest;
+        private ReceivedRequest lastRequest;
 
         public TestServer()
         {
@@ -43,7 +43,9 @@ namespace Vostok.Clusterclient.Transport.Http.Helpers
                     {
                         var context = await listener.GetContextAsync();
 
+#pragma warning disable 4014
                         Task.Run(
+#pragma warning restore 4014
                             () =>
                             {
                                 Interlocked.Exchange(ref lastRequest, DescribeReceivedRequest(context.Request));
@@ -53,6 +55,7 @@ namespace Vostok.Clusterclient.Transport.Http.Helpers
                                 context.Response.Close();
                             });
                     }
+                    // ReSharper disable once FunctionNeverReturns
                 });
         }
 

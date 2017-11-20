@@ -15,7 +15,7 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class RequestRetryModule_Tests
     {
-        private const int MaxAttempts = 5;
+        private const int maxAttempts = 5;
 
         private int nextModuleCalls;
         private ClusterResult result;
@@ -44,7 +44,7 @@ namespace Vostok.Clusterclient.Core.Modules
             retryPolicy.NeedToRetry(Arg.Any<IList<ReplicaResult>>()).Returns(true);
 
             retryStrategy = Substitute.For<IRetryStrategy>();
-            retryStrategy.AttemptsCount.Returns(MaxAttempts);
+            retryStrategy.AttemptsCount.Returns(maxAttempts);
             retryStrategy.GetRetryDelay(Arg.Any<int>()).Returns(TimeSpan.Zero);
 
             module = new RequestRetryModule(retryPolicy, retryStrategy);
@@ -55,7 +55,7 @@ namespace Vostok.Clusterclient.Core.Modules
         {
             Execute().Should().BeSameAs(result);
 
-            nextModuleCalls.Should().Be(MaxAttempts);
+            nextModuleCalls.Should().Be(maxAttempts);
         }
 
         [Test]

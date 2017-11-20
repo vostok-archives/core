@@ -9,7 +9,7 @@ using Vostok.Clusterclient.Transforms;
 
 namespace Vostok.Clusterclient
 {
-    public static class IClusterClientConfigurationExtensions
+    public static class ClusterClientConfigurationExtensions
     {
         /// <summary>
         /// Initializes configuration's <see cref="IClusterClientConfiguration.ReplicaOrdering"/> with a <see cref="WeighedReplicaOrdering"/> built with a given delegate acting on a <see cref="IWeighedReplicaOrderingBuilder"/> instance.

@@ -5,15 +5,15 @@ namespace Vostok.Commons.Utilities
 {
     internal static class DataSpeedParser
     {
-        private const string Second1 = "/sec";
-        private const string Second2 = "/second";
+        private const string second1 = "/sec";
+        private const string second2 = "/second";
 
         public static DataSpeed Parse(string input)
         {
             input = input
                 .ToLower()
-                .Replace(Second2, string.Empty)
-                .Replace(Second1, string.Empty)
+                .Replace(second2, string.Empty)
+                .Replace(second1, string.Empty)
                 .Trim('.')
                 .Trim();
 

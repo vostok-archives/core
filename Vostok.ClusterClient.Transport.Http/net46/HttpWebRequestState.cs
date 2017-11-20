@@ -36,6 +36,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 {
                     Request.Abort();
                 }
+                // ReSharper disable once EmptyGeneralCatchClause
                 catch
                 {
                 }
@@ -54,6 +55,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 {
                     RequestStream.Close();
                 }
+                // ReSharper disable once EmptyGeneralCatchClause
                 catch
                 {
                 }
@@ -70,6 +72,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 {
                     ResponseStream.Close();
                 }
+                // ReSharper disable once EmptyGeneralCatchClause
                 catch
                 {
                 }

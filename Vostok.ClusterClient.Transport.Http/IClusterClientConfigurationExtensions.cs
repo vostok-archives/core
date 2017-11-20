@@ -1,9 +1,9 @@
 ﻿namespace Vostok.Clusterclient.Transport.Http
 {
-    public static class IClusterClientConfigurationExtensions
+    public static class ClusterClientConfigurationExtensions
     {
         /// <summary>
-        /// Initialiazes configuration transport with a <see cref="VostokHttpTransport"/> using default <see cref="VostokHttpTransportSettings"/>.
+        /// Initialiazes configuration transport with a <see cref="VostokHttpTransport"/>.
         /// </summary>
         public static void SetupVostokHttpTransport(this IClusterClientConfiguration configuration)
         {

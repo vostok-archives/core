@@ -9,9 +9,10 @@ namespace Vostok.Flow
 {
     public class DistributedContext_Tests
     {
-        public static IEnumerable<object[]> GenerateData()
+        private static IEnumerable<object[]> GenerateData()
         {
             yield return new object[] {new Guid("9B47124B-8015-4E2D-B6C9-0168F10D45FB"), "guid|9b47124b-8015-4e2d-b6c9-0168f10d45fb" };
+            // ReSharper disable once RedundantExplicitNullableCreation
             yield return new object[] {new Guid?(new Guid("9B47124B-8015-4E2D-B6C9-0168F10D45FB")), "guid|9b47124b-8015-4e2d-b6c9-0168f10d45fb" };
             yield return new object[] {"str", "string|str"};
             yield return new object[] {"", "string|"};
@@ -43,8 +44,7 @@ namespace Vostok.Flow
         public void SerializeDistributedContext_should_not_return_stringValue_by_value_equals_null()
         {
             const string key = "key";
-            var value = (string) null;
-            Context.Properties.SetProperty(key, value);
+            Context.Properties.SetProperty(key, null);
             Context.Configuration.DistributedProperties.Add(key);
 
             var distributedContext = Context.SerializeDistributedProperties().ToArray();

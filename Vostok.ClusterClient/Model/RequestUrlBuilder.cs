@@ -100,14 +100,15 @@ namespace Vostok.Clusterclient.Model
             if (string.IsNullOrEmpty(segment))
                 return this;
 
+            // ReSharper disable once PossibleNullReferenceException
             if (segment.StartsWith("/"))
             {
-                if ((builder.Length > 0) && (builder[builder.Length - 1] == '/'))
+                if (builder.Length > 0 && builder[builder.Length - 1] == '/')
                     builder.Remove(builder.Length - 1, 1);
             }
             else
             {
-                if ((builder.Length > 0) && (builder[builder.Length - 1] != '/'))
+                if (builder.Length > 0 && builder[builder.Length - 1] != '/')
                     builder.Append('/');
             }
 

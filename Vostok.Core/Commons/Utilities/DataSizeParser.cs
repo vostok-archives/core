@@ -5,57 +5,55 @@ namespace Vostok.Commons.Utilities
 {
     internal static class DataSizeParser
     {
-        private const string Bytes1 = "b";
-        private const string Bytes2 = "bytes";
+        private const string bytes1 = "b";
+        private const string bytes2 = "bytes";
 
-        private const string Kilobytes1 = "kb";
-        private const string Kilobytes2 = "kilobytes";
+        private const string kilobytes1 = "kb";
+        private const string kilobytes2 = "kilobytes";
 
-        private const string Megabytes1 = "mb";
-        private const string Megabytes2 = "megabytes";
+        private const string megabytes1 = "mb";
+        private const string megabytes2 = "megabytes";
 
-        private const string Gigabytes1 = "gb";
-        private const string Gigabytes2 = "gigabytes";
+        private const string gigabytes1 = "gb";
+        private const string gigabytes2 = "gigabytes";
 
-        private const string Terabytes1 = "tb";
-        private const string Terabytes2 = "terabytes";
+        private const string terabytes1 = "tb";
+        private const string terabytes2 = "terabytes";
 
-        private const string Petabytes1 = "pb";
-        private const string Petabytes2 = "petabytes";
+        private const string petabytes1 = "pb";
+        private const string petabytes2 = "petabytes";
 
         public static DataSize Parse(string input)
         {
             input = input.ToLower();
 
-            if (input.Contains(Petabytes2))
-                return DataSize.FromPetabytes(DoubleParser.ParseDouble(PrepareInput(input, Petabytes2)));
-            if (input.Contains(Terabytes2))
-                return DataSize.FromTerabytes(DoubleParser.ParseDouble(PrepareInput(input, Terabytes2)));
-            if (input.Contains(Gigabytes2))
-                return DataSize.FromGigabytes(DoubleParser.ParseDouble(PrepareInput(input, Gigabytes2)));
-            if (input.Contains(Megabytes2))
-                return DataSize.FromMegabytes(DoubleParser.ParseDouble(PrepareInput(input, Megabytes2)));
-            if (input.Contains(Kilobytes2))
-                return DataSize.FromKilobytes(DoubleParser.ParseDouble(PrepareInput(input, Kilobytes2)));
-            if (input.Contains(Bytes2))
-                return DataSize.FromBytes(long.Parse(PrepareInput(input, Bytes2)));
+            if (input.Contains(petabytes2))
+                return DataSize.FromPetabytes(DoubleParser.ParseDouble(PrepareInput(input, petabytes2)));
+            if (input.Contains(terabytes2))
+                return DataSize.FromTerabytes(DoubleParser.ParseDouble(PrepareInput(input, terabytes2)));
+            if (input.Contains(gigabytes2))
+                return DataSize.FromGigabytes(DoubleParser.ParseDouble(PrepareInput(input, gigabytes2)));
+            if (input.Contains(megabytes2))
+                return DataSize.FromMegabytes(DoubleParser.ParseDouble(PrepareInput(input, megabytes2)));
+            if (input.Contains(kilobytes2))
+                return DataSize.FromKilobytes(DoubleParser.ParseDouble(PrepareInput(input, kilobytes2)));
+            if (input.Contains(bytes2))
+                return DataSize.FromBytes(long.Parse(PrepareInput(input, bytes2)));
 
-            if (input.Contains(Petabytes1))
-                return DataSize.FromPetabytes(DoubleParser.ParseDouble(PrepareInput(input, Petabytes1)));
-            if (input.Contains(Terabytes1))
-                return DataSize.FromTerabytes(DoubleParser.ParseDouble(PrepareInput(input, Terabytes1)));
-            if (input.Contains(Gigabytes1))
-                return DataSize.FromGigabytes(DoubleParser.ParseDouble(PrepareInput(input, Gigabytes1)));
-            if (input.Contains(Megabytes1))
-                return DataSize.FromMegabytes(DoubleParser.ParseDouble(PrepareInput(input, Megabytes1)));
-            if (input.Contains(Kilobytes1))
-                return DataSize.FromKilobytes(DoubleParser.ParseDouble(PrepareInput(input, Kilobytes1)));
-            if (input.Contains(Bytes1))
-                return DataSize.FromBytes(long.Parse(PrepareInput(input, Bytes1)));
+            if (input.Contains(petabytes1))
+                return DataSize.FromPetabytes(DoubleParser.ParseDouble(PrepareInput(input, petabytes1)));
+            if (input.Contains(terabytes1))
+                return DataSize.FromTerabytes(DoubleParser.ParseDouble(PrepareInput(input, terabytes1)));
+            if (input.Contains(gigabytes1))
+                return DataSize.FromGigabytes(DoubleParser.ParseDouble(PrepareInput(input, gigabytes1)));
+            if (input.Contains(megabytes1))
+                return DataSize.FromMegabytes(DoubleParser.ParseDouble(PrepareInput(input, megabytes1)));
+            if (input.Contains(kilobytes1))
+                return DataSize.FromKilobytes(DoubleParser.ParseDouble(PrepareInput(input, kilobytes1)));
+            if (input.Contains(bytes1))
+                return DataSize.FromBytes(long.Parse(PrepareInput(input, bytes1)));
 
-            long bytes;
-
-            if (long.TryParse(input, out bytes))
+            if (long.TryParse(input, out var bytes))
                 return DataSize.FromBytes(bytes);
 
             throw new FormatException($"DataSizeParser. Failed to parse DataSize from string '{input}'.");

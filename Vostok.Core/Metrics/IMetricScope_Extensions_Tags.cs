@@ -2,7 +2,7 @@
 
 namespace Vostok.Metrics
 {
-    public static class IMetricScope_Extensions_Tags
+    public static class MetricScope_Extensions_Tags
     {
         public static IMetricScope WithTag(this IMetricScope scope, string key, string value)
         {

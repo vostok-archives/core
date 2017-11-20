@@ -119,6 +119,7 @@ namespace Vostok.Commons.Model
             if (Math.Abs(TotalKilobytes) >= 1)
                 return TotalKilobytes.ToString("0.##") + ' ' + (shortFormat ? "KB" : "kilobytes");
 
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             return bytes.ToString() + ' ' + (shortFormat ? "B" : "bytes");
         }
 
@@ -206,6 +207,7 @@ namespace Vostok.Commons.Model
 
         public override int GetHashCode()
         {
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             return bytes.GetHashCode();
         }
 
@@ -221,6 +223,7 @@ namespace Vostok.Commons.Model
 
         public int CompareTo(DataSize other)
         {
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             return bytes.CompareTo(other.bytes);
         }
 

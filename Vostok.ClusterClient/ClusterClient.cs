@@ -37,7 +37,7 @@ namespace Vostok.Clusterclient
     /// </summary>
     public class ClusterClient : IClusterClient
     {
-        private static readonly TimeSpan BudgetPrecision = TimeSpan.FromMilliseconds(15);
+        private static readonly TimeSpan budgetPrecision = TimeSpan.FromMilliseconds(15);
 
         private readonly ClusterClientConfiguration configuration;
         private readonly Func<IRequestContext, Task<ClusterResult>> pipelineDelegate;
@@ -97,7 +97,7 @@ namespace Vostok.Clusterclient
 
         private RequestContext CreateContext(Request request, TimeSpan timeout, IRequestStrategy strategy, CancellationToken cancellationToken, RequestPriority? priority, int maxReplicasToUse)
         {
-            return new RequestContext(request, strategy, RequestTimeBudget.StartNew(timeout, BudgetPrecision), configuration.Log, cancellationToken, priority, maxReplicasToUse);
+            return new RequestContext(request, strategy, RequestTimeBudget.StartNew(timeout, budgetPrecision), configuration.Log, cancellationToken, priority, maxReplicasToUse);
         }
     }
 }

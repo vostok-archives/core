@@ -47,7 +47,9 @@ namespace Vostok.Clusterclient.Core.Modules
             responseClassifier.Decide(Arg.Any<Response>(), Arg.Any<IList<IResponseCriterion>>()).Returns(ResponseVerdict.Accept);
 
             resultStatusSelector = Substitute.For<IClusterResultStatusSelector>();
+            // ReSharper disable AssignNullToNotNullAttribute
             resultStatusSelector.Select(null, null).ReturnsForAnyArgs(ClusterResultStatus.Success);
+            // ReSharper restore AssignNullToNotNullAttribute
 
             module = new AbsoluteUrlSenderModule(transport, responseClassifier, responseCriteria, resultStatusSelector);
         }
@@ -94,7 +96,9 @@ namespace Vostok.Clusterclient.Core.Modules
         [TestCase(ClusterResultStatus.ReplicasExhausted)]
         public void Should_return_result_with_status_given_by_result_status_selector(ClusterResultStatus status)
         {
+            // ReSharper disable AssignNullToNotNullAttribute
             resultStatusSelector.Select(null, null).ReturnsForAnyArgs(status);
+            // ReSharper restore AssignNullToNotNullAttribute
 
             Execute().Status.Should().Be(status);
         }

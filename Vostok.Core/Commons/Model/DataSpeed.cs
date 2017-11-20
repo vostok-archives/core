@@ -114,6 +114,7 @@ namespace Vostok.Commons.Model
             if (KilobytesPerSecond >= 1)
                 return KilobytesPerSecond.ToString("0.####") + ' ' + (shortFormat ? "KB/sec" : "kilobytes/second");
 
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             return bytesPerSecond.ToString() + ' ' + (shortFormat ? "B/sec" : "bytes/second");
         }
 
@@ -181,6 +182,7 @@ namespace Vostok.Commons.Model
 
         public override int GetHashCode()
         {
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             return bytesPerSecond.GetHashCode();
         }
 
@@ -196,6 +198,7 @@ namespace Vostok.Commons.Model
 
         public int CompareTo(DataSpeed other)
         {
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             return bytesPerSecond.CompareTo(other.bytesPerSecond);
         }
     }

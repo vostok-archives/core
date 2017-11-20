@@ -11,7 +11,7 @@ namespace Vostok.Clusterclient.Transport.Http
 {
     internal static class WinHttpHandlerTuner
     {
-        private const BindingFlags PrivateBindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+        private const BindingFlags privateBindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
 
         private static volatile Func<HttpClientHandler, SafeHandle> handleExtractor;
         private static volatile bool canTune = true;
@@ -44,11 +44,11 @@ namespace Vostok.Clusterclient.Transport.Http
         {
             try
             {
-                var winHttpHandlerField = typeof (HttpClientHandler).GetField("_winHttpHandler", PrivateBindingFlags);
+                var winHttpHandlerField = typeof (HttpClientHandler).GetField("_winHttpHandler", privateBindingFlags);
                 if (winHttpHandlerField == null)
                     return _ => null;
 
-                var ensureSessionMethod = winHttpHandlerField.FieldType.GetMethod("EnsureSessionHandleExists", PrivateBindingFlags);
+                var ensureSessionMethod = winHttpHandlerField.FieldType.GetMethod("EnsureSessionHandleExists", privateBindingFlags);
                 if (ensureSessionMethod == null)
                     return _ => null;
 
@@ -56,7 +56,7 @@ namespace Vostok.Clusterclient.Transport.Http
                 if (requestStateType == null)
                     return _ => null;
 
-                var sessionHandleField = winHttpHandlerField.FieldType.GetField("_sessionHandle", PrivateBindingFlags);
+                var sessionHandleField = winHttpHandlerField.FieldType.GetField("_sessionHandle", privateBindingFlags);
                 if (sessionHandleField == null)
                     return _ => null;
 

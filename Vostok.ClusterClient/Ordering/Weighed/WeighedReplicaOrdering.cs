@@ -23,9 +23,9 @@ namespace Vostok.Clusterclient.Ordering.Weighed
     /// </summary>
     public class WeighedReplicaOrdering : IReplicaOrdering
     {
-        private const int PooledArraySize = 50;
+        private const int pooledArraySize = 50;
 
-        private static readonly IPool<TreeNode[]> TreeArrays = new UnlimitedLazyPool<TreeNode[]>(() => new TreeNode[PooledArraySize]);
+        private static readonly IPool<TreeNode[]> treeArrays = new UnlimitedLazyPool<TreeNode[]>(() => new TreeNode[pooledArraySize]);
 
         private readonly IList<IReplicaWeightModifier> modifiers;
         private readonly IReplicaWeightCalculator weightCalculator;
@@ -61,7 +61,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed
                 return replicas;
 
             var requiredCapacity = replicas.Count*2;
-            if (requiredCapacity > PooledArraySize)
+            if (requiredCapacity > pooledArraySize)
             {
                 return OrderInternal(replicas, storageProvider, request, new TreeNode[requiredCapacity]);
             }
@@ -71,7 +71,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed
 
         private IEnumerable<Uri> OrderUsingPooledArray(IList<Uri> replicas, IReplicaStorageProvider storageProvider, Request request)
         {
-            using (var treeArray = TreeArrays.AcquireHandle())
+            using (var treeArray = treeArrays.AcquireHandle())
             {
                 foreach (var replica in OrderInternal(replicas, storageProvider, request, treeArray))
                 {
@@ -200,7 +200,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed
                 }
 
                 var leftChildNode = GetLeftChildNodeIfExists(tree, index);
-                if (leftChildNode.HasValue && (leftChildNode.Value.Weight >= randomPoint - leftBehind))
+                if (leftChildNode.HasValue && leftChildNode.Value.Weight >= randomPoint - leftBehind)
                 {
                     index = GetLeftChildIndex(index);
                     continue;

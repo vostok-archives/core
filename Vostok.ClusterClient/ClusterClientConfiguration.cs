@@ -112,16 +112,16 @@ namespace Vostok.Clusterclient
                     yield return $"Last response criterion must always be either an '{typeof (AlwaysRejectCriterion).Name}' or '{typeof (AlwaysAcceptCriterion).Name}'.";
             }
 
-            if ((ResponseCriteria != null) && ResponseCriteria.Any(criterion => criterion == null))
+            if (ResponseCriteria != null && ResponseCriteria.Any(criterion => criterion == null))
                 yield return "One of provided response criteria is null";
 
-            if ((RequestTransforms != null) && RequestTransforms.Any(transform => transform == null))
+            if (RequestTransforms != null && RequestTransforms.Any(transform => transform == null))
                 yield return "One of provided request transforms is null";
 
-            if ((ResponseTransforms != null) && ResponseTransforms.Any(transform => transform == null))
+            if (ResponseTransforms != null && ResponseTransforms.Any(transform => transform == null))
                 yield return "One of provided response transforms is null";
 
-            if ((Modules != null) && Modules.Any(module => module == null))
+            if (Modules != null && Modules.Any(module => module == null))
                 yield return "One of provided request modules is null";
 
             if (DefaultTimeout <= TimeSpan.Zero)
@@ -155,7 +155,7 @@ namespace Vostok.Clusterclient
             if (ReplicaOrdering == null)
                 ReplicaOrdering = ClusterClientDefaults.ReplicaOrdering(Log);
 
-            if ((ResponseCriteria == null) || (ResponseCriteria.Count == 0))
+            if (ResponseCriteria == null || ResponseCriteria.Count == 0)
                 ResponseCriteria = ClusterClientDefaults.ResponseCriteria();
 
             if (RetryPolicy == null)

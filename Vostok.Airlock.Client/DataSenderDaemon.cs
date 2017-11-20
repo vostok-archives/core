@@ -8,9 +8,9 @@ namespace Vostok.Airlock
 {
     internal class DataSenderDaemon : IDataSenderDaemon
     {
-        private const int State_NotStarted = 0;
-        private const int State_Started = 1;
-        private const int State_Disposed = 2;
+        private const int stateNotStarted = 0;
+        private const int stateStarted = 1;
+        private const int stateDisposed = 2;
 
         private readonly IDataSender dataSender;
         private readonly AirlockConfig config;
@@ -25,13 +25,13 @@ namespace Vostok.Airlock
             this.config = config;
             this.log = log;
 
-            currentState = new AtomicInt(State_NotStarted);
+            currentState = new AtomicInt(stateNotStarted);
             currentIteration = null;
         }
 
         public void Start()
         {
-            if (currentState.TrySet(State_Started, State_NotStarted))
+            if (currentState.TrySet(stateStarted, stateNotStarted))
             {
                 Task.Run(SendingRoutine);
             }
@@ -39,7 +39,7 @@ namespace Vostok.Airlock
 
         public async Task FlushAsync()
         {
-            if (currentState.Value == State_Started)
+            if (currentState.Value == stateStarted)
             {
                 var iteration = currentIteration;
                 if (iteration == null)
@@ -61,7 +61,7 @@ namespace Vostok.Airlock
         public void Dispose()
         {
             FlushAsync().GetAwaiter().GetResult();
-            currentState.Value = State_Disposed;
+            currentState.Value = stateDisposed;
             currentIteration?.WakeUp();
         }
 
@@ -69,7 +69,7 @@ namespace Vostok.Airlock
         {
             var sendPeriod = config.SendPeriod;
 
-            while (currentState.Value != State_Disposed)
+            while (currentState.Value != stateDisposed)
             {
                 ReportNextIteration(new IterationHandle());
 

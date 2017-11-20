@@ -12,9 +12,9 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
 {
     public class ReplicaWeightCalculator_Tests
     {
-        private const double MinWeight = 0.0;
-        private const double MaxWeight = 10.0;
-        private const double InitialWeight = 1.0;
+        private const double minWeight = 0.0;
+        private const double maxWeight = 10.0;
+        private const double initialWeight = 1.0;
 
         private Uri replica;
         private IList<Uri> replicas;
@@ -31,13 +31,14 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
             request = Request.Get("foo/bar");
             modifiers = new List<IReplicaWeightModifier>();
             storageProvider = Substitute.For<IReplicaStorageProvider>();
-            calculator = new ReplicaWeightCalculator(modifiers, MinWeight, MaxWeight, InitialWeight);
+            calculator = new ReplicaWeightCalculator(modifiers, minWeight, maxWeight, initialWeight);
         }
 
         [Test]
         public void Ctor_should_throw_an_error_when_modifiers_list_is_null()
         {
-            Action action = () => new ReplicaWeightCalculator(null, MinWeight, MaxWeight, InitialWeight);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            Action action = () => new ReplicaWeightCalculator(null, minWeight, maxWeight, initialWeight);
 
             action.ShouldThrow<ArgumentNullException>().Which.ShouldBePrinted();
         }
@@ -45,7 +46,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
         [Test]
         public void Ctor_should_throw_an_error_when_minimum_weight_is_negative()
         {
-            Action action = () => new ReplicaWeightCalculator(modifiers, -0.01, MaxWeight, InitialWeight);
+            Action action = () => new ReplicaWeightCalculator(modifiers, -0.01, maxWeight, initialWeight);
 
             action.ShouldThrow<ArgumentOutOfRangeException>().Which.ShouldBePrinted();
         }
@@ -53,7 +54,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
         [Test]
         public void Ctor_should_throw_an_error_when_minimum_weight_is_greater_than_maximum_weight()
         {
-            Action action = () => new ReplicaWeightCalculator(modifiers, MaxWeight, MinWeight, InitialWeight);
+            Action action = () => new ReplicaWeightCalculator(modifiers, maxWeight, minWeight, initialWeight);
 
             action.ShouldThrow<ArgumentException>().Which.ShouldBePrinted();
         }
@@ -61,7 +62,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
         [Test]
         public void Ctor_should_throw_an_error_when_initial_weight_is_greater_than_maximum_weight()
         {
-            Action action = () => new ReplicaWeightCalculator(modifiers, MinWeight, MaxWeight, MaxWeight + 1);
+            Action action = () => new ReplicaWeightCalculator(modifiers, minWeight, maxWeight, maxWeight + 1);
 
             action.ShouldThrow<ArgumentOutOfRangeException>().Which.ShouldBePrinted();
         }
@@ -69,7 +70,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
         [Test]
         public void Ctor_should_throw_an_error_when_initial_weight_is_less_than_minimum_weight()
         {
-            Action action = () => new ReplicaWeightCalculator(modifiers, MinWeight, MaxWeight, MinWeight - 1);
+            Action action = () => new ReplicaWeightCalculator(modifiers, minWeight, maxWeight, minWeight - 1);
 
             action.ShouldThrow<ArgumentOutOfRangeException>().Which.ShouldBePrinted();
         }
@@ -77,7 +78,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
         [Test]
         public void GetWeight_should_return_initial_weight_when_there_are_no_modifiers()
         {
-            calculator.GetWeight(replica, replicas, storageProvider, request).Should().Be(InitialWeight);
+            calculator.GetWeight(replica, replicas, storageProvider, request).Should().Be(initialWeight);
         }
 
         [Test]
@@ -92,7 +93,7 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
             Received.InOrder(
                 () =>
                 {
-                    var w1 = InitialWeight;
+                    var w1 = initialWeight;
                     var w2 = w1 + 1;
                     var w3 = w2*2;
 
@@ -114,9 +115,9 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
             Received.InOrder(
                 () =>
                 {
-                    var w1 = InitialWeight;
-                    var w2 = MaxWeight;
-                    var w3 = MinWeight;
+                    var w1 = initialWeight;
+                    var w2 = maxWeight;
+                    var w3 = minWeight;
 
                     modifiers[0].Modify(replica, replicas, storageProvider, request, ref w1);
                     modifiers[1].Modify(replica, replicas, storageProvider, request, ref w2);
@@ -131,7 +132,9 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
             var dummy = 0.0;
 
             modifier
+                // ReSharper disable AssignNullToNotNullAttribute
                 .WhenForAnyArgs(m => m.Modify(null, null, null, null, ref dummy))
+                // ReSharper restore AssignNullToNotNullAttribute
                 .Do(info => { info[4] = transform(info.Arg<double>()); });
 
             return modifier;

@@ -11,8 +11,8 @@ namespace Vostok.Airlock
     [TestFixture]
     internal class RecordSerializer_Tests
     {
-        private const int BufferSize = 32;
-        private const int MaxRecordSize = 40;
+        private const int bufferSize = 32;
+        private const int maxRecordSize = 40;
 
         private Buffer buffer;
         private MemoryManager manager;
@@ -25,9 +25,9 @@ namespace Vostok.Airlock
         [SetUp]
         public void TestSetup()
         {
-            manager = new MemoryManager(BufferSize*2, BufferSize);
-            buffer = new Buffer(new BinaryBufferWriter(BufferSize), manager);
-            serializer = new RecordSerializer(MaxRecordSize.Bytes(), new ConsoleLog());
+            manager = new MemoryManager(bufferSize*2, bufferSize);
+            buffer = new Buffer(new BinaryBufferWriter(bufferSize), manager);
+            serializer = new RecordSerializer(maxRecordSize.Bytes(), new ConsoleLog());
 
             timestamp = DateTimeOffset.Now;
             item = "Hello!";
@@ -52,7 +52,7 @@ namespace Vostok.Airlock
         [Test]
         public void TrySerialize_should_return_false_when_available_memory_is_insufficient()
         {
-            item = new string('!', BufferSize*4);
+            item = new string('!', bufferSize*4);
 
             serializer.TrySerialize(item, itemSerializer, timestamp, buffer).Should().BeFalse();
         }
@@ -60,7 +60,7 @@ namespace Vostok.Airlock
         [Test]
         public void TrySerialize_should_return_false_when_record_size_exceeds_configured_limit()
         {
-            item = new string('!', MaxRecordSize + 1);
+            item = new string('!', maxRecordSize + 1);
 
             serializer.TrySerialize(item, itemSerializer, timestamp, buffer).Should().BeFalse();
         }

@@ -36,7 +36,9 @@ namespace Vostok.Clusterclient.Core.Sending
             resultSource = new TaskCompletionSource<ReplicaResult>();
 
             baseSender = Substitute.For<IRequestSender>();
+            // ReSharper disable AssignNullToNotNullAttribute
             baseSender.SendToReplicaAsync(null, null, TimeSpan.Zero, CancellationToken.None).ReturnsForAnyArgs(_ => resultSource.Task);
+            // ReSharper restore AssignNullToNotNullAttribute
 
             var log = new ConsoleLog();
 

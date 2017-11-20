@@ -8,6 +8,7 @@ using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Modules;
 using Vostok.Clusterclient.Ordering.Storage;
 using NUnit.Framework;
+// ReSharper disable AssignNullToNotNullAttribute
 
 namespace Vostok.Clusterclient.Core.Modules
 {

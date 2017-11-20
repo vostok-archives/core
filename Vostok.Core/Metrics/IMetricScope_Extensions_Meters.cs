@@ -3,7 +3,7 @@ using Vostok.Metrics.Meters;
 
 namespace Vostok.Metrics
 {
-    public static class IMetricScope_Extensions_Meters
+    public static class MetricScope_Extensions_Meters
     {
         public static IEventStopwatch EventStopwatch(
             this IMetricScope scope)

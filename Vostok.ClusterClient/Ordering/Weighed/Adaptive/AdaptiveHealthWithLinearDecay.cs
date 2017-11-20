@@ -26,7 +26,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Adaptive
     /// </summary>
     public class AdaptiveHealthWithLinearDecay : IAdaptiveHealthImplementation<HealthWithDecay>
     {
-        private const double MaximumHealthValue = 1.0;
+        private const double maximumHealthValue = 1.0;
 
         private readonly ITimeProvider timeProvider;
 
@@ -86,7 +86,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Adaptive
 
         public void ModifyWeight(HealthWithDecay health, ref double weight)
         {
-            var healthDamage = MaximumHealthValue - health.Value;
+            var healthDamage = maximumHealthValue - health.Value;
             if (healthDamage <= 0.0)
                 return;
 
@@ -101,12 +101,12 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Adaptive
 
         public HealthWithDecay CreateDefaultHealth()
         {
-            return new HealthWithDecay(MaximumHealthValue, DateTime.MinValue);
+            return new HealthWithDecay(maximumHealthValue, DateTime.MinValue);
         }
 
         public HealthWithDecay IncreaseHealth(HealthWithDecay current)
         {
-            return new HealthWithDecay(Math.Min(MaximumHealthValue, current.Value*UpMultiplier), current.DecayPivot);
+            return new HealthWithDecay(Math.Min(maximumHealthValue, current.Value*UpMultiplier), current.DecayPivot);
         }
 
         public HealthWithDecay DecreaseHealth(HealthWithDecay current)
@@ -116,7 +116,8 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Adaptive
 
         public bool AreEqual(HealthWithDecay x, HealthWithDecay y)
         {
-            return x.Value.Equals(y.Value) && (x.DecayPivot == y.DecayPivot);
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
+            return x.Value.Equals(y.Value) && x.DecayPivot == y.DecayPivot;
         }
 
         public void LogHealthChange(Uri replica, HealthWithDecay oldHealth, HealthWithDecay newHealth, ILog log)

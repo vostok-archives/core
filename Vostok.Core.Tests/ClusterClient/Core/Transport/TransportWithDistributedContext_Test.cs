@@ -13,7 +13,7 @@ namespace Vostok.Clusterclient.Core.Transport
 {
     public class TransportWithDistributedContext_Test
     {
-        private const string XDistributedContextSeparator = "-";
+        private const string xDistributedContextSeparator = "-";
         private ITransport transport;
         private TransportWithDistributedContext transportWithDistributedContext;
         private string existedkey;
@@ -27,8 +27,8 @@ namespace Vostok.Clusterclient.Core.Transport
         }
 
         
-        [TestCase("key", "value", HeaderNames.XDistributedContextPrefix + XDistributedContextSeparator + "key", "string|value")]
-        [TestCase("ключ", "значение", HeaderNames.XDistributedContextPrefix + XDistributedContextSeparator + "%d0%ba%d0%bb%d1%8e%d1%87", "string|%d0%b7%d0%bd%d0%b0%d1%87%d0%b5%d0%bd%d0%b8%d0%b5")]
+        [TestCase("key", "value", HeaderNames.XDistributedContextPrefix + xDistributedContextSeparator + "key", "string|value")]
+        [TestCase("ключ", "значение", HeaderNames.XDistributedContextPrefix + xDistributedContextSeparator + "%d0%ba%d0%bb%d1%8e%d1%87", "string|%d0%b7%d0%bd%d0%b0%d1%87%d0%b5%d0%bd%d0%b8%d0%b5")]
         public void SendAsync_should_create_headers_from_DistributedContext_when_headers_is_null(string key, string value, string expectedKey, string expectedValue)
         {
             Context.Configuration.DistributedProperties.Add(key);
@@ -71,7 +71,7 @@ namespace Vostok.Clusterclient.Core.Transport
             var request = new Request("GET", new Uri("http://localhost")).WithHeader(existedkey, "existedValue");
             Headers actual = null;
             transport.SendAsync(Arg.Do<Request>(x => { actual = x.Headers; }), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new Task<Response>(() => null));
-            var expectedKeys = new[] {existedkey, HeaderNames.XDistributedContextPrefix + XDistributedContextSeparator + key1, HeaderNames.XDistributedContextPrefix + XDistributedContextSeparator + key2 };
+            var expectedKeys = new[] {existedkey, HeaderNames.XDistributedContextPrefix + xDistributedContextSeparator + key1, HeaderNames.XDistributedContextPrefix + xDistributedContextSeparator + key2 };
 
             transportWithDistributedContext.SendAsync(request, TimeSpan.Zero, CancellationToken.None);
 
@@ -82,7 +82,7 @@ namespace Vostok.Clusterclient.Core.Transport
         public void SendAsync_should_not_add_headers_from_DistributedContext_when_key_exists()
         {
             const string key = "key";
-            const string headerKey = HeaderNames.XDistributedContextPrefix + XDistributedContextSeparator + key;
+            const string headerKey = HeaderNames.XDistributedContextPrefix + xDistributedContextSeparator + key;
 
             const string oldvalue = "oldValue";
 

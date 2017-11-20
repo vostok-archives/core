@@ -21,6 +21,7 @@ namespace Vostok.Clusterclient.Core.Model
         [Test]
         public void Ctor_should_throw_when_method_is_null()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             Action action = () => new Request(null, new Uri("http://foo/bar"));
 
             action.ShouldThrow<ArgumentNullException>();
@@ -29,6 +30,7 @@ namespace Vostok.Clusterclient.Core.Model
         [Test]
         public void Ctor_should_throw_when_url_is_null()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             Action action = () => new Request(RequestMethods.Get, null);
 
             action.ShouldThrow<ArgumentNullException>();

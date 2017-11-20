@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Vostok.Logging
 {
-    public static class ILogExtensions_Context
+    public static class LogExtensions_Context
     {
         public static ILog ForContext<T>(this ILog log)
         {

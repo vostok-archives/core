@@ -19,7 +19,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Leadership
     /// </summary>
     public class LeadershipWeightModifier : IReplicaWeightModifier
     {
-        private static readonly string StorageKey = typeof (LeadershipWeightModifier).FullName;
+        private static readonly string storageKey = typeof (LeadershipWeightModifier).FullName;
 
         private readonly ILeaderResultDetector resultDetector;
         private readonly ILog log;
@@ -35,13 +35,13 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Leadership
 
         public void Modify(Uri replica, IList<Uri> allReplicas, IReplicaStorageProvider storageProvider, Request request, ref double weight)
         {
-            if (!IsLeader(replica, storageProvider.Obtain<bool>(StorageKey)))
+            if (!IsLeader(replica, storageProvider.Obtain<bool>(storageKey)))
                 weight = 0.0;
         }
 
         public void Learn(ReplicaResult result, IReplicaStorageProvider storageProvider)
         {
-            var storage = storageProvider.Obtain<bool>(StorageKey);
+            var storage = storageProvider.Obtain<bool>(storageKey);
 
             bool hadStoredStatus;
 
@@ -69,9 +69,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Leadership
 
         private static bool IsLeader(Uri replica, ConcurrentDictionary<Uri, bool> storage)
         {
-            bool hadStoredStatus;
-
-            return IsLeader(replica, storage, out hadStoredStatus);
+            return IsLeader(replica, storage, out _);
         }
 
         private static bool IsLeader(Uri replica, ConcurrentDictionary<Uri, bool> storage, out bool hadStoredStatus)

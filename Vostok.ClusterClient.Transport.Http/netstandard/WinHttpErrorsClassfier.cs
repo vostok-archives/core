@@ -6,6 +6,7 @@ namespace Vostok.Clusterclient.Transport.Http
 {
     internal static class WinHttpErrorsHandler
     {
+        // ReSharper disable InconsistentNaming
         private const int ERROR_WINHTTP_AUTODETECTION_FAILED = 12180;
         private const int ERROR_WINHTTP_CANNOT_CONNECT = 12029;
         private const int ERROR_WINHTTP_CONNECTION_ERROR = 12030;
@@ -14,6 +15,7 @@ namespace Vostok.Clusterclient.Transport.Http
         private const int ERROR_WINHTTP_SECURE_CHANNEL_ERROR = 12157;
         private const int ERROR_WINHTTP_SECURE_FAILURE = 12175;
         private const int ERROR_WINHTTP_TIMEOUT = 12002;
+        // ReSharper restore InconsistentNaming
 
         private static readonly Dictionary<int, ResponseCode> mapping = new Dictionary<int, ResponseCode>
         {

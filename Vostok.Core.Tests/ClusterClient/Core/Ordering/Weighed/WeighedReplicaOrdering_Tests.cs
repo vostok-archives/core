@@ -49,7 +49,9 @@ namespace Vostok.Clusterclient.Core.Ordering.Weighed
             storageProvider = Substitute.For<IReplicaStorageProvider>();
 
             weightCalculator = Substitute.For<IReplicaWeightCalculator>();
+            // ReSharper disable AssignNullToNotNullAttribute
             weightCalculator.GetWeight(null, null, null, null).ReturnsForAnyArgs(1.0);
+            // ReSharper restore AssignNullToNotNullAttribute
 
             ordering = new WeighedReplicaOrdering(modifiers, weightCalculator);
         }

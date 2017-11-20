@@ -144,7 +144,7 @@ namespace Vostok.Clusterclient.Model
 
             builder.Append(urlString);
 
-            if (includeHeaders && (Headers != null) && (Headers.Count > 0))
+            if (includeHeaders && Headers != null && Headers.Count > 0)
             {
                 builder.AppendLine();
                 builder.Append(Headers);
@@ -164,11 +164,11 @@ namespace Vostok.Clusterclient.Model
             if (Url.IsAbsoluteUri)
             {
                 var scheme = Url.Scheme;
-                if ((scheme != Uri.UriSchemeHttp) && (scheme != Uri.UriSchemeHttps))
+                if (scheme != Uri.UriSchemeHttp && scheme != Uri.UriSchemeHttps)
                     yield return $"Request url has unsupported scheme '{scheme}'. Only http and https schemes are allowed.";
             }
 
-            if ((Content != null) && ((Method == RequestMethods.Get) || (Method == RequestMethods.Head)))
+            if (Content != null && (Method == RequestMethods.Get || Method == RequestMethods.Head))
                 yield return $"Sending a body is not allowed with {Method} requests.";
         }
 

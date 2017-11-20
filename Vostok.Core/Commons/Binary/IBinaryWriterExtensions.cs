@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Vostok.Commons.Binary
 {
-    public static class IBinaryWriterExtensions
+    public static class BinaryWriterExtensions
     {
         public static void Write(this IBinaryWriter writer, string value)
         {

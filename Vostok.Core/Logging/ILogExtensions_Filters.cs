@@ -2,7 +2,7 @@ using System;
 
 namespace Vostok.Logging
 {
-    public static class ILogExtensions_Filters
+    public static class LogExtensions_Filters
     {
         public static ILog FilterByLevel(this ILog log, LogLevel minLevel)
         {

@@ -12,9 +12,9 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class AdaptiveThrottlingModule_Tests
     {
-        private const int MinimumRequests = 50;
-        private const double CriticalRatio = 2.0;
-        private const double ProbabilityCap = 0.8;
+        private const int minimumRequests = 50;
+        private const double criticalRatio = 2.0;
+        private const double probabilityCap = 0.8;
 
         private Uri replica;
         private Request request;
@@ -36,7 +36,7 @@ namespace Vostok.Clusterclient.Core.Modules
             context = Substitute.For<IRequestContext>();
             context.Log.Returns(new SilentLog());
 
-            options = new AdaptiveThrottlingOptions(Guid.NewGuid().ToString(), 1, MinimumRequests, CriticalRatio, ProbabilityCap);
+            options = new AdaptiveThrottlingOptions(Guid.NewGuid().ToString(), 1, minimumRequests);
             module = new AdaptiveThrottlingModule(options);
         }
 
@@ -81,7 +81,7 @@ namespace Vostok.Clusterclient.Core.Modules
         [Test]
         public void Should_not_reject_requests_until_minimum_count_is_reached()
         {
-            for (var i = 0; i < MinimumRequests - 1; i++)
+            for (var i = 0; i < minimumRequests - 1; i++)
                 Execute(rejectedResult).Should().BeSameAs(rejectedResult);
         }
 
@@ -92,7 +92,7 @@ namespace Vostok.Clusterclient.Core.Modules
 
             Reject(100);
 
-            module.RejectionProbability.Should().Be(ProbabilityCap);
+            module.RejectionProbability.Should().Be(probabilityCap);
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace Vostok.Clusterclient.Core.Modules
             Accept(1);
             Reject(1);
 
-            while (module.RejectionProbability < ProbabilityCap)
+            while (module.RejectionProbability < probabilityCap)
             {
                 var previous = module.RejectionProbability;
 
@@ -116,7 +116,7 @@ namespace Vostok.Clusterclient.Core.Modules
         {
             Accept(10);
 
-            while (module.RejectionProbability < ProbabilityCap)
+            while (module.RejectionProbability < probabilityCap)
             {
                 Reject(1);
             }
@@ -135,7 +135,7 @@ namespace Vostok.Clusterclient.Core.Modules
         [Test]
         public void Should_reject_with_throttled_result_when_rejection_probability_allows()
         {
-            options = new AdaptiveThrottlingOptions(Guid.NewGuid().ToString(), 1, MinimumRequests, CriticalRatio, 1.0);
+            options = new AdaptiveThrottlingOptions(Guid.NewGuid().ToString(), 1, minimumRequests, criticalRatio, 1.0);
             module = new AdaptiveThrottlingModule(options);
 
             Accept(1);

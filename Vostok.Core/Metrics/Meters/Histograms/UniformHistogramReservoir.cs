@@ -12,8 +12,8 @@ namespace Vostok.Metrics.Meters.Histograms
     public class UniformHistogramReservoir : IReservoirHistogramMeter
     {
         /// This offfers a 99.9% confidence level with a 5% margin of error assuming a normal distribution.
-        private const int ReservoirSize = 1028;
-        private readonly double[] values = new double[ReservoirSize];
+        private const int reservoirSize = 1028;
+        private readonly double[] values = new double[reservoirSize];
 
         //TODO (@ezsilmar) To use long here, we need to generate good uniformly distributed long values
         //We do not have this feature out of the box in .net, plus random has only 32-bit seed.
@@ -38,7 +38,7 @@ namespace Vostok.Metrics.Meters.Histograms
 
         public ReservoirHistogramSnapshot GetSnapshot()
         {
-            var count = Math.Min(ReservoirSize, measurementsCount);
+            var count = Math.Min(reservoirSize, measurementsCount);
             var valuesCopy = new double[count];
             Buffer.BlockCopy(values, 0, valuesCopy, 0, count*sizeof(double));
             Array.Sort(valuesCopy);

@@ -45,9 +45,7 @@ namespace Vostok.Common
         [Test, TestCaseSource(nameof(failCases))]
         public void Should_fail_if_input_is_not_a_correct_duration(string input, string reason)
         {
-            TimeSpan result;
-
-            var success = DurationParser.TryParse(input, out result);
+            var success = DurationParser.TryParse(input, out _);
 
             success.Should().BeFalse($"because {reason}. Input: [{input}]");
         }

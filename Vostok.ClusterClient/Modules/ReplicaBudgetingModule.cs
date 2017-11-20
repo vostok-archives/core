@@ -13,8 +13,8 @@ namespace Vostok.Clusterclient.Modules
     /// </summary>
     internal class ReplicaBudgetingModule : IRequestModule
     {
-        private static readonly ConcurrentDictionary<string, Counter> Counters = new ConcurrentDictionary<string, Counter>();
-        private static readonly Stopwatch Watch = Stopwatch.StartNew();
+        private static readonly ConcurrentDictionary<string, Counter> counters = new ConcurrentDictionary<string, Counter>();
+        private static readonly Stopwatch watch = Stopwatch.StartNew();
 
         private readonly ReplicaBudgetingOptions options;
         private readonly Func<string, Counter> counterFactory;
@@ -56,7 +56,7 @@ namespace Vostok.Clusterclient.Modules
 
         private Counter GetCounter()
         {
-            return Counters.GetOrAdd(options.StorageKey, counterFactory);
+            return counters.GetOrAdd(options.StorageKey, counterFactory);
         }
 
         private static double ComputeRatio(CounterMetrics metrics)
@@ -152,7 +152,7 @@ namespace Vostok.Clusterclient.Modules
 
             private static int GetCurrentMinute()
             {
-                return (int) Math.Floor(Watch.Elapsed.TotalMinutes);
+                return (int) Math.Floor(watch.Elapsed.TotalMinutes);
             }
         }
 

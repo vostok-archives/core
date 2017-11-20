@@ -9,20 +9,20 @@ namespace Vostok.Clusterclient.Transport.Http
 {
     public abstract class TransportTestsBase
     {
-        protected readonly VostokHttpTransport transport;
-        protected readonly ILog log;
+        protected readonly VostokHttpTransport Transport;
+        protected readonly ILog Log;
 
         protected TransportTestsBase()
         {
-            log = new ConsoleLog();
-            transport = new VostokHttpTransport(log);
+            Log = new ConsoleLog();
+            Transport = new VostokHttpTransport(Log);
 
-            ThreadPoolUtility.Setup(log);
+            ThreadPoolUtility.Setup(Log);
         }
 
         protected Response Send(Request request, TimeSpan? timeout = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return transport.SendAsync(request, timeout ?? TimeSpan.FromMinutes(1), cancellationToken).GetAwaiter().GetResult();
+            return Transport.SendAsync(request, timeout ?? TimeSpan.FromMinutes(1), cancellationToken).GetAwaiter().GetResult();
         }
     }
 }

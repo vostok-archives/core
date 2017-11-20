@@ -4,18 +4,18 @@ namespace Vostok.Commons.Model
 {
     public static class RequestPriorityContext
     {
-        private const string ContextKey = "Vostok.RequestPriority";
+        private const string contextKey = "Vostok.RequestPriority";
 
         static RequestPriorityContext()
         {
-            Context.Configuration.DistributedProperties.Add(ContextKey);
+            Context.Configuration.DistributedProperties.Add(contextKey);
         }
 
         public static RequestPriority? Current
         {
             get
             {
-                var value = Context.Properties.Get(ContextKey, int.MinValue);
+                var value = Context.Properties.Get(contextKey, int.MinValue);
                 if (value < 0)
                     return null;
 
@@ -25,11 +25,11 @@ namespace Vostok.Commons.Model
             {
                 if (value == null)
                 {
-                    Context.Properties.RemoveProperty(ContextKey);
+                    Context.Properties.RemoveProperty(contextKey);
                 }
                 else
                 {
-                    Context.Properties.Set(ContextKey, (int) value.Value);
+                    Context.Properties.Set(contextKey, (int) value.Value);
                 }
             }
         }

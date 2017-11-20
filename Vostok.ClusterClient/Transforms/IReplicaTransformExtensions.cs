@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Vostok.Clusterclient.Transforms
 {
-    public static class IReplicaTransformExtensions
+    public static class ReplicaTransformExtensions
     {
         public static IList<Uri> Transform(this IReplicaTransform transform, IList<Uri> replicas)
         {

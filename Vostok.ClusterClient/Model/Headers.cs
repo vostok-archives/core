@@ -61,15 +61,7 @@ namespace Vostok.Clusterclient.Model
         /// <param name="name">Header name.</param>
         /// <returns>Header value if found, <c>null</c> otherwise.</returns>
         [CanBeNull]
-        public string this[string name]
-        {
-            get
-            {
-                int index;
-
-                return Find(name, out index)?.Value;
-            }
-        }
+        public string this[string name] => Find(name, out _)?.Value;
 
         /// <summary>
         /// <para>Produces a new <see cref="Headers"/> instance where the header with given name will have given value.</para>

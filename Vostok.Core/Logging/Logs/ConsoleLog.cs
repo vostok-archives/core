@@ -5,7 +5,7 @@ namespace Vostok.Logging.Logs
 {
     public class ConsoleLog : ILog
     {
-        private static readonly Dictionary<LogLevel, ConsoleColor> LevelToColor = new Dictionary<LogLevel, ConsoleColor>
+        private static readonly Dictionary<LogLevel, ConsoleColor> levelToColor = new Dictionary<LogLevel, ConsoleColor>
         {
             {LogLevel.Trace, ConsoleColor.Gray},
             {LogLevel.Debug, ConsoleColor.Gray},
@@ -22,7 +22,7 @@ namespace Vostok.Logging.Logs
             lock (syncLock)
             {
                 var oldColor = Console.ForegroundColor;
-                Console.ForegroundColor = LevelToColor[logEvent.Level];
+                Console.ForegroundColor = levelToColor[logEvent.Level];
                 Console.Out.Write(LogEventFormatter.Format(logEvent));
                 Console.ForegroundColor = oldColor;
             }

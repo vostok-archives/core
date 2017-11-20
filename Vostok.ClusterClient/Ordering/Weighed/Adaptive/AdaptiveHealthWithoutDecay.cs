@@ -13,7 +13,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Adaptive
     /// </summary>
     public class AdaptiveHealthWithoutDecay : IAdaptiveHealthImplementation<double>
     {
-        private const double MaximumHealthValue = 1.0;
+        private const double maximumHealthValue = 1.0;
 
         /// <param name="upMultiplier">A multiplier used to increase health. Must be in <c>(1; +infinity)</c> range.</param>
         /// <param name="downMultiplier">A multiplier used to decrease health. Must be in <c>(0; 1)</c> range.</param>
@@ -56,12 +56,12 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Adaptive
 
         public double CreateDefaultHealth()
         {
-            return MaximumHealthValue;
+            return maximumHealthValue;
         }
 
         public double IncreaseHealth(double current)
         {
-            return Math.Min(MaximumHealthValue, current*UpMultiplier);
+            return Math.Min(maximumHealthValue, current*UpMultiplier);
         }
 
         public double DecreaseHealth(double current)
