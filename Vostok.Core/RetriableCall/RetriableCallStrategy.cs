@@ -111,7 +111,7 @@ namespace Vostok.RetriableCall
             {
                 if (tryNumber > 0)
                     delay = IncreaseDelay(delay);
-                log.Warn($"Try #{tryNumber + 1} failed, retry after {delay.Milliseconds}ms", ex);
+                log.Warn($"Try #{tryNumber + 1} failed, retry after {delay.TotalMilliseconds}ms", ex);
             }
             if (!exceptions.Contains(ex))
                 exceptions.Add(ex);
