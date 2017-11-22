@@ -17,7 +17,7 @@ namespace Vostok.Clusterclient.Helpers
             {
                 var encoded = UrlEncode(bytes, offset, count);
 
-                return alwaysCreateNewReturnValue && (encoded != null) && (encoded == bytes)
+                return alwaysCreateNewReturnValue && encoded != null && encoded == bytes
                     ? (byte[]) encoded.Clone()
                     : encoded;
             }
@@ -86,7 +86,7 @@ namespace Vostok.Clusterclient.Helpers
 
             private static bool IsNonAsciiByte(byte b)
             {
-                return (b >= 0x7F) || (b < 0x20);
+                return b >= 0x7F || b < 0x20;
             }
 
             private byte[] UrlEncode(byte[] bytes, int offset, int count)
@@ -111,7 +111,7 @@ namespace Vostok.Clusterclient.Helpers
                 }
 
                 // nothing to expand? 
-                if ((cSpaces == 0) && (cUnsafe == 0))
+                if (cSpaces == 0 && cUnsafe == 0)
                     return bytes;
 
                 // expand not 'safe' characters into %XX, spaces to +s
@@ -171,7 +171,7 @@ namespace Vostok.Clusterclient.Helpers
                 }
 
                 // nothing to expand?
-                if (!alwaysCreateNewReturnValue && (cNonAscii == 0))
+                if (!alwaysCreateNewReturnValue && cNonAscii == 0)
                     return bytes;
 
                 // expand not 'safe' characters into %XX, spaces to +s 
@@ -199,17 +199,17 @@ namespace Vostok.Clusterclient.Helpers
 
             private static bool ValidateUrlEncodingParameters(byte[] bytes, int offset, int count)
             {
-                if ((bytes == null) && (count == 0))
+                if (bytes == null && count == 0)
                     return false;
                 if (bytes == null)
                 {
                     throw new ArgumentNullException(nameof(bytes));
                 }
-                if ((offset < 0) || (offset > bytes.Length))
+                if (offset < 0 || offset > bytes.Length)
                 {
                     throw new ArgumentOutOfRangeException(nameof(offset));
                 }
-                if ((count < 0) || (offset + count > bytes.Length))
+                if (count < 0 || offset + count > bytes.Length)
                 {
                     throw new ArgumentOutOfRangeException(nameof(count));
                 }
@@ -250,7 +250,7 @@ namespace Vostok.Clusterclient.Helpers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static bool IsUrlSafeChar(char ch)
             {
-                if (((ch >= 'a') && (ch <= 'z')) || ((ch >= 'A') && (ch <= 'Z')) || ((ch >= '0') && (ch <= '9')))
+                if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch >= '0' && ch <= '9')
                     return true;
 
                 switch (ch)
@@ -272,7 +272,7 @@ namespace Vostok.Clusterclient.Helpers
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal static string UrlEncodeSpaces(string str)
             {
-                if ((str != null) && (str.IndexOf(' ') >= 0))
+                if (str != null && str.IndexOf(' ') >= 0)
                     str = str.Replace(" ", "%20");
                 return str;
             }
@@ -294,7 +294,7 @@ namespace Vostok.Clusterclient.Helpers
 
         public static string UrlEncode(string str, Encoding e)
         {
-            if ((str == null) || HttpEncoderUtility.IsUrlSafeString(str))
+            if (str == null || HttpEncoderUtility.IsUrlSafeString(str))
                 return str;
 
             return Encoding.ASCII.GetString(UrlEncodeToBytes(str, e));

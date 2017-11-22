@@ -26,12 +26,12 @@ namespace Vostok.Clusterclient.Topology
         public IList<Uri> GetCluster()
         {
             var currentReplicas = provider.GetCluster();
-            if ((currentReplicas == null) || (currentReplicas.Count == 0))
+            if (currentReplicas == null || currentReplicas.Count == 0)
                 return currentReplicas;
 
             var currentCache = cache;
 
-            if ((currentCache != null) && ReferenceEquals(currentCache.Item1, currentReplicas))
+            if (currentCache != null && ReferenceEquals(currentCache.Item1, currentReplicas))
                 return currentCache.Item2;
 
             var repeatedReplicas = Repeat(currentReplicas, repeatCount);

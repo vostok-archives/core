@@ -2,7 +2,7 @@ using System;
 
 namespace Vostok.Logging
 {
-    public static class ILogExtensions_Logging
+    public static class LogExtensions_Logging
     {
         public static void Info(this ILog log, string message)
         {

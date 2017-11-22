@@ -53,7 +53,9 @@ namespace Vostok.Clusterclient.Core.Modules
             var log = new ConsoleLog();
 
             context = new RequestContext(Request.Get("foo/bar"), Substitute.For<IRequestStrategy>(), Budget.Infinite, log, CancellationToken.None, null, int.MaxValue);
+            // ReSharper disable AssignNullToNotNullAttribute
             context.Strategy.SendAsync(null, null, null, null, 0, default(CancellationToken))
+                // ReSharper restore AssignNullToNotNullAttribute
                 .ReturnsForAnyArgs(
                     async info =>
                     {
@@ -74,13 +76,18 @@ namespace Vostok.Clusterclient.Core.Modules
             requestSender.SendToReplicaAsync(replica2, Arg.Any<Request>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).ReturnsTask(_ => result2);
 
             replicaOrdering = Substitute.For<IReplicaOrdering>();
+            // ReSharper disable AssignNullToNotNullAttribute
             replicaOrdering.Order(null, null, null).ReturnsForAnyArgs(info => info.Arg<IList<Uri>>().Reverse());
+            // ReSharper restore AssignNullToNotNullAttribute
 
             responseSelector = Substitute.For<IResponseSelector>();
+            // ReSharper disable once AssignNullToNotNullAttribute
             responseSelector.Select(null).ReturnsForAnyArgs(_ => selectedResponse);
 
             resultStatusSelector = Substitute.For<IClusterResultStatusSelector>();
+            // ReSharper disable AssignNullToNotNullAttribute
             resultStatusSelector.Select(null, null).ReturnsForAnyArgs(ClusterResultStatus.Success);
+            // ReSharper restore AssignNullToNotNullAttribute
 
             storageProvider = Substitute.For<IReplicaStorageProvider>();
             module = new RequestExecutionModule(
@@ -176,7 +183,9 @@ namespace Vostok.Clusterclient.Core.Modules
         [TestCase(ClusterResultStatus.ReplicasExhausted)]
         public void Should_return_a_result_with_status_selected_by_result_status_selector(ClusterResultStatus status)
         {
+            // ReSharper disable AssignNullToNotNullAttribute
             resultStatusSelector.Select(null, null).ReturnsForAnyArgs(status);
+            // ReSharper restore AssignNullToNotNullAttribute
 
             Execute().Status.Should().Be(status);
         }

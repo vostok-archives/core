@@ -2,7 +2,7 @@ using System;
 
 namespace Vostok.Flow
 {
-    public static class IContextPropertiesExtensions_Scopes
+    public static class ContextPropertiesExtensions_Scopes
     {
         public static IDisposable Use<TValue>(this IContextProperties properties, string key, TValue value)
         {

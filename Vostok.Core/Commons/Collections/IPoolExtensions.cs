@@ -1,6 +1,6 @@
 ﻿namespace Vostok.Commons.Collections
 {
-    public static class IPoolExtensions
+    public static class PoolExtensions
     {
         public static PoolHandle<T> AcquireHandle<T>(this IPool<T> pool)
         {

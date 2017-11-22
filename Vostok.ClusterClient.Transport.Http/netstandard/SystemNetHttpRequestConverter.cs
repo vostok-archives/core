@@ -7,14 +7,14 @@ namespace Vostok.Clusterclient.Transport.Http
 {
     internal static class SystemNetHttpRequestConverter
     {
-        private static readonly Dictionary<string, HttpMethod> MethodsMapping =
+        private static readonly Dictionary<string, HttpMethod> methodsMapping =
             RequestMethods.All.ToDictionary(m => m, m => new HttpMethod(m));
 
-        private static readonly byte[] EmptyByteArray = {};
+        private static readonly byte[] emptyByteArray = {};
 
         public static HttpRequestMessage Convert(Request request)
         {
-            var message = new HttpRequestMessage(MethodsMapping[request.Method], request.Url);
+            var message = new HttpRequestMessage(methodsMapping[request.Method], request.Url);
 
             if (request.Content != null)
             {
@@ -29,19 +29,20 @@ namespace Vostok.Clusterclient.Transport.Http
             return message;
         }
 
-        private static bool TryAddHeader(Header header, HttpRequestMessage message)
+        private static void TryAddHeader(Header header, HttpRequestMessage message)
         {
             if (SystemNetHttpHeaderUtilities.IsContentHeader(header.Name))
             {
                 if (message.Content == null)
                 {
-                    message.Content = new ByteArrayContent(EmptyByteArray);
+                    message.Content = new ByteArrayContent(emptyByteArray);
                 }
 
-                return message.Content.Headers.TryAddWithoutValidation(header.Name, header.Value);
+                message.Content.Headers.TryAddWithoutValidation(header.Name, header.Value);
+                return;
             }
 
-            return message.Headers.TryAddWithoutValidation(header.Name, header.Value);
+            message.Headers.TryAddWithoutValidation(header.Name, header.Value);
         }
     }
 }

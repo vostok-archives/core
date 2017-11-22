@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Vostok.Clusterclient.Helpers;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Retry;
 using Vostok.Commons.Utilities;

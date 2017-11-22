@@ -55,6 +55,7 @@ namespace Vostok.Clusterclient.Core.Sending
 
             convertedRequest.Should().NotBeNull();
 
+            // ReSharper disable once PossibleNullReferenceException
             convertedRequest.Url.IsAbsoluteUri.Should().BeTrue();
 
             convertedRequest.Url.OriginalString.Should().Be(expectedUrl);

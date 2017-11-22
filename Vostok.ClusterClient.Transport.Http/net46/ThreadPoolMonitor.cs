@@ -45,7 +45,7 @@ namespace Vostok.Clusterclient.Transport.Http
             if (currentMultiplier < 128)
             {
                 log.Info("I will configure ThreadPool for you, buddy!");
-                ThreadPoolUtility.Setup(log, 128);
+                ThreadPoolUtility.Setup(log);
             }
         }
     }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Vostok.Commons.Binary
 {
-    public static class IBinaryReaderExtensions
+    public static class BinaryReaderExtensions
     {
         public static string ReadString(this IBinaryReader reader)
         {

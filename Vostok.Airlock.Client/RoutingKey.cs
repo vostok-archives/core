@@ -14,7 +14,7 @@ namespace Vostok.Airlock
         public const string TracesSuffix = "traces";
         public const string LogsSuffix = "logs";
 
-        private const char UnacceptableCharPlaceholder = '-';
+        private const char unacceptableCharPlaceholder = '-';
 
         public static string TryCreate(string project, string environment, string service, params string[] suffix)
         {
@@ -117,7 +117,7 @@ namespace Vostok.Airlock
                 if (IsAcceptableUpperCaseChar(sb[i]))
                     sb[i] = char.ToLower(sb[i]);
                 else
-                    sb[i] = UnacceptableCharPlaceholder;
+                    sb[i] = unacceptableCharPlaceholder;
             }
             return sb.ToString();
         }
@@ -133,7 +133,7 @@ namespace Vostok.Airlock
         {
             return c >= 'a' && c <= 'z'
                    || c >= '0' && c <= '9'
-                   || c == UnacceptableCharPlaceholder;
+                   || c == unacceptableCharPlaceholder;
         }
 
         private static bool IsAcceptableUpperCaseChar(char c)

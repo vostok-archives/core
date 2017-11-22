@@ -8,15 +8,15 @@ namespace Vostok.Clusterclient.Transport.Http
 {
     public class ConnectionTimeoutTests : TransportTestsBase
     {
-        private const string BlackholeUrl = "http://193.42.113.67:5453/foo/bar";
+        private const string blackholeUrl = "http://193.42.113.67:5453/foo/bar";
 
         // TODO(iloktionov): Придумать что-то получше рандомного IP (например, hellion).
         [Test, Ignore("Not stable on Appveyor :(")]
         public void Should_timeout_on_connection_to_a_blackhole()
         {
-            transport.ConnectionTimeout = 250.Milliseconds();
+            Transport.ConnectionTimeout = 250.Milliseconds();
 
-            var task = transport.SendAsync(Request.Get(BlackholeUrl), 1.Minutes(), CancellationToken.None);
+            var task = Transport.SendAsync(Request.Get(blackholeUrl), 1.Minutes(), CancellationToken.None);
 
             task.Wait(2.Seconds()).Should().BeTrue();
 
@@ -26,9 +26,9 @@ namespace Vostok.Clusterclient.Transport.Http
         [Test]
         public void Should_not_timeout_on_connection_to_a_blackhole_if_connection_timeout_is_disabled()
         {
-            transport.ConnectionTimeout = null;
+            Transport.ConnectionTimeout = null;
 
-            var task = transport.SendAsync(Request.Get(BlackholeUrl), 1.Minutes(), CancellationToken.None);
+            var task = Transport.SendAsync(Request.Get(blackholeUrl), 1.Minutes(), CancellationToken.None);
 
             task.Wait(2.Seconds()).Should().BeFalse();
         }
@@ -36,7 +36,7 @@ namespace Vostok.Clusterclient.Transport.Http
         [Test]
         public void Should_not_timeout_when_server_is_just_slow()
         {
-            transport.ConnectionTimeout = 250.Milliseconds();
+            Transport.ConnectionTimeout = 250.Milliseconds();
 
             using (var server = TestServer.StartNew(ctx =>
             {

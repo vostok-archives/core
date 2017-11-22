@@ -2,7 +2,7 @@ using Vostok.Flow;
 
 namespace Vostok.Logging
 {
-    public static class ILogExtensions_FlowContext
+    public static class LogExtensions_FlowContext
     {
         public static ILog WithFlowContext(this ILog log)
         {

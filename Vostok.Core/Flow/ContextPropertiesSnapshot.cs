@@ -11,7 +11,7 @@ namespace Vostok.Flow
 
     internal class ContextPropertiesSnapshot : IReadOnlyDictionary<string, object>
     {
-        private const int DefaultCapacity = 4;
+        private const int defaultCapacity = 4;
 
         public static readonly ContextPropertiesSnapshot Empty = new ContextPropertiesSnapshot(0);
 
@@ -19,7 +19,7 @@ namespace Vostok.Flow
         private readonly int count;
 
         public ContextPropertiesSnapshot()
-            : this(DefaultCapacity)
+            : this(defaultCapacity)
         {
         }
 
@@ -70,7 +70,7 @@ namespace Vostok.Flow
 
             if (properties.Length == count)
             {
-                newProperties = ReallocateArray(Math.Max(DefaultCapacity, properties.Length*2));
+                newProperties = ReallocateArray(Math.Max(defaultCapacity, properties.Length*2));
                 newProperties[count] = newProperty;
                 return new ContextPropertiesSnapshot(newProperties, count + 1);
             }

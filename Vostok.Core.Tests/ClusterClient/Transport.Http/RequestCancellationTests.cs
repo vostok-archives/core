@@ -49,7 +49,7 @@ namespace Vostok.Clusterclient.Transport.Http
 
         private Response SendWithCancellation(Request request)
         {
-            var sendTask = transport.SendAsync(request, 1.Minutes(), token);
+            var sendTask = Transport.SendAsync(request, 1.Minutes(), token);
 
             tokenSource.CancelAfter(200.Milliseconds());
 

@@ -50,7 +50,7 @@ namespace Vostok.Clusterclient
 
         /// <summary>
         /// <para>Gets or sets replica ordering implementation. See <see cref="IReplicaOrdering.Order"/> and <see cref="IReplicaOrdering.Learn"/> for more details.</para>
-        /// <para>The recommended implementation is <see cref="WeighedReplicaOrdering"/>. Use <see cref="IClusterClientConfigurationExtensions.SetupWeighedReplicaOrdering"/> extension to build it.</para>
+        /// <para>The recommended implementation is <see cref="WeighedReplicaOrdering"/>. Use <see cref="ClusterClientConfigurationExtensions.SetupWeighedReplicaOrdering"/> extension to build it.</para>
         /// <para>This parameter is optional and has a default value (see <see cref="ClusterClientDefaults.ReplicaOrdering"/>).</para>
         /// </summary>
         IReplicaOrdering ReplicaOrdering { get; set; }
@@ -63,21 +63,21 @@ namespace Vostok.Clusterclient
 
         /// <summary>
         /// <para>A list of request transforms. See <see cref="IRequestTransform"/> for more details.</para>
-        /// <para>Use <see cref="IClusterClientConfigurationExtensions.AddRequestTransform(IClusterClientConfiguration, IRequestTransform)"/> to add transforms to this list.</para>
+        /// <para>Use <see cref="ClusterClientConfigurationExtensions.AddRequestTransform(IClusterClientConfiguration, IRequestTransform)"/> to add transforms to this list.</para>
         /// <para>This parameter is optional and has an empty default value.</para>
         /// </summary>
         List<IRequestTransform> RequestTransforms { get; set; }
 
         /// <summary>
         /// <para>A list of response transforms. See <see cref="IResponseTransform"/> for more details.</para>
-        /// <para>Use <see cref="IClusterClientConfigurationExtensions.AddResponseTransform(IClusterClientConfiguration, IResponseTransform)"/> to add transforms to this list.</para>
+        /// <para>Use <see cref="ClusterClientConfigurationExtensions.AddResponseTransform(IClusterClientConfiguration, IResponseTransform)"/> to add transforms to this list.</para>
         /// <para>This parameter is optional and has an empty default value.</para>
         /// </summary>
         List<IResponseTransform> ResponseTransforms { get; set; }
 
         /// <summary>
         /// <para>A list of response criteria. See <see cref="IResponseCriterion"/> and <see cref="ResponseVerdict"/> for more details.</para>
-        /// <para>Use <see cref="IClusterClientConfigurationExtensions.SetupResponseCriteria"/> to initialize this list.</para>
+        /// <para>Use <see cref="ClusterClientConfigurationExtensions.SetupResponseCriteria"/> to initialize this list.</para>
         /// <para>This parameter is optional and has a default value (see <see cref="ClusterClientDefaults.ResponseCriteria"/>).</para>
         /// </summary>
         List<IResponseCriterion> ResponseCriteria { get; set; }
@@ -99,7 +99,7 @@ namespace Vostok.Clusterclient
         /// <item>Sending of requests with absolute urls (directly using <see cref="ITransport"/>).</item>
         /// <item>Request execution (<see cref="IClusterProvider"/> --> <see cref="IReplicaOrdering"/> --> <see cref="IRequestStrategy"/>)</item>
         /// </list>
-        /// <para>Use <see cref="IClusterClientConfigurationExtensions.AddRequestModule"/> to add transforms to this list.</para>
+        /// <para>Use <see cref="ClusterClientConfigurationExtensions.AddRequestModule"/> to add transforms to this list.</para>
         /// <para>This parameter is optional and has an empty default value.</para>
         /// </summary>
         List<IRequestModule> Modules { get; set; }
@@ -151,14 +151,14 @@ namespace Vostok.Clusterclient
         /// <summary>
         /// <para>Gets or sets the options for adaptive throttling mechanism (described in https://landing.google.com/sre/book/chapters/handling-overload.html ).</para>
         /// <para>This parameter is optional and has a <c>null</c> default value which implies no such throttling will be used.</para>
-        /// <para>Use <see cref="IClusterClientConfigurationExtensions.SetupAdaptiveThrottling"/> to set these options.</para>
+        /// <para>Use <see cref="ClusterClientConfigurationExtensions.SetupAdaptiveThrottling"/> to set these options.</para>
         /// </summary>
         AdaptiveThrottlingOptions AdaptiveThrottling { get; set; }
 
         /// <summary>
         /// <para>Gets or sets the options for replica budgeting mechanism which attempts to limit the ratio of used replicas to issued requests.</para>
         /// <para>This parameter is optional and has a <c>null</c> default value which implies no such budgeting will be used.</para>
-        /// <para>Use <see cref="IClusterClientConfigurationExtensions.SetupReplicaBudgeting"/> to set these options.</para>
+        /// <para>Use <see cref="ClusterClientConfigurationExtensions.SetupReplicaBudgeting"/> to set these options.</para>
         /// </summary>
         ReplicaBudgetingOptions ReplicaBudgeting { get; set; }
 

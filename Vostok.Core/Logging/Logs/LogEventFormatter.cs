@@ -8,7 +8,7 @@ namespace Vostok.Logging.Logs
 {
     public static class LogEventFormatter
     {
-        private static readonly Regex Pattern = new Regex(@"(?<!{){@?(?<arg>[^ :{}]+)(?<format>:[^}]+)?}", RegexOptions.Compiled);
+        private static readonly Regex pattern = new Regex(@"(?<!{){@?(?<arg>[^ :{}]+)(?<format>:[^}]+)?}", RegexOptions.Compiled);
 
         public static string Format(LogEvent logEvent)
         {
@@ -24,7 +24,7 @@ namespace Vostok.Logging.Logs
 
             var processedArguments = new List<string>();
 
-            foreach (Match match in Pattern.Matches(template))
+            foreach (Match match in pattern.Matches(template))
             {
                 var arg = match.Groups["arg"].Value;
 

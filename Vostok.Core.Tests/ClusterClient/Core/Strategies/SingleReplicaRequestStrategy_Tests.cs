@@ -33,7 +33,9 @@ namespace Vostok.Clusterclient.Core.Strategies
             result = new ReplicaResult(replicas[0], new Response(ResponseCode.NotFound), ResponseVerdict.Accept, TimeSpan.Zero);
 
             sender = Substitute.For<IRequestSender>();
+            // ReSharper disable AssignNullToNotNullAttribute
             sender.SendToReplicaAsync(null, null, TimeSpan.Zero, Arg.Any<CancellationToken>()).ReturnsForAnyArgs(_ => result);
+            // ReSharper restore AssignNullToNotNullAttribute
 
             strategy = new SingleReplicaRequestStrategy();
         }

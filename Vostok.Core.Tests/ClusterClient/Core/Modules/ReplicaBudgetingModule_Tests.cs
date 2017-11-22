@@ -11,8 +11,7 @@ namespace Vostok.Clusterclient.Core.Modules
 {
     public class ReplicaBudgetingModule_Tests
     {
-        private const int MinimumRequests = 50;
-        private const double CriticalRatio = 1.2;
+        private const int minimumRequests = 50;
 
         private Uri replica1;
         private Uri replica2;
@@ -54,7 +53,7 @@ namespace Vostok.Clusterclient.Core.Modules
             context.Log.Returns(new SilentLog());
             context.MaximumReplicasToUse.Returns(int.MaxValue);
 
-            options = new ReplicaBudgetingOptions(Guid.NewGuid().ToString(), 1, MinimumRequests, CriticalRatio);
+            options = new ReplicaBudgetingOptions(Guid.NewGuid().ToString(), 1, minimumRequests);
             module = new ReplicaBudgetingModule(options);
         }
 
@@ -111,7 +110,7 @@ namespace Vostok.Clusterclient.Core.Modules
         [Test]
         public void Should_not_limit_used_replicas_until_minimum_requests_count_is_reached()
         {
-            SpinWithTwoReplicas(MinimumRequests - 1);
+            SpinWithTwoReplicas(minimumRequests - 1);
 
             context.DidNotReceive().MaximumReplicasToUse = 1;
         }
@@ -119,7 +118,7 @@ namespace Vostok.Clusterclient.Core.Modules
         [Test]
         public void Should_limit_used_replicas_when_ratio_is_above_critical_value()
         {
-            SpinWithTwoReplicas(MinimumRequests*2);
+            SpinWithTwoReplicas(minimumRequests*2);
 
             context.ClearReceivedCalls();
 

@@ -10,6 +10,7 @@ namespace Vostok.Clusterclient.Core.Model
         [Test]
         public void Should_throw_an_error_when_supplied_with_null_name()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             Action action = () => new Header(null, "value");
 
             action.ShouldThrow<ArgumentNullException>();
@@ -18,6 +19,7 @@ namespace Vostok.Clusterclient.Core.Model
         [Test]
         public void Should_throw_an_error_when_supplied_with_null_value()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             Action action = () => new Header("name", null);
 
             action.ShouldThrow<ArgumentNullException>();

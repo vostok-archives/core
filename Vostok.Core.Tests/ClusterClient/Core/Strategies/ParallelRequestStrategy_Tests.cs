@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Sending;
 using Vostok.Clusterclient.Strategies;
 using NUnit.Framework;
+#pragma warning disable 4014
 
 namespace Vostok.Clusterclient.Core.Strategies
 {
@@ -86,6 +88,7 @@ namespace Vostok.Clusterclient.Core.Strategies
             var task = strategy.SendAsync(request, sender, Budget.WithRemaining(5.Seconds()), replicas.Take(2).ToArray(), replicas.Length, token);
 
             task.IsFaulted.Should().BeTrue();
+            Debug.Assert(task.Exception != null, "task.Exception != null");
             task.Exception.InnerExceptions.Single().Should().BeOfType<InvalidOperationException>().Which.ShouldBePrinted();
         }
 

@@ -335,6 +335,7 @@ namespace Vostok.Airlock
             buffer.WrittenRecords.Should().Be(1);
             buffer.SnapshotLength.Should().Be(0);
             buffer.SnapshotCount.Should().Be(0);
+            // ReSharper disable once PossibleNullReferenceException
             underlyingWriter.FilledSegment.Array[underlyingWriter.FilledSegment.Offset].Should().Be(0x03);
         }
 
@@ -388,6 +389,7 @@ namespace Vostok.Airlock
             buffer.SnapshotLength.Should().Be(1);
             buffer.SnapshotCount.Should().Be(1);
             buffer.SnapshotIsGarbage.Should().BeFalse();
+            // ReSharper disable once PossibleNullReferenceException
             underlyingWriter.FilledSegment.Array[underlyingWriter.FilledSegment.Offset].Should().Be(0x03);
         }
 

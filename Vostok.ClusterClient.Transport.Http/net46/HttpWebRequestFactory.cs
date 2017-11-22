@@ -34,6 +34,7 @@ namespace Vostok.Clusterclient.Transport.Http
             webRequest.Expect = null;
             webRequest.KeepAlive = true;
             webRequest.Pipelined = true;
+            // ReSharper disable once AssignNullToNotNullAttribute
             webRequest.Proxy = null;
             webRequest.AllowAutoRedirect = false;
             webRequest.AllowWriteStreamBuffering = false;

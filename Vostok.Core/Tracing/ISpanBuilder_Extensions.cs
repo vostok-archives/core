@@ -1,6 +1,6 @@
 ﻿namespace Vostok.Tracing
 {
-    public static class ISpanBuilder_Extensions
+    public static class SpanBuilder_Extensions
     {
         public static void Cancel(this ISpanBuilder spanBuilder)
         {

@@ -44,7 +44,7 @@ namespace Vostok.Clusterclient.Transport.Http
             {
                 var response = Send(Request.Get(server.Url));
 
-                response.Code.Should().Be((ResponseCode) code);
+                response.Code.Should().Be(code);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Gray
     /// </summary>
     public class GrayListModifier : IReplicaWeightModifier
     {
-        private static readonly string StorageKey = typeof (GrayListModifier).FullName;
+        private static readonly string storageKey = typeof (GrayListModifier).FullName;
 
         private readonly IGrayPeriodProvider grayPeriodProvider;
         private readonly ITimeProvider timeProvider;
@@ -51,7 +51,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Gray
         {
             DateTime lastGrayTimestamp;
 
-            var storage = storageProvider.Obtain<DateTime>(StorageKey);
+            var storage = storageProvider.Obtain<DateTime>(storageKey);
             if (!storage.TryGetValue(replica, out lastGrayTimestamp))
                 return;
 
@@ -74,7 +74,7 @@ namespace Vostok.Clusterclient.Ordering.Weighed.Gray
             if (result.Verdict != ResponseVerdict.Reject)
                 return;
 
-            var storage = storageProvider.Obtain<DateTime>(StorageKey);
+            var storage = storageProvider.Obtain<DateTime>(storageKey);
             var wasGray = storage.ContainsKey(result.Replica);
 
             storage[result.Replica] = timeProvider.GetCurrentTime();

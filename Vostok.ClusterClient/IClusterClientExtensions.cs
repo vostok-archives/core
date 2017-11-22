@@ -10,7 +10,7 @@ using Vostok.Tracing;
 
 namespace Vostok.Clusterclient
 {
-    public static class IClusterClientExtensions
+    public static class ClusterClientExtensions
     {
         /// <summary>
         /// <para>Sends given request using given <paramref name="timeout"/>, <paramref name="strategy"/> and <paramref name="cancellationToken"/>.</para>

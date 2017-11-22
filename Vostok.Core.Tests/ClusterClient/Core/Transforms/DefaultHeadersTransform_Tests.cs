@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics;
+using FluentAssertions;
 using Vostok.Clusterclient.Model;
 using Vostok.Clusterclient.Transforms;
 using NUnit.Framework;
@@ -106,6 +107,7 @@ namespace Vostok.Clusterclient.Core.Transforms
 
             var transformedRequest = transform.Transform(request);
 
+            Debug.Assert(transformedRequest.Headers != null, "transformedRequest.Headers != null");
             transformedRequest.Headers.Count.Should().Be(4);
             transformedRequest.Headers["k1"].Should().Be("v1");
             transformedRequest.Headers["k2"].Should().Be("v2");
@@ -128,6 +130,7 @@ namespace Vostok.Clusterclient.Core.Transforms
 
             var transformedRequest = transform.Transform(request);
 
+            Debug.Assert(transformedRequest.Headers != null, "transformedRequest.Headers != null");
             transformedRequest.Headers.Count.Should().Be(3);
             transformedRequest.Headers["k1"].Should().Be("v1");
             transformedRequest.Headers["k2"].Should().Be("override");

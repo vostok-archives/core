@@ -5,7 +5,7 @@ namespace Vostok.Metrics
 {
     public class MetricClock
     {
-        private event Action<DateTimeOffset> actions;
+        private event Action<DateTimeOffset> Actions;
         private int isRunning;
         private DateTimeOffset aggregationTimestamp;
         private Thread aggregationThread;
@@ -21,12 +21,12 @@ namespace Vostok.Metrics
 
         public void Register(Action<DateTimeOffset> action)
         {
-            actions += action;
+            Actions += action;
         }
 
         public void Unregister(Action<DateTimeOffset> action)
         {
-            actions -= action;
+            Actions -= action;
         }
 
         public void Start()
@@ -60,8 +60,8 @@ namespace Vostok.Metrics
             {
                 WaitForNextAggregation();
 
-                if (actions != null)
-                    foreach (var action in actions.GetInvocationList())
+                if (Actions != null)
+                    foreach (var action in Actions.GetInvocationList())
                     {
                         try
                         {

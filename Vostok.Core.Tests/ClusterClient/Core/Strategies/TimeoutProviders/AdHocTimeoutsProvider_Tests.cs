@@ -20,6 +20,7 @@ namespace Vostok.Clusterclient.Core.Strategies.TimeoutProviders
         [Test]
         public void Should_throw_an_error_when_given_null_timeout_providers_array()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             Action action = () => new AdHocTimeoutsProvider(null);
 
             action.ShouldThrow<ArgumentNullException>().Which.ShouldBePrinted();

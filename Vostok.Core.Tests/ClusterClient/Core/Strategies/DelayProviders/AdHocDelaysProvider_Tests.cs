@@ -20,6 +20,7 @@ namespace Vostok.Clusterclient.Core.Strategies.DelayProviders
         [Test]
         public void Should_throw_an_error_when_given_null_delay_providers_array()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             Action action = () => new AdHocDelaysProvider(TailDelayBehaviour.StopIssuingDelays, null);
 
             action.ShouldThrow<ArgumentNullException>().Which.ShouldBePrinted();

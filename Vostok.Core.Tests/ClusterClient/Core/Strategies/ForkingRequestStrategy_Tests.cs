@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Vostok.Clusterclient.Sending;
 using Vostok.Clusterclient.Strategies;
 using Vostok.Clusterclient.Strategies.DelayProviders;
 using NUnit.Framework;
+#pragma warning disable 4014
 
 namespace Vostok.Clusterclient.Core.Strategies
 {
@@ -72,6 +74,7 @@ namespace Vostok.Clusterclient.Core.Strategies
         [Test]
         public void Ctor_should_throw_when_given_null_delays_provider()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             Action action = () => new ForkingRequestStrategy(null, 3);
 
             action.ShouldThrow<ArgumentNullException>().Which.ShouldBePrinted();
@@ -99,6 +102,7 @@ namespace Vostok.Clusterclient.Core.Strategies
             var task = strategy.SendAsync(request, sender, Budget.WithRemaining(5.Seconds()), new Uri[] {}, replicas.Length, token);
 
             task.IsFaulted.Should().BeTrue();
+            Debug.Assert(task.Exception != null, "task.Exception != null");
             task.Exception.InnerExceptions.Single().Should().BeOfType<InvalidOperationException>().Which.ShouldBePrinted();
         }
 
@@ -317,6 +321,7 @@ namespace Vostok.Clusterclient.Core.Strategies
                     {
                         delaySourcesEnumerator.MoveNext();
 
+                        Debug.Assert(delaySourcesEnumerator.Current != null, "delaySourcesEnumerator.Current != null");
                         return delaySourcesEnumerator.Current.Task;
                     });
         }
@@ -335,6 +340,7 @@ namespace Vostok.Clusterclient.Core.Strategies
 
         private void CompleteForkingDelay()
         {
+            Debug.Assert(delaySourcesEnumerator.Current != null, "delaySourcesEnumerator.Current != null");
             delaySourcesEnumerator.Current.TrySetResult(true);
         }
 

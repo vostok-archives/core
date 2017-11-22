@@ -17,7 +17,7 @@ namespace Vostok.Clusterclient.Modules
 
         public Task<ClusterResult> ExecuteAsync(IRequestContext context, Func<IRequestContext, Task<ClusterResult>> next)
         {
-            if ((transforms != null) && (transforms.Count > 0))
+            if (transforms != null && transforms.Count > 0)
             {
                 foreach (var transform in transforms)
                     context.Request = transform.Transform(context.Request);

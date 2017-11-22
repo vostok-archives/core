@@ -36,7 +36,9 @@ namespace Vostok.Clusterclient.Core.Strategies
             request = Request.Get("/foo");
 
             timeoutsProvider = Substitute.For<ISequentialTimeoutsProvider>();
+            // ReSharper disable AssignNullToNotNullAttribute
             timeoutsProvider.GetTimeout(null, null, 0, 0).ReturnsForAnyArgs(1.Seconds(), 2.Seconds(), 3.Seconds());
+            // ReSharper restore AssignNullToNotNullAttribute
 
             sender = Substitute.For<IRequestSender>();
             SetupResult(replica1, ResponseVerdict.Reject);

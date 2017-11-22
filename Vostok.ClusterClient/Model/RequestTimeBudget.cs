@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Vostok.Clusterclient.Helpers;
 using Vostok.Commons.Utilities;
 
 namespace Vostok.Clusterclient.Model
