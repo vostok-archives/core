@@ -74,6 +74,12 @@ namespace Vostok.Commons.Collections
             return GetEnumerator();
         }
 
+        public void UnionWith(IEnumerable<T> other)
+        {
+            foreach (var value in other)
+                Add(value);
+        }
+
         #region Unsupported operations
 
         public void ExceptWith(IEnumerable<T> other)
@@ -117,11 +123,6 @@ namespace Vostok.Commons.Collections
         }
 
         public void SymmetricExceptWith(IEnumerable<T> other)
-        {
-            throw new NotSupportedException();
-        }
-
-        public void UnionWith(IEnumerable<T> other)
         {
             throw new NotSupportedException();
         }
