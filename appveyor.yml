@@ -35,7 +35,7 @@ install:
           $version = $xml.CreateElement("Version")
           $versionText = $xml.CreateTextNode($env:appveyor_build_version)
           $version.AppendChild($versionText)
-          $xml.Project.PropertyGroup.AppendChild($version)
+          $gen.ParentNode.AppendChild($version)
           $xml.Save($xmlPath)
         }
       }
