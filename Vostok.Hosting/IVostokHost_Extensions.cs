@@ -59,7 +59,13 @@ namespace Vostok.Hosting
                     {
                     }
                 }
-                done.Wait();
+                try
+                {
+                    done.Wait();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
             }
             AppDomain.CurrentDomain.ProcessExit += (sender, args) => ShutdownAndWait("Termination signal was received -> terminating...");
             Console.CancelKeyPress += (sender, args) =>
