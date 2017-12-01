@@ -5,7 +5,7 @@ using Vostok.Logging;
 
 namespace Vostok.Hosting
 {
-    public static class IVostokHost_Extensions
+    public static class VostokHost_Extensions
     {
         public static void Run(this IVostokHost host)
         {

@@ -3,7 +3,7 @@ using Vostok.Airlock;
 
 namespace Vostok.Hosting
 {
-    public static class IVostokHostingEnvironment_Extensions
+    public static class VostokHostingEnvironment_Extensions
     {
         public static string GetLoggingRoutingKey(this IVostokHostingEnvironment hostingEnvironment)
         {

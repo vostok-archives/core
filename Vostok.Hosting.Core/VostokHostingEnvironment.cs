@@ -17,9 +17,9 @@ namespace Vostok.Hosting
             Trace.Configuration.Reporter = new AirlockTraceReporter(() => Current?.AirlockClient, () => RoutingKey.TryCreate(Current?.Project, Current?.Environment, Current?.Service, RoutingKey.TracesSuffix));
         }
 
-        public static void SetHostingContext(IVostokHostingContext hostingContext)
+        public static void SetHostingContext(IVostokHostingContext newHostingContext)
         {
-            VostokHostingEnvironment.hostingContext = hostingContext;
+            hostingContext = newHostingContext;
         }
 
         private readonly CancellationTokenSource shutdownCtc = new CancellationTokenSource();

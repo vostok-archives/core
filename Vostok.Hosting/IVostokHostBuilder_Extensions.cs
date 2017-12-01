@@ -4,7 +4,7 @@ using Vostok.Hosting.Configuration;
 
 namespace Vostok.Hosting
 {
-    public static class IVostokHostBuilder_Extensions
+    public static class VostokHostBuilder_Extensions
     {
         public static IVostokHostBuilder ConfigureAppConfiguration(this IVostokHostBuilder hostBuilder, Action<IConfigurationBuilder> configureDelegate)
         {
