@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Vostok.Commons.Utilities;
 using Vostok.Logging;
 
@@ -27,11 +26,6 @@ namespace Vostok.Airlock
         public void Push<T>(string routingKey, T item, DateTimeOffset? timestamp = null)
         {
             clients[ThreadSafeRandom.Next(clients.Length)].Push(routingKey, item, timestamp);
-        }
-
-        public Task FlushAsync()
-        {
-            return Task.WhenAll(clients.Select(client => client.FlushAsync()));
         }
 
         public void Dispose()
