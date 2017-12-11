@@ -30,5 +30,12 @@ namespace Vostok.Hosting
         {
             return hostBuilder.ConfigureMetrics((_, metricsConfigurator) => configureDelegate(metricsConfigurator));
         }
+
+        public static IVostokHostBuilder SetServiceInfo(this IVostokHostBuilder vostokHostBuilder, string project, string service)
+        {
+            vostokHostBuilder.UseSetting(VostokConfigurationDefaults.ProjectKey, project);
+            vostokHostBuilder.UseSetting(VostokConfigurationDefaults.ServiceKey, service);
+            return vostokHostBuilder;
+        }
     }
 }

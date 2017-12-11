@@ -41,13 +41,6 @@ namespace Vostok.Hosting
             };
         }
 
-        public IVostokHostBuilder SetServiceInfo(string project, string service)
-        {
-            hostingEnvironment.Project = project;
-            hostingEnvironment.Service = service;
-            return this;
-        }
-
         public string GetSetting(string key)
         {
             return config[key];
@@ -66,17 +59,19 @@ namespace Vostok.Hosting
             hostBuilt = true;
             try
             {
-                if (string.IsNullOrEmpty(hostingEnvironment.Project))
-                    throw new InvalidOperationException($"Project name was not set. Use {nameof(SetServiceInfo)} method");
-                if (string.IsNullOrEmpty(hostingEnvironment.Service))
-                    throw new InvalidOperationException($"Service name was not set. Use {nameof(SetServiceInfo)} method");
-
                 context.HostingEnvironment = hostingEnvironment;
                 var configurationBuilder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddInMemoryCollection(config.AsEnumerable());
                 foreach (var configurationDelegate in configureAppConfigurationDelegates)
                     configurationDelegate(context, configurationBuilder);
                 var configurationRoot = configurationBuilder.Build();
                 context.Configuration = configurationRoot;
+
+                hostingEnvironment.Project = configurationRoot[VostokConfigurationDefaults.ProjectKey];
+                hostingEnvironment.Service = configurationRoot[VostokConfigurationDefaults.ServiceKey];
+                if (string.IsNullOrEmpty(hostingEnvironment.Project))
+                    throw new InvalidOperationException($"Project name was not set. Use {nameof(VostokHostBuilder_Extensions.SetServiceInfo)} method or configure '{VostokConfigurationDefaults.ProjectKey}' setting");
+                if (string.IsNullOrEmpty(hostingEnvironment.Service))
+                    throw new InvalidOperationException($"Service name was not set. Use {nameof(VostokHostBuilder_Extensions.SetServiceInfo)} method or configure '{VostokConfigurationDefaults.ServiceKey}' setting");
 
                 hostingEnvironment.Configuration = configurationRoot;
                 hostingEnvironment.Environment = configurationRoot[VostokConfigurationDefaults.EnvironmentKey];
