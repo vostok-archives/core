@@ -7,7 +7,6 @@ namespace Vostok.Hosting
     public interface IVostokHostBuilder
     {
         IVostokHost Build();
-        IVostokHostBuilder SetServiceInfo(string project, string service);
         string GetSetting(string key);
         IVostokHostBuilder UseSetting(string key, string value);
         IVostokHostBuilder ConfigureAppConfiguration(Action<VostokHostBuilderContext, IConfigurationBuilder> configureDelegate);
