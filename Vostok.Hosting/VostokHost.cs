@@ -27,7 +27,10 @@ namespace Vostok.Hosting
                 {
                     VostokHostingEnvironment.Current = HostingEnvironment;
                     HostingEnvironment.Log.Info($"Starting service: {HostingEnvironment.Project}/{HostingEnvironment.Service}");
-                    HostingEnvironment.Log.Info($"Environment: {HostingEnvironment.Environment}");
+                    if (string.IsNullOrEmpty(HostingEnvironment.Environment))
+                        HostingEnvironment.Log.Warn("Environment: <unspecified>. Attention! No metrics/logs/traces will be sent to airlock!");
+                    else
+                        HostingEnvironment.Log.Info($"Environment: {HostingEnvironment.Environment}");
                     
                     try
                     {

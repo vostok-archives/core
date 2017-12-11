@@ -83,8 +83,6 @@ namespace Vostok.Hosting
                 var hostConfigurator = new HostConfigurator(hostingEnvironment);
                 foreach (var configurationDelegate in configureHostDelegates)
                     configurationDelegate(context, hostConfigurator);
-                if (string.IsNullOrEmpty(hostingEnvironment.Environment))
-                    hostingEnvironment.Environment = VostokEnvironmentNames.Production;
 
                 var airlockConfigurator = new AirlockConfigurator();
                 foreach (var configurationDelegate in configureAirlockDelegates)
@@ -103,7 +101,7 @@ namespace Vostok.Hosting
                 var metricsConfigurator = new MetricsConfigurator(metricConfiguration);
                 foreach (var configurationDelegate in configureMetricsDelegates)
                     configurationDelegate(context, metricsConfigurator);
-                metricConfiguration.Reporter = new AirlockMetricReporter(hostingEnvironment.AirlockClient, RoutingKey.CreatePrefix(hostingEnvironment.Project, hostingEnvironment.Environment, hostingEnvironment.Service));
+                metricConfiguration.Reporter = new AirlockMetricReporter(hostingEnvironment.AirlockClient, RoutingKey.TryCreatePrefix(hostingEnvironment.Project, hostingEnvironment.Environment, hostingEnvironment.Service));
                 hostingEnvironment.MetricScope = new RootMetricScope(metricConfiguration);
 
                 return new VostokHost(hostingEnvironment, new TApp());
