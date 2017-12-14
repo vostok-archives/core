@@ -42,55 +42,42 @@ namespace Vostok.Airlock
 
         public void Start()
         {
-            log.Warn($"{id:N} Start. Started.");
             if (currentState.TrySet(stateStarted, stateNotStarted))
             {
-                log.Warn($"{id:N} Start. Passed start check.");
                 //@ezsilmar
                 //Make sure that current iteration is initialized synchronously here
                 //Otherwise we violate dispose invariant: the state is 'stateStarted' but CurrentIteration is null
 #pragma warning disable 4014
                 SendingRoutine();
 #pragma warning restore 4014
-                log.Warn($"{id:N} Start. Started routine.");
             }
-            log.Warn($"{id:N} Start. Finished");
         }
 
         public async Task FlushAsync()
         {
-            log.Warn($"{id:N} Flush. Started");
             if (currentState.Value == stateStarted)
             {
                 var iteration = CurrentIteration;
                 if (iteration == null)
                 {
-                    log.Warn($"{id:N} Flush. Finished. Iteration was null");
                     return;
                 }
                 
                 iteration.WakeUp();
-                log.Warn($"{id:N} Flush. Waked up current iteration");
                 var nextIteration = await iteration.WaitIterationFinished();
-                log.Warn($"{id:N} Flush. Current iteration wait finished.");
                 if (nextIteration == null)
                 {
-                    log.Warn($"{id:N} Flush. Finished. Next iteration was null");
                     return;
                 }
                 
                 await nextIteration.WaitSendFinished();
-                log.Warn($"{id:N} Flush. Finished. Next iteration send finished.");
             }
         }
 
         public void Dispose()
         {
-            log.Warn($"{id:N} Dispose. Started.");
             FlushAsync().GetAwaiter().GetResult();
-            log.Warn($"{id:N} Dispose. Flush finished.");
             currentState.Value = stateDisposed;
-            log.Warn($"{id:N} Dispose. Set state to disposed");
             var iteration = CurrentIteration;
             if (iteration == null)
             {
@@ -109,35 +96,26 @@ namespace Vostok.Airlock
             nextIteration.WakeUp();
 
             nextIteration.WaitIterationFinished().GetAwaiter().GetResult();
-            log.Warn($"{id:N} Dispose. Finished. Waked up current iteration");
         }
 
         private async Task SendingRoutine()
         {
-            log.Warn($"{id:N} Routine. Started");
             var sendPeriod = config.SendPeriod;
 
             while (currentState.Value != stateDisposed)
             {
-                log.Warn($"{id:N} Routine. Passed dispose check");
                 ReportNextIteration(new IterationHandle());
-                log.Warn($"{id:N} Routine. Next iteration reported");
 
                 var (result, sendTime) = await SendAsync().ConfigureAwait(false);
-                log.Warn($"{id:N} Routine. Send finished");
 
                 AdjustSendPeriod(result, ref sendPeriod);
 
                 CurrentIteration.ScheduleWakeUp(sendPeriod - sendTime);
 
-                log.Warn($"{id:N} Routine. Going to sleep.");
                 await CurrentIteration.WaitForNextIteration().ConfigureAwait(false);
-                log.Warn($"{id:N} Routine. Waked up for next iteration");
             }
 
-            log.Warn($"{id:N} Routine. Failed dispose check.");
             ReportNextIteration(null);
-            log.Warn($"{id:N} Routine. Finished. Reported null to current iteration");
         }
 
         private async Task<(DataSendResult, TimeSpan)> SendAsync()
