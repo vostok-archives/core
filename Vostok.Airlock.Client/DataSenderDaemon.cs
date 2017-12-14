@@ -37,7 +37,12 @@ namespace Vostok.Airlock
             if (currentState.TrySet(stateStarted, stateNotStarted))
             {
                 log.Warn($"{id:N} Start. Passed start check.");
-                Task.Run(SendingRoutine);
+                //@ezsilmar
+                //Make sure that current iteration is initialized synchronously here
+                //Otherwise we violate dispose invariant: the state is 'stateStarted' but currentIteration is null
+#pragma warning disable 4014
+                SendingRoutine();
+#pragma warning restore 4014
                 log.Warn($"{id:N} Start. Started routine.");
             }
             log.Warn($"{id:N} Start. Finished");
