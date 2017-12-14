@@ -20,7 +20,7 @@ namespace Vostok.Airlock
 
         //@ezsilmar
         // IterationHandle is needed for async flush support
-        // This variable is set only in SendingRoutine thread and it's value is read concurrently
+        // This variable is set only in SendingRoutine thread and its value is read concurrently
         private IterationHandle currentIteration;
         private IterationHandle CurrentIteration
         {
@@ -91,7 +91,24 @@ namespace Vostok.Airlock
             log.Warn($"{id:N} Dispose. Flush finished.");
             currentState.Value = stateDisposed;
             log.Warn($"{id:N} Dispose. Set state to disposed");
-            CurrentIteration?.WakeUp(); // Вот здесь потрачено - можем прождать целый период отправки.
+            var iteration = CurrentIteration;
+            if (iteration == null)
+            {
+                return;
+            }
+            iteration.WakeUp();
+
+            //@ezsilmar
+            // Need to check next iteration too,
+            // because IterationFinished is set after while loop check in SendRoutine
+            var nextIteration = iteration.WaitIterationFinished().GetAwaiter().GetResult();
+            if (nextIteration == null)
+            {
+                return;
+            }
+            nextIteration.WakeUp();
+
+            nextIteration.WaitIterationFinished().GetAwaiter().GetResult();
             log.Warn($"{id:N} Dispose. Finished. Waked up current iteration");
         }
 
