@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Vostok.Commons.Synchronization;
 using Vostok.Logging;
@@ -18,7 +18,16 @@ namespace Vostok.Airlock
         private readonly ILog log;
         private readonly AtomicInt currentState;
 
-        private volatile IterationHandle currentIteration;
+        //@ezsilmar
+        // IterationHandle is needed for async flush support
+        // This variable is set only in SendingRoutine thread and it's value is read concurrently
+        private IterationHandle currentIteration;
+        private IterationHandle CurrentIteration
+        {
+            get => Interlocked.CompareExchange(ref currentIteration, null, null);
+            set => Interlocked.Exchange(ref currentIteration, value);
+        }
+
         private readonly Guid id = Guid.NewGuid();
 
         public DataSenderDaemon(IDataSender dataSender, AirlockConfig config, ILog log)
@@ -28,7 +37,7 @@ namespace Vostok.Airlock
             this.log = log;
 
             currentState = new AtomicInt(stateNotStarted);
-            currentIteration = null;
+            CurrentIteration = null;
         }
 
         public void Start()
@@ -39,7 +48,7 @@ namespace Vostok.Airlock
                 log.Warn($"{id:N} Start. Passed start check.");
                 //@ezsilmar
                 //Make sure that current iteration is initialized synchronously here
-                //Otherwise we violate dispose invariant: the state is 'stateStarted' but currentIteration is null
+                //Otherwise we violate dispose invariant: the state is 'stateStarted' but CurrentIteration is null
 #pragma warning disable 4014
                 SendingRoutine();
 #pragma warning restore 4014
@@ -53,7 +62,7 @@ namespace Vostok.Airlock
             log.Warn($"{id:N} Flush. Started");
             if (currentState.Value == stateStarted)
             {
-                var iteration = currentIteration;
+                var iteration = CurrentIteration;
                 if (iteration == null)
                 {
                     log.Warn($"{id:N} Flush. Finished. Iteration was null");
@@ -82,7 +91,7 @@ namespace Vostok.Airlock
             log.Warn($"{id:N} Dispose. Flush finished.");
             currentState.Value = stateDisposed;
             log.Warn($"{id:N} Dispose. Set state to disposed");
-            currentIteration?.WakeUp(); // Вот здесь потрачено - можем прождать целый период отправки.
+            CurrentIteration?.WakeUp(); // Вот здесь потрачено - можем прождать целый период отправки.
             log.Warn($"{id:N} Dispose. Finished. Waked up current iteration");
         }
 
@@ -102,10 +111,10 @@ namespace Vostok.Airlock
 
                 AdjustSendPeriod(result, ref sendPeriod);
 
-                currentIteration.ScheduleWakeUp(sendPeriod - sendTime);
+                CurrentIteration.ScheduleWakeUp(sendPeriod - sendTime);
 
                 log.Warn($"{id:N} Routine. Going to sleep.");
-                await currentIteration.WaitForNextIteration().ConfigureAwait(false);
+                await CurrentIteration.WaitForNextIteration().ConfigureAwait(false);
                 log.Warn($"{id:N} Routine. Waked up for next iteration");
             }
 
@@ -130,14 +139,14 @@ namespace Vostok.Airlock
             }
 
             var sendTime = watch.Elapsed;
-            currentIteration.ReportSendFinished();
+            CurrentIteration.ReportSendFinished();
             return (result, sendTime);
         }
 
         private void ReportNextIteration(IterationHandle handle)
         {
-            var previousIteration = currentIteration;
-            currentIteration = handle;
+            var previousIteration = CurrentIteration;
+            CurrentIteration = handle;
             previousIteration?.ReportIterationFinished(handle);
         }
 
