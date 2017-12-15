@@ -11,7 +11,7 @@ using Vostok.Logging.Logs;
 
 namespace Vostok.Airlock
 {
-    //[Ignore("Explicit attribute does not work in VS + Resharper")]
+    [Ignore("Explicit attribute does not work in VS + Resharper")]
     public class Integration_Tests
     {
         private readonly ConsoleLog log = new ConsoleLog();
