@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using Vostok.Commons.Synchronization;
 using Vostok.Logging;
@@ -17,6 +18,11 @@ namespace Vostok.Airlock
         private readonly DataSenderDaemon dataSenderDaemon;
         private readonly AtomicLong lostItemsCounter;
         private readonly AtomicLong sentItemsCounter;
+
+        private readonly AtomicBoolean isDisposed;
+        //@ezsilmar
+        //Dispose should wait for all pending flushes
+        private readonly ReaderWriterLockSlim flushDisposeSyncObject;
 
         public AirlockClient(AirlockConfig config, ILog log = null)
         {
@@ -52,6 +58,9 @@ namespace Vostok.Airlock
 
             flushTracker = new FlushTracker();
             dataSenderDaemon = new DataSenderDaemon(dataSender, flushTracker, config, log);
+
+            isDisposed = new AtomicBoolean(false);
+            flushDisposeSyncObject = new ReaderWriterLockSlim();
         }
 
         public long LostItemsCount => lostItemsCounter.Value;
@@ -60,6 +69,9 @@ namespace Vostok.Airlock
 
         public void Push<T>(string routingKey, T item, DateTimeOffset? timestamp = null)
         {
+            if (isDisposed)
+                return;
+
             if (!AirlockSerializerRegistry.TryGet<T>(out var serializer))
                 return;
 
@@ -75,12 +87,39 @@ namespace Vostok.Airlock
 
         public Task FlushAsync()
         {
-            return flushTracker.RequestFlush();
+            if (isDisposed)
+                return Task.CompletedTask;
+
+            flushDisposeSyncObject.EnterReadLock();
+            try
+            {
+                if (isDisposed)
+                {
+                    return Task.CompletedTask;
+                }
+                return flushTracker.RequestFlush();
+            }
+            finally
+            {
+                flushDisposeSyncObject.ExitReadLock();
+            }
         }
 
         public void Dispose()
         {
-            dataSenderDaemon.Dispose();
+            if (isDisposed.TrySetTrue())
+            {
+                flushDisposeSyncObject.EnterWriteLock();
+                try
+                {
+                    flushTracker.RequestFlush().GetAwaiter().GetResult();
+                    dataSenderDaemon.Dispose();
+                }
+                finally
+                {
+                    flushDisposeSyncObject.ExitWriteLock();
+                }
+            }
         }
 
         private IBufferPool ObtainBufferPool(string routingKey)

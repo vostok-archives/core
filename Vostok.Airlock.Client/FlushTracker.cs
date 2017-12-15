@@ -5,25 +5,30 @@ namespace Vostok.Airlock
 {
     internal class FlushTracker : IFlushTracker
     {
-        private FlushRegistrationList registrationList;
+        private FlushRegistration registration;
+
+        public FlushTracker()
+        {
+            registration = new FlushRegistration();
+        }
 
         public Task RequestFlush()
         {
-            var currentRegistrationList = Interlocked.CompareExchange(ref registrationList, null, null);
-            currentRegistrationList.RequestProcessing();
-            return currentRegistrationList.ProcessingCompleted;
+            var currentRegistration = Interlocked.CompareExchange(ref registration, null, null);
+            currentRegistration.RequestProcessing();
+            return currentRegistration.ProcessingCompleted;
         }
 
         public Task WaitForFlushRequest()
         {
-            return Interlocked.CompareExchange(ref registrationList, null, null).ProcessingRequested;
+            return Interlocked.CompareExchange(ref registration, null, null).ProcessingRequested;
         }
 
-        public FlushRegistrationList ResetFlushRegistrationList()
+        public FlushRegistration ResetFlushRegistrationList()
         {
-            var nextRegistrationList = new FlushRegistrationList();
-            var currentRegistrationList = Interlocked.Exchange(ref registrationList, nextRegistrationList);
-            return currentRegistrationList;
+            var nextRegistration = new FlushRegistration();
+            var currentRegistration = Interlocked.Exchange(ref registration, nextRegistration);
+            return currentRegistration;
         }
     }
 }

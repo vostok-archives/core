@@ -5,7 +5,7 @@ namespace Vostok.Airlock
     internal interface IFlushTracker
     {
         Task WaitForFlushRequest();
-        FlushRegistrationList ResetFlushRegistrationList();
+        FlushRegistration ResetFlushRegistrationList();
         Task RequestFlush();
     }
 }

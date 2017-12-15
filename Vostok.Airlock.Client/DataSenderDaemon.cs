@@ -40,16 +40,16 @@ namespace Vostok.Airlock
         private async Task Routine()
         {
             var sendPeriod = config.SendPeriod;
-            var sw = new Stopwatch();
-            FlushRegistrationList flushRegistrationList = null;
+            var lastSendElapsed = TimeSpan.Zero;
+            FlushRegistration flushRegistration = null;
 
             while (!routineCancellation.Task.IsCompleted)
             {
                 var flushRequested = flushTracker.WaitForFlushRequest();
                 var wakeUpReason = await Task.WhenAny(
-                    ScheduleDelay(sendPeriod - sw.Elapsed),
+                    ScheduleDelay(sendPeriod - lastSendElapsed),
                     flushRequested,
-                    routineCancellation.Task);
+                    routineCancellation.Task).ConfigureAwait(false);
 
                 if (wakeUpReason == routineCancellation.Task)
                 {
@@ -58,16 +58,29 @@ namespace Vostok.Airlock
 
                 if (wakeUpReason == flushRequested)
                 {
-                    flushRegistrationList = flushTracker.ResetFlushRegistrationList();
+                    flushRegistration = flushTracker.ResetFlushRegistrationList();
                 }
 
-                sw.Restart();
-                var sendResult = await sender.SendAsync();
-                sw.Stop();
+                var sw = Stopwatch.StartNew();
+                var sendResult = await SendAsync().ConfigureAwait(false);
+                lastSendElapsed = sw.Elapsed;
                 sendPeriod = GetNextSendPeriod(sendResult, sendPeriod);
 
-                flushRegistrationList?.ReportProcessingCompleted();
-                flushRegistrationList = null;
+                flushRegistration?.ReportProcessingCompleted();
+                flushRegistration = null;
+            }
+        }
+
+        private async Task<DataSendResult> SendAsync()
+        {
+            try
+            {
+                return await sender.SendAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                log.Warn("Send failed with exception", ex);
+                return DataSendResult.Ok;
             }
         }
 
