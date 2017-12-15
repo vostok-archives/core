@@ -13,6 +13,14 @@ namespace Vostok.Metrics
 
         public static IDisposable Gauge(
             this IMetricScope scope,
+            string name,
+            Func<double> getValue)
+        {
+            return scope.Gauge(scope.DefaultInterval, name, getValue);
+        }
+
+        public static IDisposable Gauge(
+            this IMetricScope scope,
             TimeSpan period,
             string name,
             Func<double> getValue)
@@ -25,6 +33,13 @@ namespace Vostok.Metrics
                     var value = getValue();
                     SendMetricToScope(scope, name, timestamp, value);
                 });
+        }
+
+        public static ICounter Counter(
+            this IMetricScope scope,
+            string name)
+        {
+            return scope.Counter(scope.DefaultInterval, name);
         }
 
         public static ICounter Counter(
