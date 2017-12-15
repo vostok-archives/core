@@ -1,216 +1,94 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
-using Vostok.Commons.Synchronization;
 using Vostok.Logging;
 
 namespace Vostok.Airlock
 {
-    internal class DataSenderDaemon : IDataSenderDaemon
+    internal class DataSenderDaemon : IDisposable
     {
-        private const int stateNotStarted = 0;
-        private const int stateStarted = 1;
-        private const int stateDisposed = 2;
-
-        private readonly IDataSender dataSender;
+        private readonly IDataSender sender;
+        private readonly IFlushTracker flushTracker;
         private readonly AirlockConfig config;
         private readonly ILog log;
-        private readonly AtomicInt currentState;
 
-        //@ezsilmar
-        // IterationHandle is needed for async flush support
-        // This variable is set only in SendingRoutine thread and its value is read concurrently
-        private IterationHandle currentIteration;
-        private IterationHandle CurrentIteration
+        private readonly Task routine;
+        private readonly TaskCompletionSource<byte> routineCancellation;
+
+        public DataSenderDaemon(
+            IDataSender sender,
+            IFlushTracker flushTracker,
+            AirlockConfig config,
+            ILog log)
         {
-            get => Interlocked.CompareExchange(ref currentIteration, null, null);
-            set => Interlocked.Exchange(ref currentIteration, value);
-        }
-
-        private readonly Guid id = Guid.NewGuid();
-
-        public DataSenderDaemon(IDataSender dataSender, AirlockConfig config, ILog log)
-        {
-            this.dataSender = dataSender;
+            this.sender = sender;
+            this.flushTracker = flushTracker;
             this.config = config;
             this.log = log;
 
-            currentState = new AtomicInt(stateNotStarted);
-            CurrentIteration = null;
-        }
-
-        public void Start()
-        {
-            if (currentState.TrySet(stateStarted, stateNotStarted))
-            {
-                //@ezsilmar
-                //Make sure that current iteration is initialized synchronously here
-                //Otherwise we violate dispose invariant: the state is 'stateStarted' but CurrentIteration is null
-#pragma warning disable 4014
-                SendingRoutine();
-#pragma warning restore 4014
-            }
-        }
-
-        public async Task FlushAsync()
-        {
-            if (currentState.Value == stateStarted)
-            {
-                var iteration = CurrentIteration;
-                if (iteration == null)
-                {
-                    return;
-                }
-                
-                iteration.WakeUp();
-                var nextIteration = await iteration.WaitIterationFinished();
-                if (nextIteration == null)
-                {
-                    return;
-                }
-                
-                await nextIteration.WaitSendFinished();
-            }
+            routineCancellation = new TaskCompletionSource<byte>();
+            routine = Routine();
         }
 
         public void Dispose()
         {
-            FlushAsync().GetAwaiter().GetResult();
-            currentState.Value = stateDisposed;
-            var iteration = CurrentIteration;
-            if (iteration == null)
-            {
-                return;
-            }
-            iteration.WakeUp();
-
-            //@ezsilmar
-            // Need to check next iteration too,
-            // because IterationFinished is set after while loop check in SendRoutine
-            var nextIteration = iteration.WaitIterationFinished().GetAwaiter().GetResult();
-            if (nextIteration == null)
-            {
-                return;
-            }
-            nextIteration.WakeUp();
-
-            nextIteration.WaitIterationFinished().GetAwaiter().GetResult();
+            flushTracker.RequestFlush().GetAwaiter().GetResult();
+            routineCancellation.TrySetResult(1);
+            routine.GetAwaiter().GetResult();
         }
 
-        private async Task SendingRoutine()
+        private async Task Routine()
         {
             var sendPeriod = config.SendPeriod;
+            var sw = new Stopwatch();
+            FlushRegistrationList flushRegistrationList = null;
 
-            while (currentState.Value != stateDisposed)
+            while (!routineCancellation.Task.IsCompleted)
             {
-                ReportNextIteration(new IterationHandle());
+                var flushRequested = flushTracker.WaitForFlushRequest();
+                var wakeUpReason = await Task.WhenAny(
+                    ScheduleDelay(sendPeriod - sw.Elapsed),
+                    flushRequested,
+                    routineCancellation.Task);
 
-                var (result, sendTime) = await SendAsync().ConfigureAwait(false);
+                if (wakeUpReason == routineCancellation.Task)
+                {
+                    return;
+                }
 
-                AdjustSendPeriod(result, ref sendPeriod);
+                if (wakeUpReason == flushRequested)
+                {
+                    flushRegistrationList = flushTracker.ResetFlushRegistrationList();
+                }
 
-                CurrentIteration.ScheduleWakeUp(sendPeriod - sendTime);
+                sw.Restart();
+                var sendResult = await sender.SendAsync();
+                sw.Stop();
+                sendPeriod = GetNextSendPeriod(sendResult, sendPeriod);
 
-                await CurrentIteration.WaitForNextIteration().ConfigureAwait(false);
+                flushRegistrationList?.ReportProcessingCompleted();
+                flushRegistrationList = null;
             }
-
-            ReportNextIteration(null);
         }
 
-        private async Task<(DataSendResult, TimeSpan)> SendAsync()
+        private Task ScheduleDelay(TimeSpan sleepTime)
         {
-            var watch = Stopwatch.StartNew();
-
-            DataSendResult result;
-            try
+            if (sleepTime <= TimeSpan.Zero)
             {
-                result = await dataSender.SendAsync().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                log.Warn($"{id:N} Send failed with exception", ex);
-                result = DataSendResult.Ok;
+                return Task.CompletedTask;
             }
 
-            var sendTime = watch.Elapsed;
-            CurrentIteration.ReportSendFinished();
-            return (result, sendTime);
+            return Task.Delay(sleepTime);
         }
 
-        private void ReportNextIteration(IterationHandle handle)
-        {
-            var previousIteration = CurrentIteration;
-            CurrentIteration = handle;
-            previousIteration?.ReportIterationFinished(handle);
-        }
-
-        private void AdjustSendPeriod(DataSendResult result, ref TimeSpan sendPeriod)
+        private TimeSpan GetNextSendPeriod(DataSendResult result, TimeSpan sendPeriod)
         {
             if (result == DataSendResult.Backoff)
             {
-                sendPeriod = TimeSpan.FromTicks(Math.Min(sendPeriod.Ticks*2, config.SendPeriodCap.Ticks));
-            }
-            else
-            {
-                sendPeriod = config.SendPeriod;
-            }
-        }
-
-        private class IterationHandle
-        {
-            private readonly TaskCompletionSource<byte> nextIterationWakeup;
-            private readonly TaskCompletionSource<byte> sendFinished;
-            private readonly TaskCompletionSource<IterationHandle> iterationFinished;
-
-            public IterationHandle()
-            {
-                nextIterationWakeup = new TaskCompletionSource<byte>();
-                sendFinished = new TaskCompletionSource<byte>();
-                iterationFinished = new TaskCompletionSource<IterationHandle>();
+                return TimeSpan.FromTicks(Math.Min(sendPeriod.Ticks * 2, config.SendPeriodCap.Ticks));
             }
 
-            public Task WaitSendFinished()
-            {
-                return sendFinished.Task;
-            }
-
-            public void ReportSendFinished()
-            {
-                sendFinished.TrySetResult(1);
-            }
-
-            public Task WaitForNextIteration()
-            {
-                return nextIterationWakeup.Task;
-            }
-
-            public void WakeUp()
-            {
-                nextIterationWakeup.TrySetResult(1);
-            }
-
-            public void ScheduleWakeUp(TimeSpan wakeUpAfter)
-            {
-                if (wakeUpAfter > TimeSpan.Zero)
-                {
-                    Task.Delay(wakeUpAfter).ContinueWith(_ => WakeUp());
-                }
-                else
-                {
-                    WakeUp();
-                }
-            }
-
-            public Task<IterationHandle> WaitIterationFinished()
-            {
-                return iterationFinished.Task;
-            }
-
-            public void ReportIterationFinished(IterationHandle nextIteration)
-            {
-                iterationFinished.TrySetResult(nextIteration);
-            }
+            return config.SendPeriod;
         }
     }
 }

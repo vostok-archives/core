@@ -11,13 +11,13 @@ using Vostok.Logging.Logs;
 
 namespace Vostok.Airlock
 {
-    [Ignore("Explicit attribute does not work in VS + Resharper")]
+    //[Ignore("Explicit attribute does not work in VS + Resharper")]
     public class Integration_Tests
     {
         private readonly ConsoleLog log = new ConsoleLog();
 
         [Test]
-        [Repeat(100)]
+        [Repeat(50)]
         public void PushLogEventsToAirlock()
         {
             var routingKey = RoutingKey.Create("vostok", "ci", "core", RoutingKey.LogsSuffix);
@@ -68,6 +68,7 @@ namespace Vostok.Airlock
                 InitialPooledBuffersCount = 10,
                 EnableTracing = false,
             };
+            //return new AirlockClient(airlockConfig, log.FilterByLevel(LogLevel.Warn));
             return new ParallelAirlockClient(airlockConfig, 10, log.FilterByLevel(LogLevel.Warn));
         }
     }

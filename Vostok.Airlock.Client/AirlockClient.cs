@@ -13,6 +13,7 @@ namespace Vostok.Airlock
         private readonly MemoryManager memoryManager;
         private readonly RecordWriter recordWriter;
         private readonly ConcurrentDictionary<string, IBufferPool> bufferPools;
+        private readonly FlushTracker flushTracker;
         private readonly DataSenderDaemon dataSenderDaemon;
         private readonly AtomicLong lostItemsCounter;
         private readonly AtomicLong sentItemsCounter;
@@ -49,7 +50,8 @@ namespace Vostok.Airlock
                 sentItemsCounter
             );
 
-            dataSenderDaemon = new DataSenderDaemon(dataSender, config, log);
+            flushTracker = new FlushTracker();
+            dataSenderDaemon = new DataSenderDaemon(dataSender, flushTracker, config, log);
         }
 
         public long LostItemsCount => lostItemsCounter.Value;
@@ -61,15 +63,11 @@ namespace Vostok.Airlock
             if (!AirlockSerializerRegistry.TryGet<T>(out var serializer))
                 return;
 
-            if (recordWriter.TryWrite(
+            if (!recordWriter.TryWrite(
                 item,
                 serializer,
                 timestamp ?? DateTimeOffset.UtcNow,
                 ObtainBufferPool(routingKey)))
-            {
-                dataSenderDaemon.Start();
-            }
-            else
             {
                 lostItemsCounter.Increment();
             }
@@ -77,7 +75,7 @@ namespace Vostok.Airlock
 
         public Task FlushAsync()
         {
-            return dataSenderDaemon.FlushAsync();
+            return flushTracker.RequestFlush();
         }
 
         public void Dispose()
