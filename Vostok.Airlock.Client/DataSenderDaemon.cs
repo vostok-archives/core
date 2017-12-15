@@ -32,7 +32,6 @@ namespace Vostok.Airlock
 
         public void Dispose()
         {
-            flushTracker.RequestFlush().GetAwaiter().GetResult();
             routineCancellation.TrySetResult(1);
             routine.GetAwaiter().GetResult();
         }
@@ -58,7 +57,7 @@ namespace Vostok.Airlock
 
                 if (wakeUpReason == flushRequested)
                 {
-                    flushRegistration = flushTracker.ResetFlushRegistrationList();
+                    flushRegistration = flushTracker.ResetFlushRegistration();
                 }
 
                 var sw = Stopwatch.StartNew();
@@ -100,7 +99,6 @@ namespace Vostok.Airlock
             {
                 return TimeSpan.FromTicks(Math.Min(sendPeriod.Ticks * 2, config.SendPeriodCap.Ticks));
             }
-
             return config.SendPeriod;
         }
     }

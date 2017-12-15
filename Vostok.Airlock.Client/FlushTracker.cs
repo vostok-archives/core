@@ -24,7 +24,7 @@ namespace Vostok.Airlock
             return Interlocked.CompareExchange(ref registration, null, null).ProcessingRequested;
         }
 
-        public FlushRegistration ResetFlushRegistrationList()
+        public FlushRegistration ResetFlushRegistration()
         {
             var nextRegistration = new FlushRegistration();
             var currentRegistration = Interlocked.Exchange(ref registration, nextRegistration);

@@ -9,6 +9,12 @@ namespace Vostok.Airlock
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
 
+            if (config.SendPeriod < TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(config.SendPeriod));
+
+            if (config.SendPeriod > config.SendPeriodCap)
+                throw new ArgumentException($"{nameof(config.SendPeriod)} should be less or equal to {nameof(config.SendPeriodCap)}");
+
             if (config.ClusterProvider == null)
                 throw new ArgumentNullException(nameof(config.ClusterProvider));
 
