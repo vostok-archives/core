@@ -55,7 +55,7 @@ namespace Vostok.RetriableCall
             Assert.AreEqual(expectedResult, actualResult);
             Assert.AreEqual(3, counter.Value, "counter");
             Assert.Greater(stopwatch.ElapsedMilliseconds, 500*(1 + 1.7) - 100, "ElapsedMilliseconds");
-            Assert.Less(stopwatch.ElapsedMilliseconds, 500*(1 + 2.5) + 100, "ElapsedMilliseconds");
+            Assert.Less(stopwatch.ElapsedMilliseconds, 500*(1 + 2.5) + 1000, "ElapsedMilliseconds");
         }
 
         [Test, TestCase(true), TestCase(false)]
@@ -69,7 +69,7 @@ namespace Vostok.RetriableCall
             stopwatch.Stop();
             Assert.AreEqual(5, counter.Value, "counter");
             Assert.Greater(stopwatch.ElapsedMilliseconds, 500*(1 + 1.7 + 1.7*1.7 + 1.7*1.7*1.7) - 100, "ElapsedMilliseconds");
-            Assert.Less(stopwatch.ElapsedMilliseconds, 500*(1 + 2.5 + 2.5*2.5 + 2.5*2.5*2.5) + 100, "ElapsedMilliseconds");
+            Assert.Less(stopwatch.ElapsedMilliseconds, 500*(1 + 2.5 + 2.5*2.5 + 2.5*2.5*2.5) + 1000, "ElapsedMilliseconds");
         }
 
         [Test, TestCase(true), TestCase(false)]
