@@ -2,9 +2,14 @@
 
 namespace Vostok.Commons.Synchronization
 {
-    public class AtomicDouble
+    public class AtomicDouble : IAtomicNumber<double>
     {
         private double value;
+
+        public AtomicDouble()
+        {
+            value = 0;
+        }
 
         public AtomicDouble(double value)
         {
