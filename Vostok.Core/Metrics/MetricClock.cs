@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading;
+using Vostok.Commons.Extensions.UnitConvertions;
 
 namespace Vostok.Metrics
 {
     public class MetricClock
     {
+        public static readonly TimeSpan DefaultPeriod = 1.Minutes();
+
         private event Action<DateTimeOffset> Actions;
         private int isRunning;
         private DateTimeOffset aggregationTimestamp;
