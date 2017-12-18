@@ -16,7 +16,7 @@ namespace Vostok.Metrics
             string name,
             Func<double> getValue)
         {
-            return scope.Gauge(scope.DefaultInterval, name, getValue);
+            return scope.Gauge(MetricClock.DefaultPeriod, name, getValue);
         }
 
         public static IDisposable Gauge(
@@ -39,7 +39,7 @@ namespace Vostok.Metrics
             this IMetricScope scope,
             string name)
         {
-            return scope.Counter(scope.DefaultInterval, name);
+            return scope.Counter(MetricClock.DefaultPeriod, name);
         }
 
         public static ICounter Counter(

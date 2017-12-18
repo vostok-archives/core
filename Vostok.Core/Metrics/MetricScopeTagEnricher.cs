@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Vostok.Metrics
 {
@@ -12,7 +11,6 @@ namespace Vostok.Metrics
         {
             this.parent = parent;
             this.tags = tags;
-            DefaultInterval = parent.DefaultInterval;
         }
 
         public IMetricEventWriter WriteEvent()
@@ -24,8 +22,6 @@ namespace Vostok.Metrics
         {
             return Enrich(parent.WriteMetric());
         }
-
-        public TimeSpan DefaultInterval { get; }
 
         private IMetricEventWriter Enrich(IMetricEventWriter writer)
         {

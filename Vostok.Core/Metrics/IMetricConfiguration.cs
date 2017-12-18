@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Vostok.Flow;
 
 namespace Vostok.Metrics
@@ -12,7 +11,5 @@ namespace Vostok.Metrics
         ISet<string> ContextFieldsWhitelist { get; }
 
         IMetricEventReporter Reporter { get; set; }
-
-        TimeSpan DefaultInterval { get; set; } 
     }
 }

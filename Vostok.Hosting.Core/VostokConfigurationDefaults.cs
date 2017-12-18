@@ -10,7 +10,6 @@ namespace Vostok.Hosting
         public const string EnvironmentKey = "environment";
         public const string HostKey = "host";
         public const string AirlockParallelismKey = "parallelism";
-        public const string DefaultMetricInterval = "default_interval";
         public const int DefaultAirlockParallelism = 1;
     }
 }

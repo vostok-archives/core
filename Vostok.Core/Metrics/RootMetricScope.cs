@@ -1,5 +1,4 @@
-﻿using System;
-using Vostok.Commons.Collections;
+﻿using Vostok.Commons.Collections;
 
 namespace Vostok.Metrics
 {
@@ -7,11 +6,9 @@ namespace Vostok.Metrics
     {
         private readonly UnlimitedLazyPool<MetricEventWriter> eventWriterPool;
         private readonly UnlimitedLazyPool<MetricEventWriter> metricWriterPool;
-        public TimeSpan DefaultInterval { get; }
 
         public RootMetricScope(IMetricConfiguration configuration)
         {
-            DefaultInterval = configuration.DefaultInterval;
             eventWriterPool = new UnlimitedLazyPool<MetricEventWriter>(
                 () => new MetricEventWriter(
                     eventWriterPool,

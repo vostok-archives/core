@@ -158,9 +158,6 @@ namespace Vostok.Hosting
         {
             var metricsSection = configuration.GetSection(VostokConfigurationDefaults.MetricsSection);
             metricConfiguration.ContextFieldsWhitelist.UnionWith((metricsSection[nameof(metricConfiguration.ContextFieldsWhitelist)] ?? "").Split(new[] {' ', ';', ','}, StringSplitOptions.RemoveEmptyEntries));
-            var defaultMetricIntervalStr = metricsSection[VostokConfigurationDefaults.DefaultMetricInterval];
-            if (!string.IsNullOrEmpty(defaultMetricIntervalStr) && DurationParser.TryParse(defaultMetricIntervalStr, out var defaultMetricInterval))
-                metricConfiguration.DefaultInterval = defaultMetricInterval;
         }
 
         private static IAirlockClient CreateAirlockClient(AirlockConfig airlockConfig, int parallelism, ILog log)

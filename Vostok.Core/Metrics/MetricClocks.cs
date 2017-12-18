@@ -19,6 +19,13 @@ namespace Vostok.Metrics
             return clock;
         }
 
+        public static MetricClock Get()
+        {
+            var clock = clocks.GetOrAdd(MetricClock.DefaultPeriod, per => new MetricClock(per));
+            clock.Start();
+            return clock;
+        }
+
         public static void Stop()
         {
             foreach (var kvp in clocks)
