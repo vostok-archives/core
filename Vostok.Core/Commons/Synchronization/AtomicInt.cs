@@ -2,9 +2,13 @@
 
 namespace Vostok.Commons.Synchronization
 {
-    public class AtomicInt
+    public class AtomicInt : IAtomicNumber<int>
     {
         private int value;
+
+        public AtomicInt()
+        {
+        }
 
         public AtomicInt(int value)
         {

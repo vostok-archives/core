@@ -2,9 +2,13 @@
 
 namespace Vostok.Commons.Synchronization
 {
-    public class AtomicLong
+    public class AtomicLong : IAtomicNumber<long>
     {
         private long value;
+
+        public AtomicLong()
+        {
+        }
 
         public AtomicLong(long value)
         {
