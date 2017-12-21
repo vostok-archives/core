@@ -13,22 +13,22 @@ namespace Vostok.Common.Synchronization
         [Test]
         public void AtomicDoubleMultithreadedTest()
         {
-            AtomicAddMultithreadedTest<double, AtomicDouble>(ThreadSafeRandom.NextDouble, x => x, (a, b) => a + b, (a, b) => Math.Abs(a - b) < 1e-10);
+            AtomicMultithreadedTest<double, AtomicDouble>(ThreadSafeRandom.NextDouble, x => x, (a, b) => a + b, (a, b) => Math.Abs(a - b) < 1e-10);
         }
 
         [Test]
         public void AtomicIntMultithreadedTest()
         {
-            AtomicAddMultithreadedTest<int, AtomicInt>(ThreadSafeRandom.Next, x => x, (a, b) => a + b, (a, b) => a == b);
+            AtomicMultithreadedTest<int, AtomicInt>(ThreadSafeRandom.Next, x => x, (a, b) => a + b, (a, b) => a == b);
         }
 
         [Test]
         public void AtomicLongMultithreadedTest()
         {
-            AtomicAddMultithreadedTest<long, AtomicLong>(() => ThreadSafeRandom.Next(0L, 100000L), x => x, (a, b) => a + b, (a, b) => a == b);
+            AtomicMultithreadedTest<long, AtomicLong>(() => ThreadSafeRandom.Next(0L, 100000L), x => x, (a, b) => a + b, (a, b) => a == b);
         }
 
-        private void AtomicAddMultithreadedTest<T, TAtomic>(Func<T> getRandom, Func<int, T> fromInt, Func<T, T, T> add, Func<T, T, bool> areEqual)
+        private void AtomicMultithreadedTest<T, TAtomic>(Func<T> getRandom, Func<int, T> fromInt, Func<T, T, T> add, Func<T, T, bool> areEqual)
             where TAtomic : IAtomicNumber<T>, new()
         {
             var counterIncrease = new TAtomic();
