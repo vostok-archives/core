@@ -8,7 +8,6 @@ namespace Vostok.Commons.Synchronization
 
         public AtomicInt()
         {
-            value = 0;
         }
 
         public AtomicInt(int value)

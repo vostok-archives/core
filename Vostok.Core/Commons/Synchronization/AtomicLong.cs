@@ -8,7 +8,6 @@ namespace Vostok.Commons.Synchronization
 
         public AtomicLong()
         {
-            value = 0;
         }
 
         public AtomicLong(long value)

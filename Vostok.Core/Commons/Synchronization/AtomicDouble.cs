@@ -8,7 +8,6 @@ namespace Vostok.Commons.Synchronization
 
         public AtomicDouble()
         {
-            value = 0;
         }
 
         public AtomicDouble(double value)

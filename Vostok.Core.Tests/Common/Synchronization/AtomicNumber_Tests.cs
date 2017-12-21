@@ -52,7 +52,7 @@ namespace Vostok.Common.Synchronization
             {
                 if (counterIncrease.TryIncreaseTo(fromInt(10)))
                 {
-                    Assert.True(wasIncrease.TrySetTrue());;
+                    Assert.True(wasIncrease.TrySetTrue());
                 }
             });
 
