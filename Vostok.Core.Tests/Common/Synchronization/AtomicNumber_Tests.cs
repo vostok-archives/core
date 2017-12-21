@@ -8,6 +8,8 @@ namespace Vostok.Common.Synchronization
 {
     public class AtomicNumber_Tests
     {
+        private const int threadCount = 1000;
+
         [Test]
         public void AtomicDoubleMultithreadedTest()
         {
@@ -29,7 +31,6 @@ namespace Vostok.Common.Synchronization
         private void AtomicAddMultithreadedTest<T, TAtomic>(Func<T> getRandom, Func<int, T> fromInt, Func<T, T, T> add, Func<T, T, bool> areEqual)
             where TAtomic : IAtomicNumber<T>, new()
         {
-            const int threadCount = 1000;
             var counterIncrease = new TAtomic();
             var increaseToValues = new T[threadCount];
             var maxRandom = 0;
@@ -41,6 +42,19 @@ namespace Vostok.Common.Synchronization
             }
             Parallel.ForEach(increaseToValues, x => counterIncrease.TryIncreaseTo(x));
             Assert.True(areEqual(fromInt(maxRandom), counterIncrease.Value), $"{counterIncrease.Value} must be equal to {fromInt(maxRandom)} after multithreaded increase");
+
+            for (var i = 0; i < increaseToValues.Length; i++)
+            {
+                increaseToValues[i] = fromInt(0);
+            }
+            var wasIncrease = new AtomicBoolean(false);
+            Parallel.ForEach(increaseToValues, x =>
+            {
+                if (counterIncrease.TryIncreaseTo(fromInt(10)))
+                {
+                    Assert.True(wasIncrease.TrySetTrue());;
+                }
+            });
 
             var diffs = new T[threadCount];
             var sum = default(T);
