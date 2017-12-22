@@ -9,11 +9,6 @@
     <StartupObject />
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net471'">
-    <!-- Workaround for tooling bug which must be fixed in VS 15.5 (see https://github.com/dotnet/standard/issues/552) -->
-    <_HasReferenceToSystemRuntime>true</_HasReferenceToSystemRuntime>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="4.19.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
