@@ -14,7 +14,7 @@ namespace Vostok.Logging.Logs
         {
             var message = FormatMessage(logEvent.MessageTemplate, logEvent.MessageParameters);
             var parameters = FormatProperties(logEvent.Properties);
-            return $"{DateTime.Now:HH:mm:ss.fff} {logEvent.Level} {message} {logEvent.Exception}{Environment.NewLine}{parameters}{Environment.NewLine}";
+            return $"{DateTime.Now:HH:mm:ss.fff} {logEvent.Level} {message} {logEvent.Exception}{Environment.NewLine}{(parameters != "" ? parameters + Environment.NewLine : "")}";
         }
 
         public static string FormatMessage(string template, object[] parameters)
@@ -46,6 +46,8 @@ namespace Vostok.Logging.Logs
 
         public static string FormatProperties(IReadOnlyDictionary<string, object> properties)
         {
+            if (properties == null || properties.Count == 0)
+                return "";
             return "{" + string.Join(", ", properties.Select(x => $"{x.Key}: {x.Value}")) + "}";
         }
 
