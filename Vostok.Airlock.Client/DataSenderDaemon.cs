@@ -8,7 +8,6 @@ namespace Vostok.Airlock
     internal class DataSenderDaemon : IDisposable
     {
         private readonly IDataSender sender;
-        private readonly IFlushTracker flushTracker;
         private readonly AirlockConfig config;
         private readonly ILog log;
 
@@ -17,12 +16,10 @@ namespace Vostok.Airlock
 
         public DataSenderDaemon(
             IDataSender sender,
-            IFlushTracker flushTracker,
             AirlockConfig config,
             ILog log)
         {
             this.sender = sender;
-            this.flushTracker = flushTracker;
             this.config = config;
             this.log = log;
 
@@ -30,24 +27,26 @@ namespace Vostok.Airlock
             routine = Routine();
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// @ezsilmar Be careful, this method is not thread-safe
+        /// </summary>
         public void Dispose()
         {
             routineCancellation.TrySetResult(1);
             routine.GetAwaiter().GetResult();
+            SendAsync().GetAwaiter().GetResult();
         }
 
         private async Task Routine()
         {
             var sendPeriod = config.SendPeriod;
             var lastSendElapsed = TimeSpan.Zero;
-            FlushRegistration flushRegistration = null;
 
             while (!routineCancellation.Task.IsCompleted)
             {
-                var flushRequested = flushTracker.WaitForFlushRequest();
                 var wakeUpReason = await Task.WhenAny(
                     ScheduleDelay(sendPeriod - lastSendElapsed),
-                    flushRequested,
                     routineCancellation.Task).ConfigureAwait(false);
 
                 if (wakeUpReason == routineCancellation.Task)
@@ -55,18 +54,10 @@ namespace Vostok.Airlock
                     return;
                 }
 
-                if (wakeUpReason == flushRequested)
-                {
-                    flushRegistration = flushTracker.ResetFlushRegistration();
-                }
-
                 var sw = Stopwatch.StartNew();
                 var sendResult = await SendAsync().ConfigureAwait(false);
                 lastSendElapsed = sw.Elapsed;
                 sendPeriod = GetNextSendPeriod(sendResult, sendPeriod);
-
-                flushRegistration?.ReportProcessingCompleted();
-                flushRegistration = null;
             }
         }
 
