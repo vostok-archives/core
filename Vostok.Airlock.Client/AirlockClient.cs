@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
 using Vostok.Commons.Synchronization;
 using Vostok.Logging;
 using Vostok.Logging.Logs;
@@ -16,6 +15,10 @@ namespace Vostok.Airlock
         private readonly DataSenderDaemon dataSenderDaemon;
         private readonly AtomicLong lostItemsCounter;
         private readonly AtomicLong sentItemsCounter;
+        private readonly ILog log;
+
+        private readonly AtomicBoolean isDisposed;
+        private readonly AtomicBoolean pushAfterDisposeLogged;
 
         public AirlockClient(AirlockConfig config, ILog log = null)
         {
@@ -23,7 +26,8 @@ namespace Vostok.Airlock
 
             this.config = config;
 
-            log = (log ?? new SilentLog()).ForContext(this);
+            this.log = log = (log ?? new SilentLog()).ForContext(this);
+
             memoryManager = new MemoryManager(
                 config.MaximumMemoryConsumption.Bytes,
                 (int) config.InitialPooledBufferSize.Bytes
@@ -50,6 +54,8 @@ namespace Vostok.Airlock
             );
 
             dataSenderDaemon = new DataSenderDaemon(dataSender, config, log);
+            isDisposed = new AtomicBoolean(false);
+            pushAfterDisposeLogged = new AtomicBoolean(false);
         }
 
         public long LostItemsCount => lostItemsCounter.Value;
@@ -58,31 +64,31 @@ namespace Vostok.Airlock
 
         public void Push<T>(string routingKey, T item, DateTimeOffset? timestamp = null)
         {
+            if (isDisposed)
+            {
+                LogPushAfterDispose(routingKey);
+                return;
+            }
+
             if (!AirlockSerializerRegistry.TryGet<T>(out var serializer))
                 return;
 
-            if (recordWriter.TryWrite(
+            if (!recordWriter.TryWrite(
                 item,
                 serializer,
                 timestamp ?? DateTimeOffset.UtcNow,
                 ObtainBufferPool(routingKey)))
             {
-                dataSenderDaemon.Start();
-            }
-            else
-            {
                 lostItemsCounter.Increment();
             }
         }
 
-        public Task FlushAsync()
-        {
-            return dataSenderDaemon.FlushAsync();
-        }
-
         public void Dispose()
         {
-            dataSenderDaemon.Dispose();
+            if (isDisposed.TrySetTrue())
+            {
+                dataSenderDaemon.Dispose();
+            }
         }
 
         private IBufferPool ObtainBufferPool(string routingKey)
@@ -93,6 +99,14 @@ namespace Vostok.Airlock
                     memoryManager,
                     config.InitialPooledBuffersCount
                 ));
+        }
+
+        private void LogPushAfterDispose(string routingKey)
+        {
+            if (pushAfterDisposeLogged.TrySetTrue())
+            {
+                log.Warn($"Tried to push a message to routing key '{routingKey}' after dispose of AirlockClient");
+            }
         }
     }
 }
