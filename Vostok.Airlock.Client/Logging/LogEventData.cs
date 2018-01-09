@@ -11,6 +11,7 @@ namespace Vostok.Airlock.Logging
         {
             if (ex == null)
                 return;
+            Message = ex.Message;
             Exceptions = new List<LogEventException>();
             var currentEx = ex;
             while (currentEx != null)
