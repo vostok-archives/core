@@ -96,7 +96,8 @@ namespace Vostok.Hosting
                 var metricsConfigurator = new MetricsConfigurator(metricConfiguration);
                 foreach (var configurationDelegate in configureMetricsDelegates)
                     configurationDelegate(context, metricsConfigurator);
-                metricConfiguration.Reporter = new AirlockMetricReporter(hostingEnvironment.AirlockClient, RoutingKey.TryCreatePrefix(hostingEnvironment.Project, hostingEnvironment.Environment, hostingEnvironment.Service));
+                if (metricConfiguration.Reporter == null)
+                    metricConfiguration.Reporter = new AirlockMetricReporter(hostingEnvironment.AirlockClient, RoutingKey.TryCreatePrefix(hostingEnvironment.Project, hostingEnvironment.Environment, hostingEnvironment.Service));
                 hostingEnvironment.MetricScope = new RootMetricScope(metricConfiguration);
 
                 return new VostokHost(hostingEnvironment, new TApp());
@@ -251,6 +252,11 @@ namespace Vostok.Hosting
             public void AddContextFieldswhitelist(params string[] fields)
             {
                 metricConfiguration.ContextFieldsWhitelist.UnionWith(fields);
+            }
+
+            public void SetReporter(IMetricEventReporter reporter)
+            {
+                metricConfiguration.Reporter = reporter;
             }
         }
 
