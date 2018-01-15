@@ -20,7 +20,7 @@ namespace Vostok.Logging
             new object[] {"GenericClassFunc", (Action)GenericClassFunc, new[] {"TestByThrowingException", "GenericClassFunc", "MyFunc"}, new[] { "System.Exception" } },
             new object[] {"AsyncFunc", (Action)(() => MyAsyncFunc().GetAwaiter().GetResult()), new[] {"TestByThrowingException", "<.cctor>b__12_0", "HandleNonSuccessAndDebuggerNotification", "Throw", "MyAsyncFunc"}, new[] { "System.Exception" } },
             new object[] {"LambdaFunc", (Action)MyLambdaFunc, new[] {"TestByThrowingException", "MyLambdaFunc", "MyLambdaFunc { <lambda> }"}, new[] { "System.Exception" } },
-            new object[] {"NestedFunc", (Action)NestedFunc, new[] {"TestByThrowingException", "NestedFunc", "NestedFunc", "NestedFunc2"}, new[] { "System.InvalidOperationException", "System.IO.InvalidDataException" } }
+            new object[] {"NestedFunc", (Action)NestedFunc, new[] {"NestedFunc", "NestedFunc2", "TestByThrowingException", "NestedFunc"}, new[] { "System.InvalidOperationException", "System.IO.InvalidDataException" } }
         };
 
         private static readonly string[][] asyncNameVariants =
@@ -54,13 +54,13 @@ namespace Vostok.Logging
                     var funcNamesAtException = logEventData.Exceptions.SelectMany(e1 => e1.Stack).Select(x => x.Function).Reverse();
                     if (caseName != "AsyncFunc")
                     {
-                        funcNamesAtException.ShouldAllBeEquivalentTo(funcNames, "funcNames for case " + caseName);
+                        funcNamesAtException.ShouldAllBeEquivalentTo(funcNames, c => c.WithStrictOrderingFor(x => x), "funcNames for case " + caseName);
                     }
                     else
                     {
                         Assert.That(asyncNameVariants.Any(asyncVariant => asyncVariant.SequenceEqual(funcNames)));
                     }
-                    logEventData.Exceptions.Select(ex => ex.Type).ShouldAllBeEquivalentTo(exNames, "exception name for case " + caseName);
+                    logEventData.Exceptions.Select(ex => ex.Type).ShouldAllBeEquivalentTo(exNames, c => c.WithStrictOrderingFor(x => x), "exception name for case " + caseName);
                 }
             }
         }
