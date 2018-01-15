@@ -18,13 +18,16 @@ namespace Vostok.Logging
             new object[] {"DivideByZero", (Action)DivideByZero, new[] {"TestByThrowingException", "DivideByZero"}, new[] { "System.DivideByZeroException" } },
             new object[] {"MyGenericFunc<int>", (Action)MyGenericFunc<int>, new[] {"TestByThrowingException", "MyGenericFunc"}, new[] { "System.Exception" } },
             new object[] {"GenericClassFunc", (Action)GenericClassFunc, new[] {"TestByThrowingException", "GenericClassFunc", "MyFunc"}, new[] { "System.Exception" } },
-#if NETCOREAPP2_0
             new object[] {"AsyncFunc", (Action)(() => MyAsyncFunc().GetAwaiter().GetResult()), new[] {"TestByThrowingException", "<.cctor>b__12_0", "HandleNonSuccessAndDebuggerNotification", "Throw", "MyAsyncFunc"}, new[] { "System.Exception" } },
-#else
-            new object[] {"AsyncFunc", (Action)(() => MyAsyncFunc().GetAwaiter().GetResult()), new[] {"TestByThrowingException", "<.cctor>b__12_0", "HandleNonSuccessAndDebuggerNotification", "ThrowForNonSuccess", "MyAsyncFunc"}, new[] { "System.Exception" } },
-#endif
             new object[] {"LambdaFunc", (Action)MyLambdaFunc, new[] {"TestByThrowingException", "MyLambdaFunc", "MyLambdaFunc { <lambda> }"}, new[] { "System.Exception" } },
             new object[] {"NestedFunc", (Action)NestedFunc, new[] {"TestByThrowingException", "NestedFunc", "NestedFunc", "NestedFunc2"}, new[] { "System.InvalidOperationException", "System.IO.InvalidDataException" } }
+        };
+
+        private static readonly string[][] asyncNameVariants =
+        {
+            new[] {"TestByThrowingException", "<.cctor>b__12_0", "HandleNonSuccessAndDebuggerNotification", "Throw", "MyAsyncFunc"},
+            new[] {"TestByThrowingException", "<.cctor>b__12_0", "GetResult", "HandleNonSuccessAndDebuggerNotification", "Throw", "MyAsyncFunc"},
+            new[] {"TestByThrowingException", "<.cctor>b__12_0", "HandleNonSuccessAndDebuggerNotification", "ThrowForNonSuccess", "MyAsyncFunc"}
         };
 
         private readonly ConsoleLog log = new ConsoleLog();
@@ -48,7 +51,15 @@ namespace Vostok.Logging
                     log.Error(e);
                     var logEventData = new LogEventData(e);
                     log.Debug("got:\n" + JsonConvert.SerializeObject(logEventData, Formatting.Indented));
-                    logEventData.Exceptions.SelectMany(e1 => e1.Stack).Select(x => x.Function).ShouldAllBeEquivalentTo(funcNames.Reverse(), "funcNames for case " + caseName);
+                    var funcNamesAtException = logEventData.Exceptions.SelectMany(e1 => e1.Stack).Select(x => x.Function).Reverse();
+                    if (caseName != "AsyncFunc")
+                    {
+                        funcNamesAtException.ShouldAllBeEquivalentTo(funcNames, "funcNames for case " + caseName);
+                    }
+                    else
+                    {
+                        Assert.That(asyncNameVariants.Any(asyncVariant => asyncVariant.SequenceEqual(funcNames)));
+                    }
                     logEventData.Exceptions.Select(ex => ex.Type).ShouldAllBeEquivalentTo(exNames, "exception name for case " + caseName);
                 }
             }
