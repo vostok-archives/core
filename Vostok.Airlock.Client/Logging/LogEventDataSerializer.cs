@@ -7,14 +7,12 @@ namespace Vostok.Airlock.Logging
 {
     public class LogEventDataSerializer : IAirlockSerializer<LogEventData>, IAirlockDeserializer<LogEventData>
     {
-        private const byte formatVersion = 2;
+        private const byte formatVersion = 1;
 
         public LogEventData Deserialize(IAirlockSource source)
         {
             var reader = source.Reader;
             var version = reader.ReadByte();
-            if (version == 1)
-                return DeserializeV1(reader);
             if (version != formatVersion)
                 throw new InvalidDataException("invalid format version: " + version);
 
@@ -38,19 +36,6 @@ namespace Vostok.Airlock.Logging
             writer.WriteNullable(item.Message, (w, s) => w.Write(s));
             writer.WriteNullable(item.Exceptions, (a,b) => a.WriteCollection(b, WriteException));
             writer.WriteNullable(item.Properties, (a, b) => a.WriteDictionary(b, (c, d) => c.Write(d), (c, d) => c.Write(d)));
-        }
-
-        private LogEventData DeserializeV1(IBinaryReader reader)
-        {
-            var eventData = new LogEventData
-            {
-                Timestamp = new DateTimeOffset(reader.ReadInt64(), TimeSpan.Zero),
-                Level = (LogLevel) reader.ReadInt32(),
-                Message = reader.ReadNullable(r => r.ReadString())
-            };
-            reader.ReadNullable(r => r.ReadString());
-            eventData.Properties = reader.ReadNullable(x => x.ReadDictionary(y => y.ReadString(), y => y.ReadString()));
-            return eventData;
         }
 
         private LogEventException ReadException(IBinaryReader reader)
