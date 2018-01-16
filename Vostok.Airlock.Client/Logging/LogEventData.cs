@@ -31,7 +31,7 @@ namespace Vostok.Airlock.Logging
 
         public string Message { get; set; }
 
-        public List<LogEventException> Exceptions;
+        public List<LogEventException> Exceptions { get; set; }
 
         public IDictionary<string, string> Properties { get; set; }
     }
