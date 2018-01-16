@@ -1,34 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace Vostok.Airlock.Logging
 {
     public sealed class LogEventException
     {
-        public LogEventException()
-        {
-            
-        }
-
-        public LogEventException(Exception ex)
-        {
-            if (ex == null)
-                return;
-            Module = ex.Source;
-            Message = ex.Message;
-            Type = ex.GetType().FullName;
-            var frames = new StackTrace(ex, true).GetFrames();
-            if (frames == null)
-                return;
-            Stack = new List<LogEventStackFrame>();
-            foreach (var frame in frames)
-            {
-                Stack.Add(new LogEventStackFrame(frame));
-            }
-        }
-
         public string Message { get; set; }
         public string Type { get; set; }
         public string Module { get; set; }
