@@ -28,7 +28,7 @@ namespace Vostok.RetriableCall
             var ex = rootEx;
             while (ex != null && !condition(ex))
             {
-                if (!(rootEx is AggregateException aggregateEx))
+                if (!(ex is AggregateException aggregateEx))
                     ex = ex.InnerException;
                 else
                 {
@@ -38,6 +38,7 @@ namespace Vostok.RetriableCall
                         if (exInner != null)
                             return exInner;
                     }
+                    return null;
                 }
             }
             return ex;
