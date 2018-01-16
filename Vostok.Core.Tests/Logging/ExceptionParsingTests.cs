@@ -36,33 +36,26 @@ namespace Vostok.Logging
         [Test]
         public void TestByThrowingException(string caseName, Action action, string[] funcNames, string[] exNames) //
         {
-            //foreach (var testCase in testCases.Cast<object[]>())
-            //{
-            //    var caseName = (string)testCase[0];
-            //    var action = (Action)testCase[1];
-            //    var funcNames = (string[])testCase[2];
-            //    var exNames = (string[])testCase[3];
-                try
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                log.Error(e);
+                var logEventData = new LogEventData(e);
+                log.Debug("got:\n" + JsonConvert.SerializeObject(logEventData, Formatting.Indented));
+                var funcNamesAtException = logEventData.Exceptions.SelectMany(e1 => e1.Stack).Select(x => x.Function).Reverse();
+                if (caseName != "AsyncFunc")
                 {
-                    action();
+                    funcNamesAtException.ShouldAllBeEquivalentTo(funcNames, c => c.WithStrictOrderingFor(x => x), "funcNames for case " + caseName);
                 }
-                catch (Exception e)
+                else
                 {
-                    log.Error(e);
-                    var logEventData = new LogEventData(e);
-                    log.Debug("got:\n" + JsonConvert.SerializeObject(logEventData, Formatting.Indented));
-                    var funcNamesAtException = logEventData.Exceptions.SelectMany(e1 => e1.Stack).Select(x => x.Function).Reverse();
-                    if (caseName != "AsyncFunc")
-                    {
-                        funcNamesAtException.ShouldAllBeEquivalentTo(funcNames, c => c.WithStrictOrderingFor(x => x), "funcNames for case " + caseName);
-                    }
-                    else
-                    {
-                        Assert.That(asyncNameVariants.Any(asyncVariant => asyncVariant.SequenceEqual(funcNames)));
-                    }
-                    logEventData.Exceptions.Select(ex => ex.Type).ShouldAllBeEquivalentTo(exNames, c => c.WithStrictOrderingFor(x => x), "exception name for case " + caseName);
+                    Assert.That(asyncNameVariants.Any(asyncVariant => asyncVariant.SequenceEqual(funcNames)));
                 }
-            //}
+                logEventData.Exceptions.Select(ex => ex.Type).ShouldAllBeEquivalentTo(exNames, c => c.WithStrictOrderingFor(x => x), "exception name for case " + caseName);
+            }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
