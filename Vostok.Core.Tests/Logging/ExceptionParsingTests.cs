@@ -32,16 +32,16 @@ namespace Vostok.Logging
 
         private readonly ConsoleLog log = new ConsoleLog();
 
-        //[TestCaseSource(nameof(testCases))]
+        [TestCaseSource(nameof(testCases))]
         [Test]
-        public void TestByThrowingException() //Action action, string[] funcNames, string[] exNames
+        public void TestByThrowingException(string caseName, Action action, string[] funcNames, string[] exNames) //
         {
-            foreach (var testCase in testCases.Cast<object[]>())
-            {
-                var caseName = (string)testCase[0];
-                var action = (Action)testCase[1];
-                var funcNames = (string[])testCase[2];
-                var exNames = (string[])testCase[3];
+            //foreach (var testCase in testCases.Cast<object[]>())
+            //{
+            //    var caseName = (string)testCase[0];
+            //    var action = (Action)testCase[1];
+            //    var funcNames = (string[])testCase[2];
+            //    var exNames = (string[])testCase[3];
                 try
                 {
                     action();
@@ -62,7 +62,7 @@ namespace Vostok.Logging
                     }
                     logEventData.Exceptions.Select(ex => ex.Type).ShouldAllBeEquivalentTo(exNames, c => c.WithStrictOrderingFor(x => x), "exception name for case " + caseName);
                 }
-            }
+            //}
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
