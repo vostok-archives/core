@@ -16,13 +16,13 @@ namespace Vostok.RetriableCall
             return FindFirstException(rootEx, condition) != null;
         }
 
-        public static TException FindFirstException<TException>(Exception rootEx)
+        public static TException FindFirstException<TException>(this Exception rootEx)
             where TException : Exception
         {
             return FindFirstException(rootEx, e => e is TException) as TException;
         }
 
-        public static Exception FindFirstException(Exception rootEx, Func<Exception, bool> condition)
+        public static Exception FindFirstException(this Exception rootEx, Func<Exception, bool> condition)
         {
             var ex = rootEx;
             while (ex != null && !condition(ex))
