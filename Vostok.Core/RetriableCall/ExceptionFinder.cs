@@ -2,28 +2,27 @@ using System;
 
 namespace Vostok.RetriableCall
 {
+    // todo (andrew, 17.01.2018): test all this staff
     public static class ExceptionFinder
     {
-        public static bool HasException<TException>(Exception rootEx)
+        public static bool HasException<TException>(this Exception rootEx)
             where TException : Exception
         {
-            return FindException<TException>(rootEx) != null;
+            return HasException(rootEx, e => e is TException);
         }
 
-        public static TException FindException<TException>(Exception rootEx)
+        public static bool HasException(this Exception rootEx, Func<Exception, bool> condition)
+        {
+            return FindFirstException(rootEx, condition) != null;
+        }
+
+        public static TException FindFirstException<TException>(Exception rootEx)
             where TException : Exception
         {
-            return FindException(rootEx, e => e is TException) as TException;
+            return FindFirstException(rootEx, e => e is TException) as TException;
         }
 
-        public static TException FindException<TException>(Exception rootEx, Func<TException, bool> condition)
-            where TException : Exception
-        {
-            return FindException(rootEx,
-                ex => ex is TException te && condition(te)) as TException;
-        }
-
-        public static Exception FindException(Exception rootEx, Func<Exception, bool> condition)
+        public static Exception FindFirstException(Exception rootEx, Func<Exception, bool> condition)
         {
             var ex = rootEx;
             while (ex != null && !condition(ex))
@@ -34,7 +33,7 @@ namespace Vostok.RetriableCall
                 {
                     foreach (var innerException in aggregateEx.InnerExceptions)
                     {
-                        var exInner = FindException(innerException, condition);
+                        var exInner = FindFirstException(innerException, condition);
                         if (exInner != null)
                             return exInner;
                     }
