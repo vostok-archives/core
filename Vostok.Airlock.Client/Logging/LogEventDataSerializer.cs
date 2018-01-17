@@ -19,7 +19,7 @@ namespace Vostok.Airlock.Logging
             return new LogEventData
             {
                 Timestamp = new DateTimeOffset(reader.ReadInt64(), TimeSpan.Zero),
-                Level = (LogLevel) reader.ReadInt32(),
+                Level = (LogLevel)reader.ReadInt32(),
                 Message = reader.ReadNullable(r => r.ReadString()),
                 Exceptions = reader.ReadNullable(x => x.ReadList(ReadException)),
                 Properties = reader.ReadNullable(x => x.ReadDictionary(y => y.ReadString(), y => y.ReadString()))
@@ -32,15 +32,15 @@ namespace Vostok.Airlock.Logging
 
             writer.Write(formatVersion);
             writer.Write(item.Timestamp.UtcTicks);
-            writer.Write((int) item.Level);
+            writer.Write((int)item.Level);
             writer.WriteNullable(item.Message, (w, s) => w.Write(s));
-            writer.WriteNullable(item.Exceptions, (a,b) => a.WriteCollection(b, WriteException));
+            writer.WriteNullable(item.Exceptions, (a, b) => a.WriteCollection(b, WriteException));
             writer.WriteNullable(item.Properties, (a, b) => a.WriteDictionary(b, (c, d) => c.Write(d), (c, d) => c.Write(d)));
         }
 
-        private LogEventException ReadException(IBinaryReader reader)
+        private static LogEventException ReadException(IBinaryReader reader)
         {
-            return new LogEventException()
+            return new LogEventException
             {
                 Message = reader.ReadNullable(r => r.ReadString()),
                 Type = reader.ReadNullable(r => r.ReadString()),
@@ -49,15 +49,15 @@ namespace Vostok.Airlock.Logging
             };
         }
 
-        private void WriteException(IBinaryWriter writer, LogEventException logEventException)
+        private static void WriteException(IBinaryWriter writer, LogEventException logEventException)
         {
             writer.WriteNullable(logEventException.Message, (w, s) => w.Write(s));
             writer.WriteNullable(logEventException.Type, (w, s) => w.Write(s));
             writer.WriteNullable(logEventException.Module, (w, s) => w.Write(s));
-            writer.WriteNullable(logEventException.Stack, (w,x) => w.WriteCollection(x, WriteStackFrame));
+            writer.WriteNullable(logEventException.Stack, (w, x) => w.WriteCollection(x, WriteStackFrame));
         }
 
-        private LogEventStackFrame ReadStackFrame(IBinaryReader reader)
+        private static LogEventStackFrame ReadStackFrame(IBinaryReader reader)
         {
             return new LogEventStackFrame
             {
@@ -70,7 +70,7 @@ namespace Vostok.Airlock.Logging
             };
         }
 
-        private void WriteStackFrame(IBinaryWriter writer, LogEventStackFrame stackFrame)
+        private static void WriteStackFrame(IBinaryWriter writer, LogEventStackFrame stackFrame)
         {
             writer.WriteNullable(stackFrame.Module, (w, s) => w.Write(s));
             writer.WriteNullable(stackFrame.Function, (w, s) => w.Write(s));
