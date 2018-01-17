@@ -34,8 +34,8 @@ namespace Vostok.Airlock
                 Reader = new BinaryBufferReader(bufferWriter.Buffer, 0)
             };
 
-            var obj2 = serializer.Deserialize(airlockSource);
-            obj2.ShouldBeEquivalentTo(obj);
+            var deserialized = serializer.Deserialize(airlockSource);
+            deserialized.ShouldBeEquivalentTo(obj);
         }
     }
 }
