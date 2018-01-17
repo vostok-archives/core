@@ -23,7 +23,7 @@ namespace Vostok.Logging
             new object[] {"AsyncFunc", (Action)(() => MyAsyncFunc().GetAwaiter().GetResult()), new[] {"TestByThrowingException", "<.cctor>b__12_0", "HandleNonSuccessAndDebuggerNotification", "Throw", "MyAsyncFunc"}, new[] {"System.Exception"}},
             new object[] {"LambdaFunc", (Action)MyLambdaFunc, new[] {"TestByThrowingException", "MyLambdaFunc", "MyLambdaFunc { <lambda> }"}, new[] {"System.Exception"}},
             new object[] {"NestedFunc", (Action)NestedFunc, new[] {"NestedFunc", "NestedFunc2", "TestByThrowingException", "NestedFunc"}, new[] {"System.InvalidOperationException", "System.IO.InvalidDataException"}},
-            new object[] {"AggregateException", (Action)AggregateExceptionFunc, new[] {"AggregateExceptionFunc", "AggregateExceptionFunc", "TestByThrowingException", "AggregateExceptionFunc"}, new[] {"System.AggregateException", "System.IO.InvalidDataException", "System.InvalidOperationException"}}
+            new object[] {"AggregateException", (Action)AggregateExceptionFunc, new[] {"AggregateExceptionFunc2", "AggregateExceptionFunc", "TestByThrowingException", "AggregateExceptionFunc"}, new[] {"System.AggregateException", "System.IO.InvalidDataException", "System.InvalidOperationException"}}
         };
 
         private static readonly string[][] asyncNameVariants =
