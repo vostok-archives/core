@@ -39,12 +39,6 @@ namespace Vostok.Airlock.Logging
                 }
                 else
                 {
-                    if (aggregateEx.InnerExceptions.Count == 1)
-                    {
-                        currentEx = aggregateEx.InnerException;
-                        continue;
-                    }
-
                     yield return aggregateEx;
                     foreach (var innerException in aggregateEx.InnerExceptions)
                     {
