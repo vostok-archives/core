@@ -35,6 +35,7 @@ namespace Vostok.RetriableCall
                         if (exInner != null)
                             return exInner;
                     }
+                    break; // AggregateException.InnerException == AggregateException.InnerExceptions[0]
                 }
                 ex = ex.InnerException;
             }

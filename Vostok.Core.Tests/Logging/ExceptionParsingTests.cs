@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -16,13 +17,13 @@ namespace Vostok.Logging
     {
         private static readonly object[] testCases =
         {
-            new object[] {"DivideByZero", (Action)DivideByZero, new[] {"TestByThrowingException", "DivideByZero"}, new[] { "System.DivideByZeroException" } },
-            new object[] {"MyGenericFunc<int>", (Action)MyGenericFunc<int>, new[] {"TestByThrowingException", "MyGenericFunc"}, new[] { "System.Exception" } },
-            new object[] {"GenericClassFunc", (Action)GenericClassFunc, new[] {"TestByThrowingException", "GenericClassFunc", "MyFunc"}, new[] { "System.Exception" } },
-            new object[] {"AsyncFunc", (Action)(() => MyAsyncFunc().GetAwaiter().GetResult()), new[] {"TestByThrowingException", "<.cctor>b__12_0", "HandleNonSuccessAndDebuggerNotification", "Throw", "MyAsyncFunc"}, new[] { "System.Exception" } },
-            new object[] {"LambdaFunc", (Action)MyLambdaFunc, new[] {"TestByThrowingException", "MyLambdaFunc", "MyLambdaFunc { <lambda> }"}, new[] { "System.Exception" } },
-            new object[] {"NestedFunc", (Action)NestedFunc, new[] {"NestedFunc", "NestedFunc2", "TestByThrowingException", "NestedFunc"}, new[] { "System.InvalidOperationException", "System.IO.InvalidDataException" } },
-            new object[] {"AggregateException", (Action)AggregateExceptionFunc, new[] { "AggregateExceptionFunc", "AggregateExceptionFunc", "TestByThrowingException", "AggregateExceptionFunc" }, new[] { "System.AggregateException", "System.IO.InvalidDataException", "System.InvalidOperationException" } }
+            new object[] {"DivideByZero", (Action)DivideByZero, new[] {"TestByThrowingException", "DivideByZero"}, new[] {"System.DivideByZeroException"}},
+            new object[] {"MyGenericFunc<int>", (Action)MyGenericFunc<int>, new[] {"TestByThrowingException", "MyGenericFunc"}, new[] {"System.Exception"}},
+            new object[] {"GenericClassFunc", (Action)GenericClassFunc, new[] {"TestByThrowingException", "GenericClassFunc", "MyFunc"}, new[] {"System.Exception"}},
+            new object[] {"AsyncFunc", (Action)(() => MyAsyncFunc().GetAwaiter().GetResult()), new[] {"TestByThrowingException", "<.cctor>b__12_0", "HandleNonSuccessAndDebuggerNotification", "Throw", "MyAsyncFunc"}, new[] {"System.Exception"}},
+            new object[] {"LambdaFunc", (Action)MyLambdaFunc, new[] {"TestByThrowingException", "MyLambdaFunc", "MyLambdaFunc { <lambda> }"}, new[] {"System.Exception"}},
+            new object[] {"NestedFunc", (Action)NestedFunc, new[] {"NestedFunc", "NestedFunc2", "TestByThrowingException", "NestedFunc"}, new[] {"System.InvalidOperationException", "System.IO.InvalidDataException"}},
+            new object[] {"AggregateException", (Action)AggregateExceptionFunc, new[] {"AggregateExceptionFunc", "AggregateExceptionFunc", "TestByThrowingException", "AggregateExceptionFunc"}, new[] {"System.AggregateException", "System.IO.InvalidDataException", "System.InvalidOperationException"}}
         };
 
         private static readonly string[][] asyncNameVariants =
@@ -34,7 +35,7 @@ namespace Vostok.Logging
 
         private readonly ConsoleLog log = new ConsoleLog();
 
-        [Test, TestCaseSource(nameof(testCases))]
+        [TestCaseSource(nameof(testCases))]
         public void TestByThrowingException(string caseName, Action action, string[] funcNames, string[] exNames)
         {
             try
@@ -44,25 +45,21 @@ namespace Vostok.Logging
             catch (Exception e)
             {
                 log.Error(e);
-                var logEventData = LogEventDataFactory.CreateLogEventData(e);
-                log.Debug("got:\n" + JsonConvert.SerializeObject(logEventData, Formatting.Indented));
-                var funcNamesAtException = logEventData.Exceptions.SelectMany(e1 => e1.Stack).Select(x => x.Function).Reverse();
+                var logEventExceptions = e.Parse();
+                log.Debug("got:\n" + JsonConvert.SerializeObject(logEventExceptions, Formatting.Indented));
+                var funcNamesAtException = logEventExceptions.SelectMany(e1 => e1.Stack).Select(x => x.Function).Reverse();
                 if (caseName != "AsyncFunc")
-                {
                     funcNamesAtException.ShouldAllBeEquivalentTo(funcNames, c => c.WithStrictOrderingFor(x => x), "funcNames for case " + caseName);
-                }
                 else
-                {
                     Assert.That(asyncNameVariants.Any(asyncVariant => asyncVariant.SequenceEqual(funcNames)));
-                }
-                logEventData.Exceptions.Select(ex => ex.Type).ShouldAllBeEquivalentTo(exNames, c => c.WithStrictOrderingFor(x => x), "exception name for case " + caseName);
+                logEventExceptions.Select(ex => ex.Type).ShouldAllBeEquivalentTo(exNames, c => c.WithStrictOrderingFor(x => x), "exception name for case " + caseName);
             }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void MyGenericFunc<T>()
         {
-            throw new Exception("hello from generic func " + typeof(T).Name);
+            throw new Exception("hello from generic func " + typeof (T).Name);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -100,26 +97,17 @@ namespace Vostok.Logging
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [SuppressMessage("ReSharper", "UnusedVariable")]
         private static void DivideByZero()
         {
             var i2 = 0;
-            // ReSharper disable once UnusedVariable
-            var i = 10 / i2;
+            var i = 10/i2;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void GenericClassFunc()
         {
             new MyClass<double>().MyFunc();
-        }
-
-        private class MyClass<T>
-        {
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            public void MyFunc()
-            {
-                throw new Exception("hello from generic class " + typeof(T).Name);
-            }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -143,6 +131,15 @@ namespace Vostok.Logging
                 exceptions.Add(e);
             }
             throw new AggregateException(exceptions);
+        }
+
+        private class MyClass<T>
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public void MyFunc()
+            {
+                throw new Exception("hello from generic class " + typeof (T).Name);
+            }
         }
     }
 }
