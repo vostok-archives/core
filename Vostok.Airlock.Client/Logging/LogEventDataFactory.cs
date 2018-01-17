@@ -7,8 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace Vostok.Airlock.Logging
 {
+    // todo (andrew, 17.01.2018): need to test this thoroughly (how all fields are filled with respect to "pdbonly" and "full" debugging information types)
     public static class LogEventDataFactory
     {
+        private static readonly Regex asyncRegex = new Regex(@"^(.*)[\.\+]<(\w*)>d__\d*", RegexOptions.Compiled);
+        private static readonly Regex lambdaRegex = new Regex(@"^<?(\w*)>b__\w+", RegexOptions.Compiled);
+
         public static LogEventData CreateLogEventData(Exception ex)
         {
             if (ex == null)
@@ -49,7 +53,6 @@ namespace Vostok.Airlock.Logging
                     }
                     break;
                 }
-
             }
         }
 
@@ -77,9 +80,6 @@ namespace Vostok.Airlock.Logging
         private static LogEventStackFrame CreateLogEventStackFrame(StackFrame frame)
         {
             var stackFrame = new LogEventStackFrame();
-            var num = frame.GetFileLineNumber();
-            if (num == 0)
-                num = frame.GetILOffset();
             var method = frame.GetMethod();
             if (method != null)
             {
@@ -94,14 +94,11 @@ namespace Vostok.Airlock.Logging
                 stackFrame.Source = "(unknown)";
             }
             stackFrame.Filename = frame.GetFileName();
-            stackFrame.LineNumber = num;
+            stackFrame.LineNumber = frame.GetFileLineNumber();
             stackFrame.ColumnNumber = frame.GetFileColumnNumber();
             FixNames(stackFrame);
             return stackFrame;
         }
-
-        private static readonly Regex asyncRegex = new Regex(@"^(.*)[\.\+]<(\w*)>d__\d*", RegexOptions.Compiled);
-        private static readonly Regex lambdaRegex = new Regex(@"^<?(\w*)>b__\w+", RegexOptions.Compiled);
 
         private static void FixNames(LogEventStackFrame stackFrame)
         {
@@ -122,6 +119,5 @@ namespace Vostok.Airlock.Logging
             if (stackFrame.Module.EndsWith(".<>c") || stackFrame.Module.EndsWith("+<>c"))
                 stackFrame.Module = stackFrame.Module.Substring(0, stackFrame.Module.Length - 4);
         }
-
     }
 }
