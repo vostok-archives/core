@@ -23,7 +23,7 @@ namespace Vostok.RetriableCall
             yield return new object[] { "nestedEx", complexEx, (Func<Exception, bool>) (ex => ex is AggregateException), aggregateException2 };
         }
 
-        [Test, TestCaseSource(nameof(GenerateTestCases))]
+        [TestCaseSource(nameof(GenerateTestCases))]
         public void FindFirstTests(string testCase, Exception ex, Func<Exception,bool> condition, Exception result)
         {
             var firstException = ex.FindFirstException(condition);
