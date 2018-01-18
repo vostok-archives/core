@@ -3,7 +3,7 @@ using System.IO;
 using FluentAssertions;
 using Vostok.Commons.Binary;
 
-namespace Vostok.Airlock
+namespace Vostok.Airlock.Client.Tests
 {
     internal static class GenericSerializeDeserializeTest
     {

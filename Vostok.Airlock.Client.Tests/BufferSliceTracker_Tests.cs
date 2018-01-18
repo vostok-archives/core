@@ -3,7 +3,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Vostok.Commons.Utilities;
 
-namespace Vostok.Airlock
+namespace Vostok.Airlock.Client.Tests
 {
     [TestFixture]
     internal class BufferSliceTracker_Tests

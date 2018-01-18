@@ -9,7 +9,7 @@ using Vostok.Commons.Extensions.UnitConvertions;
 using Vostok.Logging;
 using Vostok.Logging.Logs;
 
-namespace Vostok.Airlock
+namespace Vostok.Airlock.Client.Tests
 {
     [Ignore("Explicit attribute does not work in VS + Resharper")]
     public class Integration_Tests
@@ -66,7 +66,7 @@ namespace Vostok.Airlock
                 MaximumMemoryConsumption = 300.Megabytes(),
                 InitialPooledBufferSize = 10.Megabytes(),
                 InitialPooledBuffersCount = 10,
-                EnableTracing = false,
+                EnableTracing = false
             };
             //return new AirlockClient(airlockConfig, log.FilterByLevel(LogLevel.Warn));
             return new ParallelAirlockClient(airlockConfig, 10, log.FilterByLevel(LogLevel.Warn));

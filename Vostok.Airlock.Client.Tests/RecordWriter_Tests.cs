@@ -3,7 +3,7 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Vostok.Airlock
+namespace Vostok.Airlock.Client.Tests
 {
     [TestFixture]
     internal class RecordWriter_Tests

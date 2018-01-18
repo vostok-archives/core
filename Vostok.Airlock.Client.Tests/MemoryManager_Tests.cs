@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 
-namespace Vostok.Airlock
+namespace Vostok.Airlock.Client.Tests
 {
     [TestFixture]
     internal class MemoryManager_Tests

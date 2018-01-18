@@ -6,7 +6,7 @@ using Vostok.Commons.Binary;
 using Vostok.Commons.Extensions.UnitConvertions;
 using Vostok.Logging.Logs;
 
-namespace Vostok.Airlock
+namespace Vostok.Airlock.Client.Tests
 {
     [TestFixture]
     internal class RecordSerializer_Tests

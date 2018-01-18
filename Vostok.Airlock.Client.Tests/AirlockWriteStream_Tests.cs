@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Vostok.Commons.Binary;
 
-namespace Vostok.Airlock
+namespace Vostok.Airlock.Client.Tests
 {
     [TestFixture]
     internal class AirlockWriteStream_Tests
