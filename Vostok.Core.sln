@@ -17,9 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Hosting", "Vostok.Ho
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Hosting.Core", "Vostok.Hosting.Core\Vostok.Hosting.Core.csproj", "{BB37CD77-E15F-40D6-9F64-F3904FEBB999}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vostok.Airlock.Client.Tests", "Vostok.Airlock.Client.Tests\Vostok.Airlock.Client.Tests.csproj", "{568246B8-93A8-4D10-A6EF-0A45F6A89357}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Airlock.Client.Tests", "Vostok.Airlock.Client.Tests\Vostok.Airlock.Client.Tests.csproj", "{568246B8-93A8-4D10-A6EF-0A45F6A89357}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vostok.ClusterClient.Tests", "Vostok.ClusterClient.Tests\Vostok.ClusterClient.Tests.csproj", "{48F5E8E5-9BD4-4C2F-89CA-326BEA66B14F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.ClusterClient.Tests", "Vostok.ClusterClient.Tests\Vostok.ClusterClient.Tests.csproj", "{48F5E8E5-9BD4-4C2F-89CA-326BEA66B14F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vostok.ClusterClient.Transport.Http.Tests", "Vostok.ClusterClient.Transport.Http.Tests\Vostok.ClusterClient.Transport.Http.Tests.csproj", "{36C4FE26-7AA0-4CA2-8F92-30397B74B8FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{48F5E8E5-9BD4-4C2F-89CA-326BEA66B14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48F5E8E5-9BD4-4C2F-89CA-326BEA66B14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48F5E8E5-9BD4-4C2F-89CA-326BEA66B14F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36C4FE26-7AA0-4CA2-8F92-30397B74B8FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36C4FE26-7AA0-4CA2-8F92-30397B74B8FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36C4FE26-7AA0-4CA2-8F92-30397B74B8FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36C4FE26-7AA0-4CA2-8F92-30397B74B8FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

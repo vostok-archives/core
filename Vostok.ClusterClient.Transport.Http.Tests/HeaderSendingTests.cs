@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
-using Vostok.Clusterclient.Model;
-using Vostok.Clusterclient.Transport.Http.Helpers;
 using NUnit.Framework;
+using Vostok.Clusterclient.Model;
+using Vostok.Helpers;
 
-namespace Vostok.Clusterclient.Transport.Http
+namespace Vostok
 {
     public class HeaderSendingTests : TransportTestsBase
     {

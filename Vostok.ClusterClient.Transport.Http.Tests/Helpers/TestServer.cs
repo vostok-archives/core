@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Vostok.Clusterclient.Transport.Http.Helpers
+namespace Vostok.Helpers
 {
     internal class TestServer : IDisposable
     {

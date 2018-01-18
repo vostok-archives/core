@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
+using NUnit.Framework;
 using Vostok.Clusterclient.Model;
-using Vostok.Clusterclient.Transport.Http.Helpers;
 using Vostok.Commons.Extensions.UnitConvertions;
 using Vostok.Commons.Utilities;
-using NUnit.Framework;
+using Vostok.Helpers;
 
-namespace Vostok.Clusterclient.Transport.Http
+namespace Vostok
 {
     public class ContentSendingTests : TransportTestsBase
     {
