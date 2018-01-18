@@ -70,7 +70,7 @@ namespace Vostok.RetriableCall
                 }
                 catch (Exception ex)
                 {
-                    if (ExceptionFinder.FindException(ex, isExceptionRetriable) == null)
+                    if (!ex.HasException(isExceptionRetriable))
                         throw;
                     delay = ProcessExceptionAndGetDelay(ex, exceptions, tryNumber, delay, log);
                     if (delay != TimeSpan.Zero)
@@ -93,7 +93,7 @@ namespace Vostok.RetriableCall
                 }
                 catch (Exception ex)
                 {
-                    if (ExceptionFinder.FindException(ex, isExceptionRetriable) == null)
+                    if (!ex.HasException(isExceptionRetriable))
                         throw;
                     delay = ProcessExceptionAndGetDelay(ex, exceptions, tryNumber, delay, log);
                     if (delay != TimeSpan.Zero)

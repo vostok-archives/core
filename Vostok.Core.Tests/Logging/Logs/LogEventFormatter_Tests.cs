@@ -33,7 +33,7 @@ namespace Vostok.Logging.Logs
 
         public static IEnumerable<object[]> FormatProperties_Cases()
         {
-            yield return new object[] {new Dictionary<string, object>(), "{}"};
+            yield return new object[] {new Dictionary<string, object>(), ""};
             yield return new object[] {new Dictionary<string, object> {{"Key", "Value"}}, "{Key: Value}"};
             yield return new object[] {new Dictionary<string, object> {{"Key", "Value"}, {"AnotherKey", "Value"}}, "{Key: Value, AnotherKey: Value}"};
         }
