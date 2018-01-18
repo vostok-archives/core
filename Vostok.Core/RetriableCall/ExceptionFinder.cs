@@ -2,7 +2,6 @@ using System;
 
 namespace Vostok.RetriableCall
 {
-    // todo (andrew, 17.01.2018): test all this staff
     public static class ExceptionFinder
     {
         public static bool HasException<TException>(this Exception rootEx)
@@ -35,7 +34,7 @@ namespace Vostok.RetriableCall
                         if (exInner != null)
                             return exInner;
                     }
-                    break; // AggregateException.InnerException == AggregateException.InnerExceptions[0]
+                    return null;
                 }
                 ex = ex.InnerException;
             }
