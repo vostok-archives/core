@@ -9,7 +9,6 @@ namespace Vostok.Airlock
     {
         public const string Separator = ".";
         public const string AppEventsSuffix = "app-events";
-        public const string TraceEventsSuffix = "trace-events";
         public const string MetricsSuffix = "metrics";
         public const string TracesSuffix = "traces";
         public const string LogsSuffix = "logs";
