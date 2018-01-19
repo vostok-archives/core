@@ -9,6 +9,7 @@
     <RootNamespace>Vostok</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Configurations>Debug;Release;NoTests</Configurations>
   </PropertyGroup>
 
 </Project>
