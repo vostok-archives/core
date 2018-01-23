@@ -40,8 +40,15 @@ install:
         }
       }
   - dotnet restore
+  - git clone git@github.com:vostok/cement.git
+  - msbuild cement\Cement.Net.sln
+  - cd "$env:appveyor_build_folder"
+  - cm init
+  - cm update-deps
+  - cm build-deps
 configuration: Release
 after_build:
+  - cm pack $env:APPVEYOR_PROJECT_NAME.csproj
   - ps: |
       $prbranch = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"
       if ($prbranch -eq "")
