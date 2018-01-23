@@ -1,14 +1,9 @@
-notests *default:
-
-  build:
-    target: Vostok.Core.sln
-    configuration: NoTests
-
-  install:
-    - Vostok.Core/bin/Release/netstandard2.0/Vostok.Core.dll
-
-full-build > notests:
+full-build *default:
 
   build:
     target: Vostok.Core.sln
     configuration: Release
+
+  install:
+    - Vostok.Core/bin/Release/netstandard2.0/Vostok.Core.dll
+
