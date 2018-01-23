@@ -39,11 +39,27 @@ install:
           $xml.Save($xmlPath)
         }
       }
-  - prepare.bat
+      cd $env:appveyor_build_folder\..
+      git clone https://github.com/vostok/cement.git
+      cd "cement"
+      nuget restore
+      msbuild Cement.Net.sln
+
+      $cm="$env:appveyor_build_folder\..\cement\Cement.Net\bin\Release\cm.exe"
+      cd $env:appveyor_build_folder\..
+      & $cm init
+      cd $env:appveyor_build_folder
+      echo update-deps
+      & $cm update-deps
+      echo build-deps
+      & $cm build-deps
+      echo dotnet restore
+      dotnet restore
 configuration: Release
 after_build:
-  - cmd.exe /c "%cm% pack Vostok.Core.csproj"
   - ps: |
+      $cm="$env:appveyor_build_folder\..\cement\Cement.Net\bin\Release\cm.exe"
+      & $cm pack Vostok.Core.csproj
       $prbranch = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"
       if ($prbranch -eq "")
       {
