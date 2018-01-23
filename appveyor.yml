@@ -1,4 +1,4 @@
-version: '1.0.0-pre{build}'
+version: '1.0.0.{build}'
 image: Visual Studio 2017
 nuget:
   project_feed: true
@@ -21,7 +21,7 @@ install:
         }
       }
       $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
-      Update-AppveyorBuild -Version "1.0.0-pre$zeroPaddedBuildNumber$branchstr".Replace("_", "-")
+      Update-AppveyorBuild -Version "1.0.0.$zeroPaddedBuildNumber$branchstr".Replace("_", "-")
       $csprojs = $env:appveyor_build_folder | Get-ChildItem -Recurse -Filter "*.csproj"
       foreach($csproj in $csprojs)
       {
