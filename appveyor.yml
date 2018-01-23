@@ -28,27 +28,21 @@ install:
         $name = $csproj.BaseName
         $xmlPath = "$env:appveyor_build_folder\$name\$name.csproj"
         $xml = [xml](Get-Content $xmlPath)
-        $gen = $xml.SelectSingleNode("//GeneratePackageOnBuild")
-        if ($gen -and $gen.InnerText -eq "True")
+        $props = $xml.SelectSingleNode("//PropertyGroup")
+        if ($props)
         {
           echo "Generating version $env:appveyor_build_version for $name"
           $version = $xml.CreateElement("Version")
           $versionText = $xml.CreateTextNode($env:appveyor_build_version)
           $version.AppendChild($versionText)
-          $gen.ParentNode.AppendChild($version)
+          $props.AppendChild($version)
           $xml.Save($xmlPath)
         }
       }
-  - dotnet restore
-  - git clone https://github.com/vostok/cement.git
-  - msbuild cement\Cement.Net.sln
-  - cd "$env:appveyor_build_folder"
-  - cm init
-  - cm update-deps
-  - cm build-deps
+  - prepare.bat
 configuration: Release
 after_build:
-  - cm pack $env:APPVEYOR_PROJECT_NAME.csproj
+  - cmd.exe /c "%cm% pack Vostok.Core.csproj"
   - ps: |
       $prbranch = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"
       if ($prbranch -eq "")
