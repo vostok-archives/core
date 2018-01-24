@@ -10,19 +10,15 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		NoTests|Any CPU = NoTests|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B4871488-BEAF-48BE-8399-B1521539CBA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4871488-BEAF-48BE-8399-B1521539CBA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B4871488-BEAF-48BE-8399-B1521539CBA9}.NoTests|Any CPU.ActiveCfg = NoTests|Any CPU
-		{B4871488-BEAF-48BE-8399-B1521539CBA9}.NoTests|Any CPU.Build.0 = NoTests|Any CPU
 		{B4871488-BEAF-48BE-8399-B1521539CBA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4871488-BEAF-48BE-8399-B1521539CBA9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{14367A5F-CB94-4188-9D82-BED970C51D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{14367A5F-CB94-4188-9D82-BED970C51D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14367A5F-CB94-4188-9D82-BED970C51D2F}.NoTests|Any CPU.ActiveCfg = NoTests|Any CPU
 		{14367A5F-CB94-4188-9D82-BED970C51D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14367A5F-CB94-4188-9D82-BED970C51D2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

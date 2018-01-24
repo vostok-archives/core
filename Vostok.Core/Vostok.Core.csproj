@@ -8,7 +8,6 @@
     <Product>Vostok</Product>
     <RootNamespace>Vostok</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Configurations>Debug;Release;NoTests</Configurations>
   </PropertyGroup>
 
 </Project>
