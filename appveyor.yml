@@ -28,21 +28,38 @@ install:
         $name = $csproj.BaseName
         $xmlPath = "$env:appveyor_build_folder\$name\$name.csproj"
         $xml = [xml](Get-Content $xmlPath)
-        $gen = $xml.SelectSingleNode("//GeneratePackageOnBuild")
-        if ($gen -and $gen.InnerText -eq "True")
+        $props = $xml.SelectSingleNode("//PropertyGroup")
+        if ($props)
         {
           echo "Generating version $env:appveyor_build_version for $name"
           $version = $xml.CreateElement("Version")
           $versionText = $xml.CreateTextNode($env:appveyor_build_version)
           $version.AppendChild($versionText)
-          $gen.ParentNode.AppendChild($version)
+          $props.AppendChild($version)
           $xml.Save($xmlPath)
         }
       }
-  - dotnet restore
+      cd $env:appveyor_build_folder\..
+      git clone https://github.com/vostok/cement.git
+      cd "cement"
+      nuget restore
+      msbuild Cement.Net.sln
+
+      $cm="$env:appveyor_build_folder\..\cement\Cement.Net\bin\Release\cm.exe"
+      cd $env:appveyor_build_folder\..
+      & $cm init
+      cd $env:appveyor_build_folder
+      echo update-deps
+      & $cm update-deps
+      echo build-deps
+      & $cm build-deps
+      echo dotnet restore
+      dotnet restore
 configuration: Release
 after_build:
   - ps: |
+      $cm="$env:appveyor_build_folder\..\cement\Cement.Net\bin\Release\cm.exe"
+      & $cm pack Vostok.Core.csproj
       $prbranch = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"
       if ($prbranch -eq "")
       {

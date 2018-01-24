@@ -8,6 +8,3 @@ AirlockClient library contains implementation of client to airlock gate.
 
 NuGet package names:
 - Vostok.Core
-- Vostok.ClusterClient.Core
-- Vostok.ClusterClient.Transport.Http
-- Vostok.Airlock.Client
