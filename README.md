@@ -2,9 +2,5 @@
 
 Core contains facades for logging, tracing, metrics and flowing context.
 
-ClusterClient library enables developers to build resilient and efficient clients for HTTP microservices.
-
-AirlockClient library contains implementation of client to airlock gate.
-
 NuGet package names:
 - Vostok.Core
