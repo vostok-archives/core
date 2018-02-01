@@ -7,6 +7,7 @@
     <Company>SKB Kontur</Company>
     <Product>Vostok</Product>
     <RootNamespace>Vostok</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
 </Project>
