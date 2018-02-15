@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Vostok.Logging
 {
@@ -9,7 +9,8 @@ namespace Vostok.Logging
             if (log == null)
                 throw new ArgumentNullException(nameof(log));
 
-            return new LogWithLevel(log, minLevel);
+            // todo (spaceorc, 15.02.2018) ??? проверять, что в цепочке нет уже фильтра такого же или сильнее ???
+            return minLevel == default(LogLevel) ? log : new LogWithLevel(log, minLevel);
         }
 
         public static ILog FilterByProperty<T>(this ILog log, string propertyName, Func<T, bool> propertyFilter)
