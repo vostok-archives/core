@@ -39,27 +39,30 @@ install:
           $xml.Save($xmlPath)
         }
       }
-      cd $env:appveyor_build_folder\..
-      git clone https://github.com/vostok/cement.git
-      cd "cement"
-      nuget restore
-      msbuild Cement.Net.sln
-
-      $cm="$env:appveyor_build_folder\..\cement\Cement.Net\bin\Release\cm.exe"
-      cd $env:appveyor_build_folder\..
-      & $cm init
+  - cd %appveyor_build_folder%\..
+  - git clone https://github.com/vostok/cement.git
+  - cd "cement"
+  - nuget restore
+  - msbuild Cement.Net.sln
+  - mkdir %USERPROFILE%\.cement
+  - ps: |
+      $wc = New-Object System.Net.WebClient
+      $wc.DownloadFile("https://raw.githubusercontent.com/vostok/cement-modules/master/settings", "$env:USERPROFILE\.cement\settings")
+  - set cm=%appveyor_build_folder%\..\cement\Cement.Net\bin\Release\cm.exe
+  - cd %appveyor_build_folder%\..
+  - ps: | 
+      & $env:cm init
       cd $env:appveyor_build_folder
-      echo update-deps
-      & $cm update-deps
-      echo build-deps
-      & $cm build-deps
-      echo dotnet restore
-      dotnet restore
+      & $env:cm update-deps
+  - ps: |
+      & $env:cm build-deps
+  - dotnet restore
 configuration: Release
 after_build:
   - ps: |
-      $cm="$env:appveyor_build_folder\..\cement\Cement.Net\bin\Release\cm.exe"
-      & $cm pack Vostok.Core.csproj
+      $proj="$env:APPVEYOR_PROJECT_NAME.csproj"
+      & $env:cm pack $proj
+  - ps: |
       $prbranch = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"
       if ($prbranch -eq "")
       {
@@ -75,11 +78,17 @@ after_build:
         }
       }
 test_script:
-  - ps: dotnet test "$env:appveyor_build_folder\Vostok.Core.Tests\Vostok.Core.Tests.csproj" --logger "trx;LogFileName=core-tests.trx"
+  - ps: |
+      if (Test-Path "$env:appveyor_build_folder\$env:APPVEYOR_PROJECT_NAME.Tests\$env:APPVEYOR_PROJECT_NAME.Tests.csproj")
+      {
+        dotnet test "$env:appveyor_build_folder\$env:APPVEYOR_PROJECT_NAME.Tests\$env:APPVEYOR_PROJECT_NAME.Tests.csproj" --logger "trx;LogFileName=tests.trx"
+      }
 after_test:
   - ps: |
+      if (Test-Path "$env:appveyor_build_folder\$env:APPVEYOR_PROJECT_NAME.Tests\TestResults\tests.trx") {
       $wc = New-Object 'System.Net.WebClient'
-      $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\Vostok.Core.Tests\TestResults\core-tests.trx")
+        $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\$env:APPVEYOR_PROJECT_NAME.Tests\TestResults\tests.trx")
+      }
 notifications:
   - provider: Webhook
     url: https://webhooks.gitter.im/e/f02e74a3a636a56c590b
