@@ -2,5 +2,3 @@
 
 Core contains facades for logging, tracing, metrics and flowing context.
 
-NuGet package names:
-- Vostok.Core

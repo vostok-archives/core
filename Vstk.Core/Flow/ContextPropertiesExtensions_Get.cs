@@ -1,0 +1,10 @@
+﻿namespace Vstk.Flow
+{
+    public static class ContextPropertiesExtensions_Get
+    {
+        public static TValue Get<TValue>(this IContextProperties properties, string key, TValue defaultValue = default(TValue))
+        {
+            return properties.Current.TryGetValue(key, out var value) ? (TValue) value : defaultValue;
+        }
+    }
+}

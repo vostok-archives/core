@@ -1,10 +1,10 @@
 default:
   build:
-    target: Vostok.Core.sln
+    target: Vstk.Core.sln
     tool:
       name: dotnet
   install:
-    - Vostok.Core/bin/Release/netstandard2.0/Vostok.Core.dll
+    - Vstk.Core/bin/Release/netstandard2.0/Vstk.Core.dll
 
 notests *default:
   build:
