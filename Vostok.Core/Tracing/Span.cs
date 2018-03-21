@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Vstk.Tracing
+namespace Vostok.Tracing
 {
     public class Span
     {

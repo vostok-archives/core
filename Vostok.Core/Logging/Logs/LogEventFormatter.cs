@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Vstk.Logging.Logs
+namespace Vostok.Logging.Logs
 {
     public static class LogEventFormatter
     {

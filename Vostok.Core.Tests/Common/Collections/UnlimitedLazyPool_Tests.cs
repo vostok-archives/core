@@ -1,9 +1,9 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using Vstk.Commons.Collections;
+using Vostok.Commons.Collections;
 
-namespace Vstk.Common.Collections
+namespace Vostok.Common.Collections
 {
     public class UnlimitedLazyPool_Tests
     {

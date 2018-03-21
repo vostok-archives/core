@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using Vstk.Commons.Collections;
-using Vstk.Flow;
+using Vostok.Commons.Collections;
+using Vostok.Flow;
 
-namespace Vstk.Tracing
+namespace Vostok.Tracing
 {
     internal class SpanBuilder : ISpanBuilder
     {

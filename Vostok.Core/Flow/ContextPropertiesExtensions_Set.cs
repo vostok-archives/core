@@ -1,4 +1,4 @@
-﻿namespace Vstk.Flow
+﻿namespace Vostok.Flow
 {
     public static class ContextPropertiesExtensions_Set
     {

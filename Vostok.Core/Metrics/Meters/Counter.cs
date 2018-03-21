@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Vstk.Metrics.Meters
+namespace Vostok.Metrics.Meters
 {
     public class Counter : ICounter
     {

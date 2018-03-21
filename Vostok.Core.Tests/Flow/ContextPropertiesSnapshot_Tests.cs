@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Vstk.Flow
+namespace Vostok.Flow
 {
     public class ContextPropertiesSnapshot_Tests
     {

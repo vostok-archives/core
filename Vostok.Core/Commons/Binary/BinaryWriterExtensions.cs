@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vstk.Commons.Binary
+namespace Vostok.Commons.Binary
 {
     public static class BinaryWriterExtensions
     {

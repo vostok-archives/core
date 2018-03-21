@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Vstk.Flow;
+using Vostok.Flow;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public interface IMetricConfiguration
     {

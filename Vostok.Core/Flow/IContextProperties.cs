@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Vstk.Flow
+namespace Vostok.Flow
 {
     public interface IContextProperties
     {

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Vstk.Commons.Utilities
+namespace Vostok.Commons.Utilities
 {
     public static class DurationParser
     {

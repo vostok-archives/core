@@ -1,6 +1,6 @@
 using System;
 
-namespace Vstk.Flow
+namespace Vostok.Flow
 {
     internal class ContextScope : IDisposable
     {

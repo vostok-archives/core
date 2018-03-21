@@ -1,4 +1,4 @@
-﻿namespace Vstk.Commons.Synchronization
+﻿namespace Vostok.Commons.Synchronization
 {
     public interface IAtomicNumber<T>
     {

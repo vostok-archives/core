@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Vstk.Commons.Synchronization
+namespace Vostok.Commons.Synchronization
 {
     public class AtomicDouble : IAtomicNumber<double>
     {

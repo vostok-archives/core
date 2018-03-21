@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vstk.Flow.Serializers
+namespace Vostok.Flow.Serializers
 {
     internal class GuidSerializer : BaseTypedSerializer<Guid>
     {

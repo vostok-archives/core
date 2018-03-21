@@ -1,6 +1,6 @@
 using System;
 
-namespace Vstk.Logging
+namespace Vostok.Logging
 {
     public static class LogExtensions_Logging
     {

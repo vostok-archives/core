@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vstk.Commons;
-using Vstk.Commons.Collections;
-using Vstk.Flow;
+using Vostok.Commons;
+using Vostok.Commons.Collections;
+using Vostok.Flow;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     internal class MetricEventWriter : IMetricEventWriter
     {

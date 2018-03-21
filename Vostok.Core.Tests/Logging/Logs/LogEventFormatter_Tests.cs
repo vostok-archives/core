@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Vstk.Logging.Logs
+namespace Vostok.Logging.Logs
 {
     public class LogEventFormatter_Tests
     {

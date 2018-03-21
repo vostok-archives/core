@@ -6,7 +6,7 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public class CpuUsage_Tests
     {

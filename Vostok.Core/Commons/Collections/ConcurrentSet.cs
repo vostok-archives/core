@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Vstk.Commons.Collections
+namespace Vostok.Commons.Collections
 {
     public class ConcurrentSet<T> : ISet<T>
     {

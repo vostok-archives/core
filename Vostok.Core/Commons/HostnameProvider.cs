@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vstk.Commons
+namespace Vostok.Commons
 {
     public static class HostnameProvider
     {

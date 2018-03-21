@@ -1,4 +1,4 @@
-﻿namespace Vstk.Metrics.Meters
+﻿namespace Vostok.Metrics.Meters
 {
     public interface ICounter
     {

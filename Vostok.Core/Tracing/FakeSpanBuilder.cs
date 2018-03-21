@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vstk.Tracing
+namespace Vostok.Tracing
 {
     internal class FakeSpanBuilder : ISpanBuilder
     {

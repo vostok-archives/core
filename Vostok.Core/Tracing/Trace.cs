@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Vstk.Commons.Collections;
+using Vostok.Commons.Collections;
 
-namespace Vstk.Tracing
+namespace Vostok.Tracing
 {
     public static class Trace
     {

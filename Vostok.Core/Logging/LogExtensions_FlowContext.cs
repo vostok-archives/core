@@ -1,6 +1,6 @@
-using Vstk.Flow;
+using Vostok.Flow;
 
-namespace Vstk.Logging
+namespace Vostok.Logging
 {
     public static class LogExtensions_FlowContext
     {

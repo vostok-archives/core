@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     internal class MetricScopeTagEnricher : IMetricScope
     {

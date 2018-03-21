@@ -1,6 +1,6 @@
 using System;
 
-namespace Vstk.RetriableCall
+namespace Vostok.RetriableCall
 {
     public static class ExceptionFinder
     {

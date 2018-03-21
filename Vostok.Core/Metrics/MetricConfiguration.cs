@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vstk.Commons.Collections;
+using Vostok.Commons.Collections;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public class MetricConfiguration : IMetricConfiguration
     {

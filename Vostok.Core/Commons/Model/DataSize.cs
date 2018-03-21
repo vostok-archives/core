@@ -1,7 +1,7 @@
 ﻿using System;
-using Vstk.Commons.Utilities;
+using Vostok.Commons.Utilities;
 
-namespace Vstk.Commons.Model
+namespace Vostok.Commons.Model
 {
     [Serializable]
     public struct DataSize : IEquatable<DataSize>, IComparable<DataSize>

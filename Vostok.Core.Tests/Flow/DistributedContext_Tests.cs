@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using Vstk.Flow.Serializers;
+using Vostok.Flow.Serializers;
 
-namespace Vstk.Flow
+namespace Vostok.Flow
 {
     public class DistributedContext_Tests
     {

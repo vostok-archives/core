@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-using Vstk.Commons.Collections;
-using Vstk.Flow;
+using Vostok.Commons.Collections;
+using Vostok.Flow;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public class MetricWriter_Tests
     {

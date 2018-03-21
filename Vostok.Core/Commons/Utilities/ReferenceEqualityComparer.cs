@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Vstk.Commons.Utilities
+namespace Vostok.Commons.Utilities
 {
     public class ReferenceEqualityComparer<T> : IEqualityComparer<T>
     {

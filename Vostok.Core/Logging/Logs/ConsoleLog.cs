@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Vstk.Logging.Logs
+namespace Vostok.Logging.Logs
 {
     public class ConsoleLog : ILog
     {

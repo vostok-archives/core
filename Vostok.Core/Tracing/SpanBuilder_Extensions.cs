@@ -1,4 +1,4 @@
-﻿namespace Vstk.Tracing
+﻿namespace Vostok.Tracing
 {
     public static class SpanBuilder_Extensions
     {

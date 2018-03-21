@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public static class MetricClocks
     {

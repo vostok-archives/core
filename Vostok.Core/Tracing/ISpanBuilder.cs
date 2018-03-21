@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vstk.Tracing
+namespace Vostok.Tracing
 {
     public interface ISpanBuilder : IDisposable
     {

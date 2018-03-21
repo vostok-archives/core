@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using Vstk.Commons.Model;
-using Vstk.Commons.Utilities;
+using Vostok.Commons.Model;
+using Vostok.Commons.Utilities;
 
-namespace Vstk.Common
+namespace Vostok.Common
 {
     [TestFixture]
     internal class DataSpeedParser_Tests

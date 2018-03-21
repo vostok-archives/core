@@ -1,6 +1,6 @@
 using System;
 
-namespace Vstk.Flow
+namespace Vostok.Flow
 {
     public static class ContextPropertiesExtensions_Scopes
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using Vstk.Commons.Model;
+using Vostok.Commons.Model;
 
-namespace Vstk.Commons.Utilities
+namespace Vostok.Commons.Utilities
 {
     internal static class DataSpeedParser
     {

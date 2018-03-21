@@ -1,4 +1,4 @@
-﻿namespace Vstk.Flow.Serializers
+﻿namespace Vostok.Flow.Serializers
 {
     internal class StringSerializer : BaseTypedSerializer<string>
     {

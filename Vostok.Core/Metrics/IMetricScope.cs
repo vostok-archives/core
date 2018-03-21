@@ -1,4 +1,4 @@
-﻿namespace Vstk.Metrics
+﻿namespace Vostok.Metrics
 {
     public interface IMetricScope
     {

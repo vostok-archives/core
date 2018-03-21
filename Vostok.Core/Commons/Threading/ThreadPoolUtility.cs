@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
-using Vstk.Logging;
+using Vostok.Logging;
 
-namespace Vstk.Commons.Threading
+namespace Vostok.Commons.Threading
 {
     public static class ThreadPoolUtility
     {

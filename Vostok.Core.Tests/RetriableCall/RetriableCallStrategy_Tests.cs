@@ -3,12 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Vstk.Commons.Extensions.UnitConvertions;
-using Vstk.Commons.Synchronization;
-using Vstk.Logging;
-using Vstk.Logging.Logs;
+using Vostok.Commons.Extensions.UnitConvertions;
+using Vostok.Commons.Synchronization;
+using Vostok.Logging;
+using Vostok.Logging.Logs;
 
-namespace Vstk.RetriableCall
+namespace Vostok.RetriableCall
 {
     [TestFixture]
     public class RetriableCallStrategy_Tests

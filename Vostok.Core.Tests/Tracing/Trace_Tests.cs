@@ -2,7 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Vstk.Tracing
+namespace Vostok.Tracing
 {
     public class Trace_Tests
     {

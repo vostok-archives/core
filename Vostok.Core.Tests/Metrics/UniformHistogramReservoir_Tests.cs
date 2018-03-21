@@ -1,9 +1,9 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using Vstk.Metrics.Meters.Histograms;
+using Vostok.Metrics.Meters.Histograms;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public class UniformHistogramReservoir_Tests
     {

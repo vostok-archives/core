@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public class MetricEvent
     {

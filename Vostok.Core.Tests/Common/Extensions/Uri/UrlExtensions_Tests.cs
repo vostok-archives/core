@@ -1,9 +1,9 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using Vstk.Commons.Extensions.Uri;
+using Vostok.Commons.Extensions.Uri;
 
-namespace Vstk.Common.Extensions.Uri
+namespace Vostok.Common.Extensions.Uri
 {
     public class UrlExtensions_Tests
     {

@@ -2,11 +2,11 @@
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
-using Vstk.Commons.Binary;
-using Vstk.Commons.Extensions.UnitConvertions;
-using Vstk.Commons.Utilities;
+using Vostok.Commons.Binary;
+using Vostok.Commons.Extensions.UnitConvertions;
+using Vostok.Commons.Utilities;
 
-namespace Vstk.Common.Binary
+namespace Vostok.Common.Binary
 {
     [TestFixture]
     public class BinaryBufferReadWrite_Tests

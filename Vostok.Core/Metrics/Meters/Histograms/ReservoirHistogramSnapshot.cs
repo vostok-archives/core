@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Vstk.Metrics.Meters.Histograms
+namespace Vostok.Metrics.Meters.Histograms
 {
     public class ReservoirHistogramSnapshot
     {

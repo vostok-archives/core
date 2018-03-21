@@ -1,4 +1,4 @@
-﻿namespace Vstk.Commons.Collections
+﻿namespace Vostok.Commons.Collections
 {
     public static class PoolExtensions
     {

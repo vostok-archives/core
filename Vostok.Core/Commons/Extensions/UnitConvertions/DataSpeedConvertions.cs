@@ -1,6 +1,6 @@
-﻿using Vstk.Commons.Model;
+﻿using Vostok.Commons.Model;
 
-namespace Vstk.Commons.Extensions.UnitConvertions
+namespace Vostok.Commons.Extensions.UnitConvertions
 {
     public static class DataSpeedConvertions
     {

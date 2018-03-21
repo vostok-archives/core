@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Vstk.Core</AssemblyName>
+    <AssemblyName>Vostok.Core</AssemblyName>
     <Authors>Vostok team</Authors>
     <Company>SKB Kontur</Company>
     <Product>Vostok</Product>
-    <RootNamespace>Vstk</RootNamespace>
+    <RootNamespace>Vostok</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Copyright>Copyright © SKB Kontur 2017-2018</Copyright>
-    <PackageProjectUrl>https://github.com/vostok/vstk.core</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/vostok/vstk.core/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/vostok/vostok.core</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/vostok/vostok.core/blob/master/LICENSE</PackageLicenseUrl>
     <Description>Core library for microservice toolkit http://vostok.tools/</Description>
   </PropertyGroup>
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vstk.Commons.Extensions.Uri
+namespace Vostok.Commons.Extensions.Uri
 {
     public static class UriFormattingExtensions
     {

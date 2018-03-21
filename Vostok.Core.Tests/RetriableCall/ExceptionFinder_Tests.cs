@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
-namespace Vstk.RetriableCall
+namespace Vostok.RetriableCall
 {
     public class ExceptionFinder_Tests
     {

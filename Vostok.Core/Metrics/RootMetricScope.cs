@@ -1,6 +1,6 @@
-﻿using Vstk.Commons.Collections;
+﻿using Vostok.Commons.Collections;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public class RootMetricScope : IMetricScope
     {

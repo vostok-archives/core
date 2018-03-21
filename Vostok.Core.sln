@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vstk.Core", "Vstk.Core\Vstk.Core.csproj", "{B4871488-BEAF-48BE-8399-B1521539CBA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Core", "Vostok.Core\Vostok.Core.csproj", "{B4871488-BEAF-48BE-8399-B1521539CBA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vstk.Core.Tests", "Vstk.Core.Tests\Vstk.Core.Tests.csproj", "{14367A5F-CB94-4188-9D82-BED970C51D2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vostok.Core.Tests", "Vostok.Core.Tests\Vostok.Core.Tests.csproj", "{14367A5F-CB94-4188-9D82-BED970C51D2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

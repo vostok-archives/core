@@ -1,7 +1,7 @@
 ﻿using NSubstitute;
 using NUnit.Framework;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public class RootMetricScope_Tests
     {

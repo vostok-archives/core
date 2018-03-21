@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vstk.Flow.Serializers
+namespace Vostok.Flow.Serializers
 {
     internal abstract class BaseTypedSerializer<T> : ITypedSerializer
     {

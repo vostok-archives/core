@@ -1,7 +1,7 @@
 ﻿using System;
-using Vstk.Metrics.Meters;
+using Vostok.Metrics.Meters;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public static class MetricScope_Extensions_Meters
     {

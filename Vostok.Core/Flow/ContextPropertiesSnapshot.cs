@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace Vstk.Flow
+namespace Vostok.Flow
 {
     // TODO(iloktionov): Работает неэффективно (неизменямость за счет копирования массива при перезаписи/удалении, линейный перебор при поиске), рассматриваем как решение для прототипа.
     // TODO(iloktionov): В будущем можно будет заменить на ImmutableDictionary, если найдем способ втащить его, не отказываясь от таргетинга на netstandard и не внося внешних зависимостей.

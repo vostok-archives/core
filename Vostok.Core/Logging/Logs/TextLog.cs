@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vstk.Logging.Logs
+namespace Vostok.Logging.Logs
 {
     public class TextLog : ILog
     {

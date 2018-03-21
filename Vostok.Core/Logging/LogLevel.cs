@@ -1,4 +1,4 @@
-namespace Vstk.Logging
+namespace Vostok.Logging
 {
     public enum LogLevel
     {

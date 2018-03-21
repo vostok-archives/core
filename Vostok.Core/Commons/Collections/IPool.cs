@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vstk.Commons.Collections
+namespace Vostok.Commons.Collections
 {
     public interface IPool<T> : IDisposable
     {

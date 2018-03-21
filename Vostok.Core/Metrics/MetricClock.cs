@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
-using Vstk.Commons.Extensions.UnitConvertions;
+using Vostok.Commons.Extensions.UnitConvertions;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public class MetricClock
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Vstk.Commons.Extensions.Uri
+namespace Vostok.Commons.Extensions.Uri
 {
     public static class UriNormalizationExtensions
     {

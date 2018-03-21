@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Vstk.Logging
+namespace Vostok.Logging
 {
     public static class LogExtensions_Context
     {

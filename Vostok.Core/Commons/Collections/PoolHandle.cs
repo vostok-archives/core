@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Vstk.Commons.Collections
+namespace Vostok.Commons.Collections
 {
     public class PoolHandle<T> : IDisposable
     {

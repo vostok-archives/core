@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Vstk.Commons.Synchronization;
-using Vstk.Commons.Utilities;
+using Vostok.Commons.Synchronization;
+using Vostok.Commons.Utilities;
 
-namespace Vstk.Common.Synchronization
+namespace Vostok.Common.Synchronization
 {
     public class AtomicNumber_Tests
     {

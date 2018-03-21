@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vstk.Commons.Collections;
+using Vostok.Commons.Collections;
 
-namespace Vstk.Tracing
+namespace Vostok.Tracing
 {
     internal class TraceConfiguration : ITraceConfiguration
     {

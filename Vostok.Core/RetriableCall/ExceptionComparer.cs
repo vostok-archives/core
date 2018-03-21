@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Vstk.RetriableCall
+namespace Vostok.RetriableCall
 {
     public class ExceptionComparer : IComparer<Exception>
     {

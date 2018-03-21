@@ -1,6 +1,6 @@
-﻿using Vstk.Flow;
+﻿using Vostok.Flow;
 
-namespace Vstk.Commons.Model
+namespace Vostok.Commons.Model
 {
     public static class RequestPriorityContext
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using Vstk.Commons.Utilities;
+using Vostok.Commons.Utilities;
 
-namespace Vstk.Metrics.Meters.Histograms
+namespace Vostok.Metrics.Meters.Histograms
 {
     /// <summary>
     /// A random sampling reservoir of a stream of doubles. 

@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp2.0;net471</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
-    <RootNamespace>Vstk</RootNamespace>
+    <RootNamespace>Vostok</RootNamespace>
     <Configurations>Debug;Release;NoTests</Configurations>
   </PropertyGroup>
 
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vstk.Core\Vstk.Core.csproj" />
+    <ProjectReference Include="..\Vostok.Core\Vostok.Core.csproj" />
   </ItemGroup>
 
 </Project>

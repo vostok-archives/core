@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Vstk.Logging.Logs;
+using Vostok.Logging.Logs;
 
-namespace Vstk.Logging
+namespace Vostok.Logging
 {
     public static class CompositeLog
     {

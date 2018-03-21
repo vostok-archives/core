@@ -1,4 +1,4 @@
-﻿namespace Vstk.Commons.Threading
+﻿namespace Vostok.Commons.Threading
 {
     public class ThreadPoolState
     {

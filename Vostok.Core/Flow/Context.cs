@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Vstk.Flow.Serializers;
+using Vostok.Flow.Serializers;
 
-namespace Vstk.Flow
+namespace Vostok.Flow
 {
     public static class Context
     {

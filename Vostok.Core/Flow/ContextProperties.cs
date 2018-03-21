@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 
-namespace Vstk.Flow
+namespace Vostok.Flow
 {
     internal class ContextProperties : IContextProperties
     {

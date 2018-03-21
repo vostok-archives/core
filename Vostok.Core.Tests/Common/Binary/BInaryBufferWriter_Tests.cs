@@ -1,9 +1,9 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using Vstk.Commons.Binary;
+using Vostok.Commons.Binary;
 
-namespace Vstk.Common.Binary
+namespace Vostok.Common.Binary
 {
     [TestFixture]
     internal class BinaryBufferWriter_Tests

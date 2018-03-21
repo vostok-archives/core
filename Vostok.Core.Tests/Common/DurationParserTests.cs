@@ -2,9 +2,9 @@
 using System.Globalization;
 using FluentAssertions;
 using NUnit.Framework;
-using Vstk.Commons.Utilities;
+using Vostok.Commons.Utilities;
 
-namespace Vstk.Common
+namespace Vostok.Common
 {
     [TestFixture]
     public class DurationParserTests

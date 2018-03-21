@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Vstk.Commons.Utilities
+namespace Vostok.Commons.Utilities
 {
     public static class DoubleParser
     {

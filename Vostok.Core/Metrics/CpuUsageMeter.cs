@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public class CpuUsageMeter
     {

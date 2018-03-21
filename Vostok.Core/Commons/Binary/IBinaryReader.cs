@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Vstk.Commons.Binary
+namespace Vostok.Commons.Binary
 {
     public interface IBinaryReader
     {

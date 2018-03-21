@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     internal class EventStopwatch : IEventStopwatch
     {

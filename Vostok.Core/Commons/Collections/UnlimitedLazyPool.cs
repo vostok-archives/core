@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace Vstk.Commons.Collections
+namespace Vostok.Commons.Collections
 {
     public class UnlimitedLazyPool<T> : IPool<T>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using Vstk.Flow;
+using Vostok.Flow;
 
-namespace Vstk.Tracing
+namespace Vostok.Tracing
 {
     public class TraceContext
     {

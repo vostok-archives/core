@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Vstk.Flow.Serializers
+namespace Vostok.Flow.Serializers
 {
     internal class FloatSerializer : BaseTypedSerializer<float>
     {

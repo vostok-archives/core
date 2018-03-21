@@ -1,4 +1,4 @@
-﻿namespace Vstk.Commons.Model
+﻿namespace Vostok.Commons.Model
 {
     public enum RequestPriority
     {

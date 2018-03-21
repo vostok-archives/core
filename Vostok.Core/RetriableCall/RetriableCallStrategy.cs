@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Vstk.Commons.Extensions.UnitConvertions;
-using Vstk.Commons.Utilities;
-using Vstk.Logging;
+using Vostok.Commons.Extensions.UnitConvertions;
+using Vostok.Commons.Utilities;
+using Vostok.Logging;
 
-namespace Vstk.RetriableCall
+namespace Vostok.RetriableCall
 {
     public class RetriableCallStrategy
     {

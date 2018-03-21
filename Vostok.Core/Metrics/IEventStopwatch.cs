@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Vstk.Metrics
+namespace Vostok.Metrics
 {
     public interface IEventStopwatch : IDisposable
     {
