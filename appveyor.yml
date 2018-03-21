@@ -3,92 +3,11 @@ image: Visual Studio 2017
 nuget:
   project_feed: true
   disable_publish_on_pr: true
-install:
+build_script:
   - ps: |
-      $branch = "$env:appveyor_repo_branch"
-      $prbranch = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"
-      echo "Branch: $branch; Pull request branch: $prbranch"
-      $branchstr = ""
-      if ($prbranch -ne "")
-      {
-        $branchstr = "-pr-$prbranch"
-      }
-      else
-      {
-        if ($branch -ne "master")
-        {
-          $branchstr = "-$branch"
-        }
-      }
-      $zeroPaddedBuildNumber = [convert]::ToInt32($env:appveyor_build_number, 10).ToString("000000")
-      Update-AppveyorBuild -Version "0.0.0.$zeroPaddedBuildNumber$branchstr".Replace("_", "-")
-      $csprojs = $env:appveyor_build_folder | Get-ChildItem -Recurse -Filter "*.csproj"
-      foreach($csproj in $csprojs)
-      {
-        $name = $csproj.BaseName
-        $xmlPath = "$env:appveyor_build_folder\$name\$name.csproj"
-        $xml = [xml](Get-Content $xmlPath)
-        $props = $xml.SelectSingleNode("//PropertyGroup")
-        if ($props)
-        {
-          echo "Generating version $env:appveyor_build_version for $name"
-          $version = $xml.CreateElement("Version")
-          $versionText = $xml.CreateTextNode($env:appveyor_build_version)
-          $version.AppendChild($versionText)
-          $props.AppendChild($version)
-          $xml.Save($xmlPath)
-        }
-      }
-  - cd %appveyor_build_folder%\..
-  - git clone https://github.com/vostok/cement.git
-  - cd "cement"
-  - nuget restore
-  - msbuild Cement.Net.sln
-  - mkdir %USERPROFILE%\.cement
-  - ps: |
-      $wc = New-Object System.Net.WebClient
-      $wc.DownloadFile("https://raw.githubusercontent.com/vostok/cement-modules/master/settings", "$env:USERPROFILE\.cement\settings")
-  - set cm=%appveyor_build_folder%\..\cement\Cement.Net\bin\Release\cm.exe
-  - cd %appveyor_build_folder%\..
-  - ps: | 
-      & $env:cm init
-      cd $env:appveyor_build_folder
-      & $env:cm update-deps
-  - ps: |
-      & $env:cm build-deps
-  - dotnet restore
-configuration: Release
-after_build:
-  - ps: |
-      $proj="$env:APPVEYOR_PROJECT_NAME.csproj"
-      & $env:cm pack $proj
-  - ps: |
-      $prbranch = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"
-      if ($prbranch -eq "")
-      {
-        $csprojs = $env:appveyor_build_folder | Get-ChildItem -Recurse -Filter "*.csproj"
-        foreach($csproj in $csprojs)
-        {
-          $name = $csproj.BaseName
-          $nupkgs = Get-ChildItem $env:appveyor_build_folder\$name\bin\Release\$name.*.nupkg
-          if ($nupkgs)
-          {
-            $nupkgs | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-          }          
-        }
-      }
-test_script:
-  - ps: |
-      if (Test-Path "$env:appveyor_build_folder\$env:APPVEYOR_PROJECT_NAME.Tests\$env:APPVEYOR_PROJECT_NAME.Tests.csproj")
-      {
-        dotnet test "$env:appveyor_build_folder\$env:APPVEYOR_PROJECT_NAME.Tests\$env:APPVEYOR_PROJECT_NAME.Tests.csproj" --logger "trx;LogFileName=tests.trx"
-      }
-after_test:
-  - ps: |
-      if (Test-Path "$env:appveyor_build_folder\$env:APPVEYOR_PROJECT_NAME.Tests\TestResults\tests.trx") {
-      $wc = New-Object 'System.Net.WebClient'
-        $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:appveyor_job_id)", "$env:appveyor_build_folder\$env:APPVEYOR_PROJECT_NAME.Tests\TestResults\tests.trx")
-      }
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest "https://raw.githubusercontent.com/vostok/appveyor/master/build.ps1" -OutFile "$env:appveyor_build_folder/build.ps1"
+  - powershell -File .\build.ps1
 notifications:
   - provider: Webhook
     url: https://webhooks.gitter.im/e/f02e74a3a636a56c590b
@@ -96,11 +15,11 @@ notifications:
     on_build_failure: true
     on_build_status_changed: true
 deploy:
-  provider: NuGet
-  on:
-    appveyor_repo_tag: true
-  api_key:
-    secure: JxB6wnv1G5qa2PG2XjtXYjdhktbBS8dYZVfJ/oXwdlLOYnPz7pngyoe0Tphp+UyT
-  skip_symbols: false
-  symbol_server:           # remove to push symbols to SymbolSource.org
-  artifact: /.*\.nupkg/
+  - provider: Environment
+    name: Nuget
+    on:
+      appveyor_repo_tag: true
+    artifact: /.*\.nupkg/
+  - provider: Environment
+    name: FullNuget
+    artifact: /.*\.nupkg/
