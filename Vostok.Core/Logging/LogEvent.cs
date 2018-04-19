@@ -30,7 +30,7 @@ namespace Vostok.Logging
             if (properties.ContainsKey(name))
                 return;
 
-            properties.Add(name, value);
+            properties.Add(name, value ?? "null");
         }
     }
 }
